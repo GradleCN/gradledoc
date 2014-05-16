@@ -1,0 +1,40 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;33.&nbsp;The PMD Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="jdepend_plugin.html" title="Chapter&nbsp;32.&nbsp;The JDepend Plugin"><link rel="next" href="jacoco_plugin.html" title="Chapter&nbsp;34.&nbsp;The JaCoCo Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="jdepend_plugin.html" title="Chapter&nbsp;32.&nbsp;The JDepend Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="jacoco_plugin.html" title="Chapter&nbsp;34.&nbsp;The JaCoCo Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="pmd_plugin"></a>Chapter&nbsp;33.&nbsp;The PMD Plugin</h1></div></div></div><p>The PMD plugin performs quality checks on your project's Java source files using <a class="ulink" href="http://pmd.sourceforge.net" target="_top">PMD</a>
+        and generates reports from these checks.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13658"></a>33.1.&nbsp;Usage</h2></div></div></div><p>To use the PMD plugin, include in your build script:</p><div class="example"><a name="usePmdPlugin"></a><p class="title"><b>Example&nbsp;33.1.&nbsp;Using the PMD plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'pmd'</span></pre></div></div><br class="example-break"><p>The plugin adds a number of tasks to the project that perform the quality checks. You can execute the checks by running <strong class="userinput"><code>gradle check</code></strong>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1366C"></a>33.2.&nbsp;Tasks</h2></div></div></div><p>The PMD plugin adds the following tasks to the project:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;33.1.&nbsp;PMD plugin - tasks</b></p><div class="table-contents"><table id="N13671"><thead><tr>
+                    <td>Task name</td>
+                    <td>Depends on</td>
+                    <td>Type</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">pmdMain</code>
+                </td>
+                <td>-</td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.plugins.quality.Pmd.html" target="_top"><code class="classname">Pmd</code></a></td>
+                <td>Runs PMD against the production Java source files.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">pmdTest</code>
+                </td>
+                <td>-</td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.plugins.quality.Pmd.html" target="_top"><code class="classname">Pmd</code></a></td>
+                <td>Runs PMD against the test Java source files.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">pmd<em class="replaceable"><code>SourceSet</code></em></code>
+                </td>
+                <td>-</td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.plugins.quality.Pmd.html" target="_top"><code class="classname">Pmd</code></a></td>
+                <td>Runs PMD against the given source set's Java source files.</td>
+            </tr></table></div></div><p>The PMD plugin adds the following dependencies to tasks defined by the Java plugin.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;33.2.&nbsp;PMD plugin - additional task dependencies</b></p><div class="table-contents"><table id="N136C3"><thead><td>Task name</td><td>Depends on</td></thead><tr>
+                <td><code class="literal">check</code></td>
+                <td>All PMD tasks, including <code class="literal">pmdMain</code> and <code class="literal">pmdTest</code>.</td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N136DA"></a>33.3.&nbsp;Dependency management</h2></div></div></div><p>The PMD plugin adds the following dependency configurations:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;33.3.&nbsp;PMD plugin - dependency configurations</b></p><div class="table-contents"><table id="N136DF"><thead><tr>
+                    <td>Name</td>
+                    <td>Meaning</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="filename">pmd</code>
+                </td>
+                <td>The PMD libraries to use</td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N136F6"></a>33.4.&nbsp;Configuration</h2></div></div></div><p>See <a class="ulink" href="../dsl/org.gradle.api.plugins.quality.PmdExtension.html" target="_top"><code class="classname">PmdExtension</code></a>.</p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="jdepend_plugin.html" title="Chapter&nbsp;32.&nbsp;The JDepend Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="jacoco_plugin.html" title="Chapter&nbsp;34.&nbsp;The JaCoCo Plugin">Next</a></div></div></div></body></html>

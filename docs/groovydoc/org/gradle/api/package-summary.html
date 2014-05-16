@@ -1,0 +1,401 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+<title>org.gradle.api (Gradle API 1.12)</title>
+<META NAME="keywords" CONTENT="org.gradle.api package">
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../stylesheet.css" TITLE="Style">
+<link href="../../../groovy.ico" type="image/x-icon" rel="shortcut icon">
+<link href="../../../groovy.ico" type="image/x-icon" rel="icon">
+<SCRIPT type="text/javascript">
+function windowTitle()
+{
+    parent.document.title="org.gradle.api (Gradle API 1.12)";
+}
+</SCRIPT>
+<NOSCRIPT>
+</NOSCRIPT>
+
+</head>
+
+<body BGCOLOR="white" onload="windowTitle();">
+<hr>
+
+<!-- ========= START OF TOP NAVBAR ======= -->
+<a name="navbar_top"><!-- --></a>
+<table summary="" width="100%" border="0" cellpadding="1" cellspacing="0">
+<tbody><tr>
+<td colspan="2" class="NavBarCell1" bgcolor="#eeeeff">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table summary="" border="0" cellpadding="0" cellspacing="3">
+  <tbody><tr valign="top" align="center">
+  <td class="NavBarCell1" bgcolor="#eeeeff">    <a href="../../../overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td class="NavBarCell1Rev" bgcolor="#ffffff"> &nbsp;<font class="NavBarFont1Rev"><b>Package</b></font>&nbsp;</td>
+  <td class="NavBarCell1" bgcolor="#eeeeff">    <font class="NavBarFont1">Class</font>&nbsp;</td>
+  <!--
+  <td class="NavBarCell1" bgcolor="#eeeeff">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  -->
+  <td class="NavBarCell1" bgcolor="#eeeeff">    <a href="../../../deprecated-list.html"><font class="NavBarFont1"><b>Deprecated</b></font></a>&nbsp;</td>
+  <td class="NavBarCell1" bgcolor="#eeeeff">    <a href="../../../index-all.html"><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td class="NavBarCell1" bgcolor="#eeeeff">    <a href="../../../help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</tbody></table>
+</td>
+<td rowspan="3" valign="top" align="right"><em>
+    <b>Groovy Documentation</b>
+</em>
+</td>
+</tr>
+
+<tr>
+<td class="NavBarCell2" bgcolor="white"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td class="NavBarCell2" bgcolor="white"><font size="-2">
+  <a href="../../../index.html?org/gradle/api/package-summary.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="package-summary.html" target="_top"><b>NO FRAMES</b></a>  &nbsp;
+&nbsp;<script type="text/javascript">
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="../../../allclasses-frame.html"><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+  <A HREF="../../../allclasses-frame.html"><B>All Classes</B></A>
+</noscript>
+
+
+</font></td>
+</tr>
+</tbody></table>
+<!-- ========= END OF TOP NAVBAR ========= -->
+
+
+<HR>
+<H2>
+Package org.gradle.api
+</H2>
+
+ <p><b>Start Here:</b> Gradle's org.gradle.api.Project API, which is available from your build files. The
+ API used from your build files is made up of 2 main interfaces:</p>
+
+ <ul>
+ <li>org.gradle.api.Project</li>
+ <li>org.gradle.api.Task</li>
+ </ul>
+ 
+
+
+<P>&nbsp;</P>
+
+
+
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+    <TR BGCOLOR="#90DDF7" CLASS="TableHeadingColor">
+    <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
+    <B>Interface Summary</B></FONT></TH>
+    </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Action.html" title="class in org/gradle/api">Action</A></B></TD>
+        <TD>Performs some action against objects of type T.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Buildable.html" title="class in org/gradle/api">Buildable</A></B></TD>
+        <TD>A <TT>Buildable</TT> represents an artifact or set of artifacts which are built by one or more Task
+ instances.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="DomainObjectCollection.html" title="class in org/gradle/api">DomainObjectCollection</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="DomainObjectSet.html" title="class in org/gradle/api">DomainObjectSet</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ExtensiblePolymorphicDomainObjectContainer.html" title="class in org/gradle/api">ExtensiblePolymorphicDomainObjectContainer</A></B></TD>
+        <TD>A <a href='../../../org/gradle/api/PolymorphicDomainObjectContainer.html' title='PolymorphicDomainObjectContainer'>PolymorphicDomainObjectContainer</a> that can be extended at runtime to
+ create elements of new types.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Named.html" title="class in org/gradle/api">Named</A></B></TD>
+        <TD>Types can implement this interface and use the embedded Namer implementation, to satisfy API that calls for a namer.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="NamedDomainObjectCollection.html" title="class in org/gradle/api">NamedDomainObjectCollection</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="NamedDomainObjectContainer.html" title="class in org/gradle/api">NamedDomainObjectContainer</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="NamedDomainObjectFactory.html" title="class in org/gradle/api">NamedDomainObjectFactory</A></B></TD>
+        <TD>A factory for named objects of type <TT>T</TT>.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="NamedDomainObjectList.html" title="class in org/gradle/api">NamedDomainObjectList</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="NamedDomainObjectSet.html" title="class in org/gradle/api">NamedDomainObjectSet</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Namer.html" title="class in org/gradle/api">Namer</A></B></TD>
+        <TD>A namer is capable of providing a name based on some inherent characteristic of an object.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Plugin.html" title="class in org/gradle/api">Plugin</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="PolymorphicDomainObjectContainer.html" title="class in org/gradle/api">PolymorphicDomainObjectContainer</A></B></TD>
+        <TD>A NamedDomainObjectContainer that allows to create domain objects with different types.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Project.html" title="class in org/gradle/api">Project</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ProjectEvaluationListener.html" title="class in org/gradle/api">ProjectEvaluationListener</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ProjectState.html" title="class in org/gradle/api">ProjectState</A></B></TD>
+        <TD><TT>ProjectState</TT> provides information about the execution state of a project.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Rule.html" title="class in org/gradle/api">Rule</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Script.html" title="class in org/gradle/api">Script</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Task.html" title="class in org/gradle/api">Task</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Transformer.html" title="class in org/gradle/api">Transformer</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="XmlProvider.html" title="class in org/gradle/api">XmlProvider</A></B></TD>
+        <TD>Provides various ways to access the content of an XML document.</TD>
+        </TR>
+
+</TABLE>
+&nbsp;
+<P>
+<DL>
+</DL>
+<hr>
+    
+
+
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+    <TR BGCOLOR="#90DDF7" CLASS="TableHeadingColor">
+    <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
+    <B>Class Summary</B></FONT></TH>
+    </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="AntBuilder.html" title="class in org/gradle/api">AntBuilder</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="DefaultTask.html" title="class in org/gradle/api">DefaultTask</A></B></TD>
+        <TD><TT>DefaultTask</TT> is the standard Task implementation. </TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Named.Namer.html" title="class in org/gradle/api">Named.Namer</A></B></TD>
+        <TD>An implementation of the namer interface for objects implementing the named interface.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Namer.Comparator.html" title="class in org/gradle/api">Namer.Comparator</A></B></TD>
+        <TD>A comparator implementation based on the names returned by the given namer.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Task.Namer.html" title="class in org/gradle/api">Task.Namer</A></B></TD>
+        <TD>A <a href='../../../org/gradle/api/Namer.html' title='Namer'>Namer</a> namer for tasks that returns <a href='#getName()'>getName()</a>.</TD>
+        </TR>
+
+</TABLE>
+&nbsp;
+<P>
+<DL>
+</DL>
+<hr>
+    
+
+
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+    <TR BGCOLOR="#90DDF7" CLASS="TableHeadingColor">
+    <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
+    <B>Enum Summary</B></FONT></TH>
+    </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="JavaVersion.html" title="class in org/gradle/api">JavaVersion</A></B></TD>
+        <TD>An enumeration of Java versions.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="PathValidation.html" title="class in org/gradle/api">PathValidation</A></B></TD>
+        <TD>An enumeration for describing validation policies for file paths.</TD>
+        </TR>
+
+</TABLE>
+&nbsp;
+<P>
+<DL>
+</DL>
+<hr>
+    
+
+
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+    <TR BGCOLOR="#90DDF7" CLASS="TableHeadingColor">
+    <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
+    <B>Exception Summary</B></FONT></TH>
+    </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="CircularReferenceException.html" title="class in org/gradle/api">CircularReferenceException</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="GradleException.html" title="class in org/gradle/api">GradleException</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="GradleScriptException.html" title="class in org/gradle/api">GradleScriptException</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="IllegalDependencyNotation.html" title="class in org/gradle/api">IllegalDependencyNotation</A></B></TD>
+        <TD>This exceptions is thrown, if a dependency is declared with a illegal notation.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="IllegalOperationAtExecutionTimeException.html" title="class in org/gradle/api">IllegalOperationAtExecutionTimeException</A></B></TD>
+        <TD>A <code>IllegalOperationAtExecutionTimeException</code> is thrown if you try to trigger an operation at runtime,
+ which is only allowed at configuration time.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="InvalidActionClosureException.html" title="class in org/gradle/api">InvalidActionClosureException</A></B></TD>
+        <TD>Thrown when a <a href='http://groovy.codehaus.org/gapi/groovy/lang/Closure.html' title='Closure'>Closure</a> is given as an Action implementation, but has the wrong signature.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="InvalidUserCodeException.html" title="class in org/gradle/api">InvalidUserCodeException</A></B></TD>
+        <TD>A <code>InvalidUserCodeException</code> is thrown when user-provided code cannot be executed.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="InvalidUserDataException.html" title="class in org/gradle/api">InvalidUserDataException</A></B></TD>
+        <TD>A <code>InvalidUserDataException</code> is thrown, if a user is providing illegal data for the build.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ProjectConfigurationException.html" title="class in org/gradle/api">ProjectConfigurationException</A></B></TD>
+        <TD>Indicates a problem that occurs during project configuration (evaluation) phase.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="UncheckedIOException.html" title="class in org/gradle/api">UncheckedIOException</A></B></TD>
+        <TD><code>UncheckedIOException</code> is used to wrap an <a href='http://docs.oracle.com/javase/1.5.0/docs/api/java/io/IOException.html' title='IOException'>IOException</a> into an unchecked exception.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="UnknownDomainObjectException.html" title="class in org/gradle/api">UnknownDomainObjectException</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="UnknownProjectException.html" title="class in org/gradle/api">UnknownProjectException</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="UnknownTaskException.html" title="class in org/gradle/api">UnknownTaskException</A></B></TD>
+        <TD></TD>
+        </TR>
+
+</TABLE>
+&nbsp;
+<P>
+<DL>
+</DL>
+<hr>
+    
+
+
+
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+    <TR BGCOLOR="#90DDF7" CLASS="TableHeadingColor">
+    <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
+    <B>Annotation Type Summary</B></FONT></TH>
+    </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Incubating.html" title="class in org/gradle/api">Incubating</A></B></TD>
+        <TD>Indicates that a feature is incubating. </TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="NonExtensible.html" title="class in org/gradle/api">NonExtensible</A></B></TD>
+        <TD>Indicates that the type, when DSL enhanced, does not support extensibility.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Nullable.html" title="class in org/gradle/api">Nullable</A></B></TD>
+        <TD>Indicates that the value of an element can be null.</TD>
+        </TR>
+
+</TABLE>
+&nbsp;
+<P>
+<DL>
+</DL>
+<hr>
+    
+
+
+<p>Gradle API 1.12</p>
+<hr>
+</body>
+</html>

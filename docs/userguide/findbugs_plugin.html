@@ -1,0 +1,42 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;31.&nbsp;The FindBugs Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="codenarc_plugin.html" title="Chapter&nbsp;30.&nbsp;The CodeNarc Plugin"><link rel="next" href="jdepend_plugin.html" title="Chapter&nbsp;32.&nbsp;The JDepend Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="codenarc_plugin.html" title="Chapter&nbsp;30.&nbsp;The CodeNarc Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="jdepend_plugin.html" title="Chapter&nbsp;32.&nbsp;The JDepend Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="findbugs_plugin"></a>Chapter&nbsp;31.&nbsp;The FindBugs Plugin</h1></div></div></div><p>The FindBugs plugin performs quality checks on your project's Java source files using <a class="ulink" href="http://findbugs.sourceforge.net" target="_top">FindBugs</a>
+        and generates reports from these checks.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N134E4"></a>31.1.&nbsp;Usage</h2></div></div></div><p>To use the FindBugs plugin, include in your build script:</p><div class="example"><a name="useFindBugsPlugin"></a><p class="title"><b>Example&nbsp;31.1.&nbsp;Using the FindBugs plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'findbugs'</span></pre></div></div><br class="example-break"><p>The plugin adds a number of tasks to the project that perform the quality checks. You can execute the checks by running <strong class="userinput"><code>gradle check</code></strong>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N134F8"></a>31.2.&nbsp;Tasks</h2></div></div></div><p>The FindBugs plugin adds the following tasks to the project:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;31.1.&nbsp;FindBugs plugin - tasks</b></p><div class="table-contents"><table id="N134FD"><thead><tr>
+                    <td>Task name</td>
+                    <td>Depends on</td>
+                    <td>Type</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">findbugsMain</code>
+                </td>
+                <td><code class="literal">classes</code></td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.plugins.quality.FindBugs.html" target="_top"><code class="classname">FindBugs</code></a></td>
+                <td>Runs FindBugs against the production Java source files.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">findbugsTest</code>
+                </td>
+                <td><code class="literal">testClasses</code></td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.plugins.quality.FindBugs.html" target="_top"><code class="classname">FindBugs</code></a></td>
+                <td>Runs FindBugs against the test Java source files.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">findbugs<em class="replaceable"><code>SourceSet</code></em></code>
+                </td>
+                <td>
+                    <code class="literal"><em class="replaceable"><code>sourceSet</code></em>Classes</code>
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.plugins.quality.FindBugs.html" target="_top"><code class="classname">FindBugs</code></a></td>
+                <td>Runs FindBugs against the given source set's Java source files.</td>
+            </tr></table></div></div><p>The FindBugs plugin adds the following dependencies to tasks defined by the Java plugin.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;31.2.&nbsp;FindBugs plugin - additional task dependencies</b></p><div class="table-contents"><table id="N13556"><thead><td>Task name</td><td>Depends on</td></thead><tr>
+                <td><code class="literal">check</code></td>
+                <td>All FindBugs tasks, including <code class="literal">findbugsMain</code> and <code class="literal">findbugsTest</code>.</td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1356D"></a>31.3.&nbsp;Dependency management</h2></div></div></div><p>The FindBugs plugin adds the following dependency configurations:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;31.3.&nbsp;FindBugs plugin - dependency configurations</b></p><div class="table-contents"><table id="N13572"><thead><tr>
+                    <td>Name</td>
+                    <td>Meaning</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="filename">findbugs</code>
+                </td>
+                <td>The FindBugs libraries to use</td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13589"></a>31.4.&nbsp;Configuration</h2></div></div></div><p>See <a class="ulink" href="../dsl/org.gradle.api.plugins.quality.FindBugsExtension.html" target="_top"><code class="classname">FindBugsExtension</code></a>.</p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="codenarc_plugin.html" title="Chapter&nbsp;30.&nbsp;The CodeNarc Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="jdepend_plugin.html" title="Chapter&nbsp;32.&nbsp;The JDepend Plugin">Next</a></div></div></div></body></html>

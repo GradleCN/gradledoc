@@ -1,0 +1,67 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Appendix&nbsp;C.&nbsp;The Feature Lifecycle</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="potential_traps.html" title="Appendix&nbsp;B.&nbsp;Potential Traps"><link rel="next" href="gradle_command_line.html" title="Appendix&nbsp;D.&nbsp;Gradle Command Line"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="potential_traps.html" title="Appendix&nbsp;B.&nbsp;Potential Traps">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="gradle_command_line.html" title="Appendix&nbsp;D.&nbsp;Gradle Command Line">Next</a></div></div></div><div class="appendix"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="feature_lifecycle"></a>Appendix&nbsp;C.&nbsp;The Feature Lifecycle</h1></div></div></div><p>
+        Gradle is under constant development and improvement. New versions are also delivered on a regular and frequent basis
+        (approximately every 6 weeks). Continuous improvement combined with frequent delivery allows new features to be made available
+        to users early and for invaluable real world feedback to be incorporated into the development process. Getting
+        new functionality into the hands of users regularly is a core value of the Gradle platform.
+        At the same time, API and feature stability is taken very seriously and is also considered a core value of the Gradle platform.
+        This is something that is engineered into the development process by design choices and automated testing, and is formalised by
+        the <a class="xref" href="feature_lifecycle.html#backwards_compatibility">Section&nbsp;C.2, &ldquo;Backwards Compatibility Policy&rdquo;</a>.
+    </p><p>
+        The Gradle
+        <em class="firstterm">feature lifecycle</em>
+        has been designed to meet these goals. It also serves
+        to clearly communicate to users of Gradle what the state of a feature is. The term
+        <em class="firstterm">feature</em>
+        typically means
+        an API or DSL method or property in this context, but it is not restricted to this definition.
+        Command line arguments and modes of execution (e.g. the Build Daemon) are two examples of other kinds of features.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N173CB"></a>C.1.&nbsp;States</h2></div></div></div><p>
+            Features can be in one of 4 states:
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Internal</p></li><li class="listitem"><p>Incubating</p></li><li class="listitem"><p>Public</p></li><li class="listitem"><p>Deprecated</p></li></ul></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N173DD"></a>C.1.1.&nbsp;Internal</h3></div></div></div><p>
+                Internal features are not designed for public use and are only intended to be used by Gradle itself. They can change in any way at any
+                point in time without any notice. Therefore, we recommend avoiding the use of such features.
+                Internal features are not documented. If it appears in this User Guide, the DSL Reference or the API Reference documentation then
+                the feature is not internal.
+            </p><p>
+                Internal features may evolve into public features.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:incubating_state"></a>C.1.2.&nbsp;Incubating</h3></div></div></div><p>
+                Features are introduced in the <em class="firstterm">incubating</em> state to allow real world feedback to be incorporated into the feature before it is made public and
+                locked down to provide backwards compatibility.
+                It also gives users who are willing to accept potential future changes early access to the feature so they can put it into use immediately.
+            </p><p>
+                A feature in an incubating state may change in future Gradle versions until it is no longer incubating.
+                Changes to incubating features for a Gradle release will be highlighted in the release notes for that release.
+                The incubation period for new features varies depending on the scope, complexity and nature of the feature.
+            </p><p>
+                Features in incubation are clearly indicated to be so. In the source code, all methods/properties/classes that are incubating are
+                annotated with <a class="ulink" href="../javadoc/org/gradle/api/Incubating.html" target="_top"><code class="classname">Incubating</code></a>, which is also used to specially mark them in the DSL and API references. If an incubating
+                feature is discussed in this User Guide, it will be explicitly said to be in the incubating state.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N173F6"></a>C.1.3.&nbsp;Public</h3></div></div></div><p>
+                The default state for a non-internal feature is <em class="firstterm">public</em>.
+                Anything that is documented in the User Guide, DSL Reference or API references that
+                is not explicitly said to be incubating or deprecated is considered public. Features are said to be <em class="firstterm">promoted</em> from an
+                incubating state to public. The release notes for each release indicate which previously incubating features are being promoted by the release.
+            </p><p>
+                A public feature will <span class="emphasis"><em>never</em></span> be removed or intentionally changed without undergoing deprecation.
+                All public features are subject to the backwards compatibility policy.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N17406"></a>C.1.4.&nbsp;Deprecated</h3></div></div></div><p>
+                Some features will become superseded or irrelevant due to the natural evolution of Gradle. Such features will eventually be removed
+                from Gradle after being <em class="firstterm">deprecated</em>. A deprecated feature will <span class="emphasis"><em>never</em></span>
+                be changed, until it is finally removed according to the backwards compatibility policy.
+            </p><p>
+                Deprecated features are clearly indicated to be so. In the source code, all methods/properties/classes that are deprecated are
+                annotated with
+                <code class="literal">@java.lang.Deprecated</code>
+                which is reflected in the DSL and API references.
+                In most cases, there is a replacement for the deprecated element, and this will be described in the documentation.
+                Using a deprecated feature will also result in runtime warning in Gradle's output.
+            </p><p>
+                Use of deprecated features should be avoided. The release notes for each release indicate any features that are being deprecated
+                by the release.
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="backwards_compatibility"></a>C.2.&nbsp;Backwards Compatibility Policy</h2></div></div></div><p>
+            Gradle provides backwards compatibility for across major versions (e.g. <code class="literal">1.x</code>, <code class="literal">2.x</code>
+            etc.).
+            Once a public feature is introduced or promoted in a Gradle release it will remain indefinitely or until it is deprecated. Once
+            deprecated, it may be removed in the next major release. Deprecated features may be supported across major
+            releases, but this is not guaranteed.
+        </p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="potential_traps.html" title="Appendix&nbsp;B.&nbsp;Potential Traps">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="gradle_command_line.html" title="Appendix&nbsp;D.&nbsp;Gradle Command Line">Next</a></div></div></div></body></html>

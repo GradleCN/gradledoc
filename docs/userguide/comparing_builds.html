@@ -1,0 +1,95 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;63.&nbsp;Comparing Builds</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="embedding.html" title="Chapter&nbsp;62.&nbsp;Embedding Gradle"><link rel="next" href="publishing_ivy.html" title="Chapter&nbsp;64.&nbsp;Ivy Publishing (new)"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="embedding.html" title="Chapter&nbsp;62.&nbsp;Embedding Gradle">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="publishing_ivy.html" title="Chapter&nbsp;64.&nbsp;Ivy Publishing (new)">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="comparing_builds"></a>Chapter&nbsp;63.&nbsp;Comparing Builds</h1></div></div></div><div class="note"><p>
+            Build comparison support is an <a class="link" href="feature_lifecycle.html">incubating</a> feature. This means that it is incomplete and not yet at regular Gradle production quality.
+            This also means that this Gradle User Guide chapter is a work in progress.
+        </p></div><p>
+        Gradle provides support for comparing the <em class="firstterm">outcomes</em> (e.g. the produced binary archives) of two builds.
+        There are several reasons why you may want to compare the outcomes of two builds. You may want to compare:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>A build with a newer version of Gradle than it's currently using (i.e. upgrading the Gradle version).</p></li><li class="listitem"><p>A Gradle build with a build executed by another tool such as Apache Ant, Apache Maven or something else (i.e. migrating to Gradle).</p></li><li class="listitem"><p>The same Gradle build, with the same version, before and after a change to the build (i.e. testing build changes).</p></li></ul></div><p>
+        By comparing builds in these scenarios you can make an informed decision about the Gradle upgrade, migration to Gradle or build change by understanding the differences in the outcomes.
+        The comparison process produces a HTML report outlining which outcomes were found to be identical and identifying the differences between non-identical outcomes.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N16AEE"></a>63.1.&nbsp;Definition of terms</h2></div></div></div><p>The following are the terms used for build comparison and their definitions.</p><div class="variablelist"><dl><dt><span class="term">&ldquo;Build&rdquo;</span></dt><dd><p>
+                        In the context of build comparison, a build is not necessarily a Gradle build.
+                        It can be any invokable &ldquo;process&rdquo; that produces observable &ldquo;outcomes&rdquo;.
+                        At least one of the builds in a comparison will be a Gradle build.
+                    </p></dd><dt><span class="term">&ldquo;Build Outcome&rdquo;</span></dt><dd><p>
+                        Something that happens in an observable manner during a build, such as the creation of a zip file or test execution.
+                        These are the things that are compared.
+                    </p></dd><dt><span class="term">&ldquo;Source Build&rdquo;</span></dt><dd><p>
+                        The build that comparisons are being made against, typically the build in its &ldquo;current&rdquo; state.
+                        In other words, the left hand side of the comparison.
+                    </p></dd><dt><span class="term">&ldquo;Target Build&rdquo;</span></dt><dd><p>
+                        The build that is being compared to the source build, typically the &ldquo;proposed&rdquo; build.
+                        In other words, the right hand side of the comparison.
+                    </p></dd><dt><span class="term">&ldquo;Host Build&rdquo;</span></dt><dd><p>
+                        The Gradle build that executes the comparison process. It may be the same project as either the &ldquo;target&rdquo; or &ldquo;source&rdquo; build
+                        or may be a completely separate project. It does not need to be the same Gradle version as the &ldquo;source&rdquo; or &ldquo;target&rdquo; builds.
+                        The host build must be run with Gradle 1.2 or newer.
+                    </p></dd><dt><span class="term">&ldquo;Compared Build Outcome&rdquo;</span></dt><dd><p>
+                        Build outcomes that are intended to be logically equivalent in the &ldquo;source&rdquo; and &ldquo;target&rdquo; builds,
+                        and are therefore meaningfully comparable.</p></dd><dt><span class="term">&ldquo;Uncompared Build Outcome&rdquo;</span></dt><dd><p>
+                        A build outcome is uncompared if a logical equivalent from the other build cannot be found
+                        (e.g. a build produces a zip file that the other build does not).
+                    </p></dd><dt><span class="term">&ldquo;Unknown Build Outcome&rdquo;</span></dt><dd><p>
+                        A build outcome that cannot be understood by the host build. This can occur when the source or target build
+                        is a newer Gradle version than the host build and that Gradle version exposes new outcome types. Unknown build outcomes
+                        can be compared in so far as they can be identified to be logically equivalent to an unknown build outcome in the other build,
+                        but no meaningful comparison of what the build outcome actually is can be performed. Using the latest Gradle version
+                        for the host build will avoid encountering unknown build outcomes.
+                    </p></dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N16B24"></a>63.2.&nbsp;Current Capabilities</h2></div></div></div><p>
+            As this is an <a class="link" href="feature_lifecycle.html">incubating</a> feature, a limited set of the eventual functionality has been implemented at this time.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16B2D"></a>63.2.1.&nbsp;Supported builds</h3></div></div></div><p>
+                Only support for executing Gradle builds is available at this time.
+                Source and target build must execute with Gradle newer or equal to <code class="literal">1.0</code>.
+                Host build must be at least <code class="literal">1.2</code>.
+            </p><p>
+                Future versions will provide support for executing builds from other build systems such as Apache Ant
+                or Apache Maven, as well as support for executing arbitrary processes (e.g. shell script based builds)
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16B3A"></a>63.2.2.&nbsp;Supported build outcomes</h3></div></div></div><p>
+                Only support for comparing build outcomes that are <code class="literal">zip</code> archives is supported at this time.
+                This includes <code class="literal">jar</code>, <code class="literal">war</code> and <code class="literal">ear</code> archives.
+            </p><p>
+                Future versions will provide support for comparing outcomes such as test execution (i.e. which tests were executed, which tests failed, etc.)
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N16B4D"></a>63.3.&nbsp;Comparing Gradle Builds</h2></div></div></div><p>
+            The <code class="literal">compare-gradle-builds</code> plugin can be used to facilitate a comparison between two Gradle builds. The plugin
+            adds a <a class="ulink" href="../dsl/org.gradle.api.plugins.buildcomparison.gradle.CompareGradleBuilds.html" target="_top"><code class="classname">CompareGradleBuilds</code></a> task named &ldquo;<code class="literal">compareGradleBuilds</code>&rdquo;
+            to the project. The configuration of this task specifies what is to be compared. By default, it is configured to compare the current build with itself
+            using the current Gradle version by executing the tasks: &ldquo;<code class="literal">clean assemble</code>&rdquo;.
+        </p><pre class="programlisting">apply plugin: 'compare-gradle-builds'</pre><p>
+            This task can be configured to change what is compared.
+        </p><pre class="programlisting">compareGradleBuilds {
+    sourceBuild {
+        projectDir "/projects/project-a"
+        gradleVersion "1.1"
+    }
+    targetBuild {
+        projectDir "/projects/project-b"
+        gradleVersion "1.2"
+    }
+}</pre><p>
+            The example above configures a comparison between two different projects using two different Gradle versions.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16B68"></a>63.3.1.&nbsp;Trying Gradle upgrades</h3></div></div></div><p>
+                You can use the build comparison functionality to very quickly try a new Gradle version with your build.
+            </p><p>
+                To try your current build with a different Gradle version, simply add the following to the <code class="filename">build.gradle</code> of the <em class="firstterm">root project</em>.
+            </p><pre class="programlisting">apply plugin: 'compare-gradle-builds'
+
+compareGradleBuilds {
+    targetBuild.gradleVersion = "&laquo;gradle version&raquo;"
+}</pre><p>
+                Then simply execute the <span class="command"><strong>compareGradleBuilds</strong></span> task. You will see the console output of the &ldquo;source&rdquo; and &ldquo;target&rdquo; builds as they are executing.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16B7C"></a>63.3.2.&nbsp;The comparison &ldquo;result&rdquo;</h3></div></div></div><p>
+                If there are any differences between the <em class="firstterm">compared outcomes</em>, the task will fail. The location of the HTML report
+                providing insight into the comparison will be given. If all compared outcomes are found to be identical, and there are no uncompared outcomes,
+                and there are no unknown build outcomes the task will succeed.
+            </p><p>
+                You can configure the task to not fail on compared outcome differences by setting the <code class="literal">ignoreFailures</code> property to true.
+            </p><pre class="programlisting">compareGradleBuilds {
+    ignoreFailures = true
+}</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16B8B"></a>63.3.3.&nbsp;Which archives are compared?</h3></div></div></div><p>
+                For an archive to be a candidate for comparison, it must be added as an artifact of the archives configuration.
+                Take a look at <a class="xref" href="artifact_management.html">Chapter&nbsp;51, <i>Publishing artifacts</i></a> for more information on how to configure and add artifacts.
+            </p><p>
+                The archive must also have been produced by a <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Zip.html" target="_top"><code class="classname">Zip</code></a>, <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Jar.html" target="_top"><code class="classname">Jar</code></a>,
+                <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.War.html" target="_top"><code class="classname">War</code></a>, <a class="ulink" href="../dsl/org.gradle.plugins.ear.Ear.html" target="_top"><code class="classname">Ear</code></a> task. Future versions of Gradle
+                will support increased flexibility in this area.
+            </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="embedding.html" title="Chapter&nbsp;62.&nbsp;Embedding Gradle">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="publishing_ivy.html" title="Chapter&nbsp;64.&nbsp;Ivy Publishing (new)">Next</a></div></div></div></body></html>

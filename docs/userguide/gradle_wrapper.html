@@ -1,0 +1,50 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;61.&nbsp;The Gradle Wrapper</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="init_scripts.html" title="Chapter&nbsp;60.&nbsp;Initialization Scripts"><link rel="next" href="embedding.html" title="Chapter&nbsp;62.&nbsp;Embedding Gradle"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="init_scripts.html" title="Chapter&nbsp;60.&nbsp;Initialization Scripts">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="embedding.html" title="Chapter&nbsp;62.&nbsp;Embedding Gradle">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="gradle_wrapper"></a>Chapter&nbsp;61.&nbsp;The Gradle Wrapper</h1></div></div></div><p>
+        The Gradle Wrapper (henceforth referred to as the &ldquo;wrapper) is the preferred way of starting a Gradle build. The wrapper
+        is a batch script on Windows, and a shell script for other operating systems. When you start a Gradle build via the wrapper,
+        Gradle will be automatically downloaded and used to run the build. 
+    </p><p>
+        The wrapper is something you <span class="emphasis"><em>should</em></span> check into version control. By distributing the wrapper with your project,
+        anyone can work with it without needing to install Gradle beforehand. Even better, users of the build are guaranteed to use the 
+        version of Gradle that the build was designed to work with. Of course, this is also great for 
+        <a class="ulink" href="http://en.wikipedia.org/wiki/Continuous_integration" target="_top">continuous integration</a> servers (i.e. servers that regularly
+        build your project) as it requires no configuration on the server.
+    </p><p>
+        You install the wrapper into your project by adding and configuring a <a class="ulink" href="../dsl/org.gradle.api.tasks.wrapper.Wrapper.html" target="_top"><code class="classname">Wrapper</code></a> 
+        task in your build script, and then executing it.
+    </p><div class="example"><a name="wrapperSimple"></a><p class="title"><b>Example&nbsp;61.1.&nbsp;Wrapper task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task wrapper(type: Wrapper) {
+    gradleVersion = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.4'</span>
+}</pre></div></div><br class="example-break"><p>
+        After such an execution you find the following new or updated files in your project directory 
+        (in case the default configuration of the wrapper task is used).
+    </p><div class="example"><a name="wrapperSimple"></a><p class="title"><b>Example&nbsp;61.2.&nbsp;Wrapper generated files</b></p><div class="example-contents"><p>Build layout</p><pre class="programlisting">simple/
+  gradlew
+  gradlew.bat
+  gradle/wrapper/
+    gradle-wrapper.jar
+    gradle-wrapper.properties</pre></div></div><br class="example-break"><p>
+        All of these files <span class="emphasis"><em>should</em></span> be submitted to your version control system. This only needs to be done once. After
+        these files have been added to the project, the project should then be built with the added <span class="command"><strong>gradlew</strong></span> command.
+        The <span class="command"><strong>gradlew</strong></span> command can be used <span class="emphasis"><em>exactly</em></span> the same way as the <span class="command"><strong>gradle</strong></span> command.
+    </p><p>If you want to switch to a new version of Gradle you don't need to rerun the wrapper task. It is good enough
+        to change the respective entry in the <code class="literal">gradle-wrapper.properties</code> file. But if there is for
+        example an improvement in the gradle-wrapper functionality you need to regenerate the wrapper files.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:configuration"></a>61.1.&nbsp;Configuration</h2></div></div></div><p>If you run Gradle with <span class="command"><strong>gradlew</strong></span>, the wrapper checks if a Gradle distribution for the wrapper
+            is available. If not it tries to download it, otherwise it delegates to the <span class="command"><strong>gradle</strong></span>
+            command of this distribution with all the arguments passed originally to the <span class="command"><strong>gradlew</strong></span>
+            command.
+        </p><p>
+            When you configure the <code class="literal">Wrapper</code> task, you can specify the Gradle version you wish to use. The <span class="command"><strong>gradlew</strong></span>
+            command will download the appropriate distribution from the Gradle repository.
+            Alternatively, you can specify the download URL of the Gradle distribution. The <span class="command"><strong>gradlew</strong></span> command will use this URL to download
+            the distribution.
+            If you specify neither a Gradle version or download URL, the <span class="command"><strong>gradlew</strong></span> command will by default download whichever version
+            of Gradle was used to generate the wrapper files.
+        </p><p>For the details on how to configure the wrapper, see <a class="ulink" href="../dsl/org.gradle.api.tasks.wrapper.Wrapper.html" target="_top"><code class="classname">Wrapper</code></a>
+        </p><p>If you don't want any download to happen when your project is build via <span class="command"><strong>gradlew</strong></span>, simply add the Gradle
+            distribution zip to your version control at the location specified by your wrapper configuration.
+            A relative URL is supported - you can specify a distribution file relative to the location of <code class="literal">gradle-wrapper.properties</code> file.
+        </p><p>If you build via the wrapper, any existing Gradle distribution installed on the machine is ignored.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:unix_file_permissions"></a>61.2.&nbsp;Unix file permissions</h2></div></div></div><p>The Wrapper task adds appropriate file permissions to allow the execution for the gradlew *NIX command.
+            Subversion preserves this file permission. We are not sure how other version control systems deal with this.
+            What should always work is to execute <code class="literal">sh gradlew</code>.
+        </p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="init_scripts.html" title="Chapter&nbsp;60.&nbsp;Initialization Scripts">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="embedding.html" title="Chapter&nbsp;62.&nbsp;Embedding Gradle">Next</a></div></div></div></body></html>

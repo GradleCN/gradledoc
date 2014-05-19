@@ -1,0 +1,166 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Appendix&nbsp;D.&nbsp;Gradle Command Line</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="feature_lifecycle.html" title="Appendix&nbsp;C.&nbsp;The Feature Lifecycle"><link rel="next" href="ide_support.html" title="Appendix&nbsp;E.&nbsp;Existing IDE Support and how to cope without it"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="feature_lifecycle.html" title="Appendix&nbsp;C.&nbsp;The Feature Lifecycle">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="ide_support.html" title="Appendix&nbsp;E.&nbsp;Existing IDE Support and how to cope without it">Next</a></div></div></div><div class="appendix"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="gradle_command_line"></a>Appendix&nbsp;D.&nbsp;Gradle Command Line</h1></div></div></div><p>The
+        <span class="command"><strong>gradle</strong></span>
+        command has the following usage:
+        </p><div class="cmdsynopsis"><p><code class="command">gradle</code>  [option...] [task...]</p></div><p>
+        The command-line options available for the
+        <span class="command"><strong>gradle</strong></span>
+        command are listed below:
+    </p><div class="variablelist"><dl><dt><span class="term"><code class="option">-?</code>, <code class="option">-h</code>, <code class="option">--help</code>
+            </span></dt><dd><p>Shows a help message.</p></dd><dt><span class="term"><code class="option">-a</code>, <code class="option">--no-rebuild</code>
+            </span></dt><dd><p>Do not rebuild project dependencies.
+                </p></dd><dt><span class="term">
+                <code class="option">--all</code>
+            </span></dt><dd><p>Shows additional detail in the task listing. See <a class="xref" href="tutorial_gradle_command_line.html#sec:listing_tasks">Section&nbsp;11.6.2, &ldquo;Listing tasks&rdquo;</a>.
+                </p></dd><dt><span class="term"><code class="option">-b</code>, <code class="option">--build-file</code>
+            </span></dt><dd><p>Specifies the build file. See <a class="xref" href="tutorial_gradle_command_line.html#sec:selecting_build">Section&nbsp;11.5, &ldquo;Selecting which build to execute&rdquo;</a>.
+                </p></dd><dt><span class="term"><code class="option">-c</code>, <code class="option">--settings-file</code>
+            </span></dt><dd><p>Specifies the settings file.</p></dd><dt><span class="term">
+                <code class="option">--continue</code>
+            </span></dt><dd><p>Continues task execution after a task failure.</p></dd><dt><span class="term">
+                <code class="option">--configure-on-demand (incubating)</code>
+            </span></dt><dd><p>Only relevant projects are configured in this build run. This means faster builds for large multi-projects.
+                    See <a class="xref" href="multi_project_builds.html#sec:configuration_on_demand">Section&nbsp;56.1.1.1, &ldquo;Configuration on demand&rdquo;</a>.
+                </p></dd><dt><span class="term"><code class="option">-D</code>, <code class="option">--system-prop</code>
+            </span></dt><dd><p>Sets a system property of the JVM, for example <code class="literal">-Dmyprop=myvalue</code>.
+                    See <a class="xref" href="tutorial_this_and_that.html#sec:gradle_properties_and_system_properties">Section&nbsp;14.2, &ldquo;Gradle properties and system properties&rdquo;</a>.
+                </p></dd><dt><span class="term"><code class="option">-d</code>, <code class="option">--debug</code>
+            </span></dt><dd><p>Log in debug mode (includes normal stacktrace). See <a class="xref" href="logging.html">Chapter&nbsp;18, <i>Logging</i></a>.
+                </p></dd><dt><span class="term"><code class="option">-g</code>, <code class="option">--gradle-user-home</code>
+            </span></dt><dd><p>Specifies the Gradle user home directory. The default is the
+                    <code class="filename">.gradle</code>
+                    directory in the user's home directory.
+                </p></dd><dt><span class="term">
+                <code class="option">--gui</code>
+            </span></dt><dd><p>Launches the Gradle GUI. See <a class="xref" href="tutorial_gradle_gui.html">Chapter&nbsp;12, <i>Using the Gradle Graphical User Interface</i></a>.
+                </p></dd><dt><span class="term"><code class="option">-I</code>, <code class="option">--init-script</code>
+            </span></dt><dd><p>Specifies an initialization script. See <a class="xref" href="init_scripts.html">Chapter&nbsp;60, <i>Initialization Scripts</i></a>.
+                </p></dd><dt><span class="term"><code class="option">-i</code>, <code class="option">--info</code>
+            </span></dt><dd><p>Set log level to info. See <a class="xref" href="logging.html">Chapter&nbsp;18, <i>Logging</i></a>.
+                </p></dd><dt><span class="term"><code class="option">-m</code>, <code class="option">--dry-run</code>
+            </span></dt><dd><p>Runs the build with all task actions disabled. See <a class="xref" href="tutorial_gradle_command_line.html#sec:dry_run">Section&nbsp;11.7, &ldquo;Dry Run&rdquo;</a>.
+                </p></dd><dt><span class="term">
+                <code class="option">--no-color</code>
+            </span></dt><dd><p>Do not use color in the console output.</p></dd><dt><span class="term">
+                <code class="option">--offline</code>
+            </span></dt><dd><p>Specifies that the build should operate without accessing network resources. See <a class="xref" href="dependency_management.html#sec:cache_command_line_options">Section&nbsp;50.9.2, &ldquo;Command line options to override caching&rdquo;</a>.</p></dd><dt><span class="term"><code class="option">-P</code>, <code class="option">--project-prop</code>
+            </span></dt><dd><p>Sets a project property of the root project, for example
+                    <code class="literal">-Pmyprop=myvalue</code>. See <a class="xref" href="tutorial_this_and_that.html#sec:gradle_properties_and_system_properties">Section&nbsp;14.2, &ldquo;Gradle properties and system properties&rdquo;</a>.
+                </p></dd><dt><span class="term"><code class="option">-p</code>, <code class="option">--project-dir</code>
+            </span></dt><dd><p>Specifies the start directory for Gradle. Defaults to current directory.
+                    See <a class="xref" href="tutorial_gradle_command_line.html#sec:selecting_build">Section&nbsp;11.5, &ldquo;Selecting which build to execute&rdquo;</a>.
+                </p></dd><dt><span class="term">
+                <code class="option">--parallel (incubating)</code>
+            </span></dt><dd><p>
+                    Build projects in parallel. Gradle will attempt to determine the optimal number of executor threads to use.
+                    This option should only be used with decoupled projects (see <a class="xref" href="multi_project_builds.html#sec:decoupled_projects">Section&nbsp;56.9, &ldquo;Decoupled Projects&rdquo;</a>).
+                </p></dd><dt><span class="term">
+                <code class="option">--parallel-threads (incubating)</code>
+            </span></dt><dd><p>
+                    Build projects in parallel, using the specified number of executor threads. For example<code class="literal">--parallel-threads=3</code>.
+                    This option should only be used with decoupled projects (see <a class="xref" href="multi_project_builds.html#sec:decoupled_projects">Section&nbsp;56.9, &ldquo;Decoupled Projects&rdquo;</a>).
+                </p></dd><dt><span class="term">
+                <code class="option">--profile</code>
+            </span></dt><dd><p>Profiles build execution time and generates a report in the
+                    <code class="filename"><em class="replaceable"><code>buildDir</code></em>/reports/profile</code>
+                    directory. See <a class="xref" href="tutorial_gradle_command_line.html#sec:profiling_build">Section&nbsp;11.6.7, &ldquo;Profiling a build&rdquo;</a>.
+                </p></dd><dt><span class="term">
+                <code class="option">--project-cache-dir</code>
+            </span></dt><dd><p>Specifies the project-specific cache directory. Default value is
+                    <code class="filename">.gradle</code>
+                    in the root project directory. See <a class="xref" href="tutorial_this_and_that.html#sec:caching">Section&nbsp;14.6, &ldquo;Caching&rdquo;</a>.
+                </p></dd><dt><span class="term"><code class="option">-q</code>, <code class="option">--quiet</code>
+            </span></dt><dd><p>Log errors only. See <a class="xref" href="logging.html">Chapter&nbsp;18, <i>Logging</i></a>.
+                </p></dd><dt><span class="term">
+                <code class="option">--recompile-scripts</code>
+            </span></dt><dd><p>Specifies that cached build scripts are skipped and forced to be recompiled.
+                    See <a class="xref" href="tutorial_this_and_that.html#sec:caching">Section&nbsp;14.6, &ldquo;Caching&rdquo;</a>.
+                </p></dd><dt><span class="term">
+                <code class="option">--refresh-dependencies</code>
+            </span></dt><dd><p>Refresh the state of dependencies.
+                    See <a class="xref" href="dependency_management.html#sec:cache_command_line_options">Section&nbsp;50.9.2, &ldquo;Command line options to override caching&rdquo;</a>.
+                </p></dd><dt><span class="term">
+                <code class="option">--rerun-tasks</code>
+            </span></dt><dd><p>Specifies that any task optimization is ignored.
+                </p></dd><dt><span class="term"><code class="option">-S</code>, <code class="option">--full-stacktrace</code>
+            </span></dt><dd><p>Print out the full (very verbose) stacktrace for any exceptions. See <a class="xref" href="logging.html">Chapter&nbsp;18, <i>Logging</i></a>.
+                </p></dd><dt><span class="term"><code class="option">-s</code>, <code class="option">--stacktrace</code>
+            </span></dt><dd><p>Print out the stacktrace also for user exceptions (e.g. compile error). See <a class="xref" href="logging.html">Chapter&nbsp;18, <i>Logging</i></a>.
+                </p></dd><dt><span class="term"><code class="option">-u</code>, <code class="option">--no-search-upwards</code>
+            </span></dt><dd><p>Don't search in parent directories for a
+                    <code class="filename">settings.gradle</code>
+                    file.
+                </p></dd><dt><span class="term"><code class="option">-v</code>, <code class="option">--version</code>
+            </span></dt><dd><p>Prints version info.
+                </p></dd><dt><span class="term"><code class="option">-x</code>, <code class="option">--exclude-task</code>
+            </span></dt><dd><p>Specifies a task to be excluded from execution. See <a class="xref" href="tutorial_gradle_command_line.html#sec:excluding_tasks_from_the_command_line">Section&nbsp;11.2, &ldquo;Excluding tasks&rdquo;</a>.
+                </p></dd></dl></div><p>The above information is printed to the console when you execute <strong class="userinput"><code>gradle -h</code></strong>.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N175DA"></a>D.1.&nbsp;Deprecated command-line options</h2></div></div></div><p>The following options are deprecated and will be removed in a future version of Gradle:</p><div class="variablelist"><dl><dt><span class="term"><code class="option">-C</code>, <code class="option">--cache</code>
+                </span></dt><dd><p>(deprecated) Specifies how compiled build scripts should be cached. Possible values are:
+                        <code class="literal">rebuild</code>
+                        or <code class="literal">on</code>. Default value is
+                        <code class="literal">on</code>. You should use
+                        <code class="option">--recompile-scripts</code>
+                        instead.
+                    </p></dd><dt><span class="term"><code class="option">--no-opt</code>
+                </span></dt><dd><p>(deprecated) Specifies to ignore all task optimization. You should use
+                        <code class="option">--rerun-tasks</code>
+                        instead.
+                    </p></dd><dt><span class="term"><code class="option">--refresh</code>
+                </span></dt><dd><p>(deprecated) Refresh the state of resources of the type(s) specified. Currently only <code class="literal">dependencies</code> is supported.
+                        You should use <code class="option">--refresh-dependencies</code> instead.
+                    </p></dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="daemon_cli"></a>D.2.&nbsp;Daemon command-line options:</h2></div></div></div><p>The
+            <a class="xref" href="gradle_daemon.html">Chapter&nbsp;19, <i>The Gradle Daemon</i></a>
+            contains more information about the daemon.
+            For example it includes information how to turn on the daemon by default
+            so that you can avoid using
+            <code class="literal">--daemon</code>
+            all the time.
+        </p><div class="variablelist"><dl><dt><span class="term">
+                    <code class="option">--daemon</code>
+                </span></dt><dd><p>Uses the Gradle daemon to run the build.
+                        Starts the daemon if not running or existing daemon busy.
+                        <a class="xref" href="gradle_daemon.html">Chapter&nbsp;19, <i>The Gradle Daemon</i></a>
+                        contains more detailed
+                        information when new daemon processes are started.
+                    </p></dd><dt><span class="term">
+                    <code class="option">--foreground</code>
+                </span></dt><dd><p>Starts the Gradle daemon in the foreground. Useful for debugging or troubleshooting
+                        because you can easily monitor the build execution.
+                    </p></dd><dt><span class="term">
+                    <code class="option">--no-daemon</code>
+                </span></dt><dd><p>Do not use the Gradle daemon to run the build.
+                        Useful occasionally if you have configured Gradle to always run with the daemon by default.
+                    </p></dd><dt><span class="term">
+                    <code class="option">--stop</code>
+                </span></dt><dd><p>Stops the Gradle daemon if it is running.
+                        You can only stop daemons that were started with
+                        the Gradle version you use when running <code class="literal">--stop</code>.
+                    </p></dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N17647"></a>D.3.&nbsp;System properties</h2></div></div></div><p>The following system properties are available for the
+            <span class="command"><strong>gradle</strong></span>
+            command. Note that
+            command-line options take precedence over system properties.
+        </p><dt><span class="term">
+                <code class="literal">gradle.user.home</code>
+            </span></dt><dd><p>Specifies the Gradle user home directory.</p></dd><p>The
+            <a class="xref" href="build_environment.html#sec:gradle_configuration_properties">Section&nbsp;20.1, &ldquo;Configuring the build environment via gradle.properties&rdquo;</a>
+            contains specific information about
+            Gradle configuration available via system properties.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1765D"></a>D.4.&nbsp;Environment variables</h2></div></div></div><p>The following environment variables are available for the
+            <span class="command"><strong>gradle</strong></span>
+            command. Note that
+            command-line options and system properties take precedence over environment variables.
+        </p><div class="variablelist"><dl><dt><span class="term">
+                    <code class="literal">GRADLE_OPTS</code>
+                </span></dt><dd><p>Specifies command-line arguments to use to start the JVM. This can be useful for setting
+                        the system properties to use for running Gradle. For example you could set
+                        <code class="literal">GRADLE_OPTS="-Dorg.gradle.daemon=true"</code>
+                        to use the Gradle daemon without needing to use the
+                        <code class="option">--daemon</code>
+                        option every time you
+                        run Gradle.
+                        <a class="xref" href="build_environment.html#sec:gradle_configuration_properties">Section&nbsp;20.1, &ldquo;Configuring the build environment via gradle.properties&rdquo;</a>
+                        contains more information about ways of configuring the daemon
+                        without using environmental variables, e.g. in more maintainable and explicit way.
+                    </p></dd><dt><span class="term">
+                    <code class="literal">GRADLE_USER_HOME</code>
+                </span></dt><dd><p>Specifies the Gradle user home directory.</p></dd></dl></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="feature_lifecycle.html" title="Appendix&nbsp;C.&nbsp;The Feature Lifecycle">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="ide_support.html" title="Appendix&nbsp;E.&nbsp;Existing IDE Support and how to cope without it">Next</a></div></div></div></body></html>

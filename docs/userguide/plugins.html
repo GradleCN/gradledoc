@@ -1,0 +1,94 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;21.&nbsp;Gradle Plugins</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="build_environment.html" title="Chapter&nbsp;20.&nbsp;The Build Environment"><link rel="next" href="standard_plugins.html" title="Chapter&nbsp;22.&nbsp;Standard Gradle plugins"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="build_environment.html" title="Chapter&nbsp;20.&nbsp;The Build Environment">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="standard_plugins.html" title="Chapter&nbsp;22.&nbsp;Standard Gradle plugins">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="plugins"></a>Chapter&nbsp;21.&nbsp;Gradle Plugins</h1></div></div></div><p>
+        Gradle at its core intentionally provides little useful functionality for real world automation. All of the useful
+        features, such as the ability to compile Java code for example, are added by <span class="emphasis"><em>plugins</em></span>.
+        Plugins add new tasks (e.g. <a class="ulink" href="../dsl/org.gradle.api.tasks.compile.JavaCompile.html" target="_top"><code class="classname">JavaCompile</code></a>), domain objects (e.g.
+        <a class="ulink" href="../dsl/org.gradle.api.tasks.SourceSet.html" target="_top"><code class="classname">SourceSet</code></a>), conventions (e.g. main Java source is located at
+        <code class="literal">src/main/java</code>) as well as extending core objects and objects from other plugins.
+    </p><p>
+        In this chapter we will discuss how to use plugins and the terminology and concepts surrounding plugins.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:using_plugins"></a>21.1.&nbsp;Applying plugins</h2></div></div></div><p>
+            Plugins are said to be <span class="emphasis"><em>applied</em></span>, which is done via the <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:apply(java.util.Map)" target="_top"><code class="classname">Project.apply()</code></a> method.
+        </p><div class="example"><a name="useJavaPlugin"></a><p class="title"><b>Example&nbsp;21.1.&nbsp;Applying a plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span></pre></div></div><br class="example-break"><p>
+            Plugins advertise a short name for themselves. In the above case, we are using the short name &lsquo;<code class="literal">java</code>&rsquo; to apply
+            the <a class="ulink" href="../javadoc/org/gradle/api/plugins/JavaPlugin.html" target="_top"><code class="classname">JavaPlugin</code></a>.
+        </p><p>
+            We could also have used the following syntax:
+        </p><div class="example"><a name="pluginIntro"></a><p class="title"><b>Example&nbsp;21.2.&nbsp;Applying a plugin by type</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: org.gradle.api.plugins.JavaPlugin</pre></div></div><br class="example-break"><p>
+            Thanks to Gradle's default imports (see <a class="xref" href="ide_support.html">Appendix&nbsp;E, <i>Existing IDE Support and how to cope without it</i></a>) you could also write:
+        </p><div class="example"><a name="pluginIntro"></a><p class="title"><b>Example&nbsp;21.3.&nbsp;Applying a plugin by type</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: JavaPlugin</pre></div></div><br class="example-break"><p>
+            The application of plugins is <span class="emphasis"><em>idempotent</em></span>. That is, a plugin can be applied multiple times. If the plugin
+            has previously been applied, any further applications will have no effect.
+        </p><p>
+            A plugin is simply any class that implements the <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a> interface. Gradle provides
+            the core plugins as part of its distribution so simply applying the plugin as above is all you need to do.
+            For 3rd party plugins however, you need to make the plugins available to the build classpath. For more information
+            on how to do this, see <a class="xref" href="organizing_build_logic.html#sec:external_dependencies">Section&nbsp;59.5, &ldquo;External dependencies for the build script&rdquo;</a>.
+        </p><p>
+            For more on writing your own plugins, see <a class="xref" href="custom_plugins.html">Chapter&nbsp;58, <i>Writing Custom Plugins</i></a>.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1185A"></a>21.2.&nbsp;What plugins do</h2></div></div></div><p>
+            Applying a plugin to the project allows the plugin to extend the project's capabilities. It can do things
+            such as:
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Add tasks to the project (e.g. compile, test)</li><li class="listitem">Pre-configure added tasks with useful defaults.</li><li class="listitem">Add dependency configurations to the project (see <a class="xref" href="artifact_dependencies_tutorial.html#configurations">Section&nbsp;8.3, &ldquo;Dependency configurations&rdquo;</a>).</li><li class="listitem">Add new properties and methods to existing type via extensions.</li></ul></div><p>
+            Let's check this out:
+        </p><div class="example"><a name="pluginIntro"></a><p class="title"><b>Example&nbsp;21.4.&nbsp;Tasks added by a plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
+
+task show &lt;&lt; {
+    println relativePath(compileJava.destinationDir)
+    println relativePath(processResources.destinationDir)
+}</pre><p>Output of <strong class="userinput"><code>gradle -q show</code></strong></p><pre class="screen">&gt; gradle -q show
+build/classes/main
+build/resources/main</pre></div></div><br class="example-break"><p>
+            The Java plugin has added a <code class="literal">compileJava</code> task and a <code class="literal">processResources</code> task
+            to the project and configured the <code class="literal">destinationDir</code> property of both of these tasks.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sub:more_about_convention_objects"></a>21.3.&nbsp;Conventions</h2></div></div></div><p>
+            Plugins can pre-configure the project in smart ways to support convention-over-configuration. Gradle
+            provides mechanisms and sophisticated support and it's a key ingredient in powerful-yet-concise build scripts.
+        </p><p>
+            We saw in the example above that the Java plugins adds a task named <code class="literal">compileJava</code> that has
+            a property named <code class="literal">destinationDir</code> (that configures where the compiled Java source should be placed).
+            The Java plugin defaults this property to point to <code class="literal">build/classes/main</code> in the project directory.
+            This is an example of convention-over-configuration via a <span class="emphasis"><em>reasonable default</em></span>.
+        </p><p>
+            We can change this property simply by giving it a new value.
+        </p><div class="example"><a name="pluginConfig"></a><p class="title"><b>Example&nbsp;21.5.&nbsp;Changing plugin defaults</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
+
+compileJava.destinationDir = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/output/classes"</span>)
+
+task show &lt;&lt; {
+    println relativePath(compileJava.destinationDir)
+}</pre><p>Output of <strong class="userinput"><code>gradle -q show</code></strong></p><pre class="screen">&gt; gradle -q show
+build/output/classes</pre></div></div><br class="example-break"><p>
+            However, the <code class="literal">compileJava</code> task is likely to not be the only task that needs to know where
+            the class files are. 
+        </p><p>
+            The Java plugin adds the concept of <span class="emphasis"><em>source sets</em></span> (see <a class="ulink" href="../dsl/org.gradle.api.tasks.SourceSet.html" target="_top"><code class="classname">SourceSet</code></a>)
+            to describe the aspects of a set of source, one aspect being where the class files should be written to when it is compiled.
+            The Java plugin maps the <code class="literal">destinationDir</code> property of the <code class="literal">compileJava</code> task to this aspect of the source set.
+        </p><p>
+            We can change where the class files are written via the source set.
+        </p><div class="example"><a name="pluginConvention"></a><p class="title"><b>Example&nbsp;21.6.&nbsp;Plugin convention object</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
+
+sourceSets.main.output.classesDir = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/output/classes"</span>)
+
+task show &lt;&lt; {
+    println relativePath(compileJava.destinationDir)
+}</pre><p>Output of <strong class="userinput"><code>gradle -q show</code></strong></p><pre class="screen">&gt; gradle -q show
+build/output/classes</pre></div></div><br class="example-break"><p>
+            In the example above, we applied the Java plugin which, among other things, did the following:
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Added a new domain object type: <a class="ulink" href="../dsl/org.gradle.api.tasks.SourceSet.html" target="_top"><code class="classname">SourceSet</code></a></li><li class="listitem">Configured a <code class="literal">main</code> source set with default (i.e. conventional) values for properties</li><li class="listitem">Configured supporting tasks to use these properties to perform work</li></ul></div><p>
+            All of this happened during the <code class="literal">apply plugin: "java"</code> step. In the example above, we <span class="emphasis"><em>changed</em></span>
+            the desired location of the class files after this conventional configuration had been performed. Notice by the output with the example
+            that the value for <code class="literal">compileJava.destinationDir</code> also changed to reflect the configuration change.
+        </p><p>
+            Consider the case where another task is to consume the classes files. If this task is configured to use the value from
+            <code class="literal">sourceSets.main.output.classesDir</code>, then changing it in this location will update both the
+            <code class="literal">compileJava</code> task and this other consumer task whenever it is changed.
+        </p><p>
+            This ability to configure properties of objects to reflect the value of another object's task at all times (i.e. even when it changes) is
+            known as &ldquo;<span class="emphasis"><em>convention mapping</em></span>&rdquo;. It allows Gradle to provide conciseness through convention-over-configuration and
+            sensible defaults yet not require complete reconfiguration if a conventional default needs to be changed. Without this, in the example above,
+            we would have had to reconfigure every object that needs to work with the class files.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N118FD"></a>21.4.&nbsp;More on plugins</h2></div></div></div><p>
+            This chapter aims to serve as an introduction to plugins and Gradle and the role they play. For more information on the inner workings
+            of plugins, see <a class="xref" href="custom_plugins.html">Chapter&nbsp;58, <i>Writing Custom Plugins</i></a>.
+        </p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="build_environment.html" title="Chapter&nbsp;20.&nbsp;The Build Environment">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="standard_plugins.html" title="Chapter&nbsp;22.&nbsp;Standard Gradle plugins">Next</a></div></div></div></body></html>

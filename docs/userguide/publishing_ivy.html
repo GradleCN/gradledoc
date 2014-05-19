@@ -1,0 +1,328 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;64.&nbsp;Ivy Publishing (new)</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="comparing_builds.html" title="Chapter&nbsp;63.&nbsp;Comparing Builds"><link rel="next" href="publishing_maven.html" title="Chapter&nbsp;65.&nbsp;Maven Publishing (new)"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="comparing_builds.html" title="Chapter&nbsp;63.&nbsp;Comparing Builds">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="publishing_maven.html" title="Chapter&nbsp;65.&nbsp;Maven Publishing (new)">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="publishing_ivy"></a>Chapter&nbsp;64.&nbsp;Ivy Publishing (new)</h1></div></div></div><div class="note"><p>
+            This chapter describes the new <a class="link" href="feature_lifecycle.html">incubating</a> Ivy publishing support provided by the &ldquo;<code class="literal">ivy-publish</code>&rdquo;
+            plugin. Eventually this new publishing support will replace publishing via the <code class="literal">Upload</code> task.
+        </p><p>
+            If you are looking for documentation on the original Ivy publishing support using the <code class="literal">Upload</code> task please see
+            <a class="xref" href="artifact_management.html">Chapter&nbsp;51, <i>Publishing artifacts</i></a>.
+        </p></div><p>
+        This chapter describes how to publish build artifacts in the <a class="ulink" href="http://ant.apache.org/ivy/" target="_top">Apache Ivy</a> format, usually to a repository
+        for consumption by other builds or projects. What is published is one or more artifacts created by the build, and an
+        Ivy <em class="firstterm">module descriptor</em> (normally <code class="filename">ivy.xml</code>)
+        that describes the artifacts and the dependencies of the artifacts, if any.
+    </p><p>
+        A published Ivy module can be consumed by Gradle (see <a class="xref" href="dependency_management.html">Chapter&nbsp;50, <i>Dependency Management</i></a>) and other tools that understand the Ivy format.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="publishing_ivy:plugin"></a>64.1.&nbsp;The &ldquo;<code class="literal">ivy-publish</code>&rdquo; Plugin</h2></div></div></div><p>
+            The ability to publish in the Ivy format is provided by the &ldquo;<code class="literal">ivy-publish</code>&rdquo; plugin.
+        </p><p>
+            The &ldquo;<code class="literal">publishing</code>&rdquo; plugin creates an extension on the project named &ldquo;<code class="literal">publishing</code>&rdquo; of type <a class="ulink" href="../dsl/org.gradle.api.publish.PublishingExtension.html" target="_top"><code class="classname">PublishingExtension</code></a>.
+            This extension provides a container of named publications and a container of named repositories. The &ldquo;<code class="literal">ivy-publish</code>&rdquo; plugin works with
+            <a class="ulink" href="../dsl/org.gradle.api.publish.ivy.IvyPublication.html" target="_top"><code class="classname">IvyPublication</code></a> publications and <a class="ulink" href="../dsl/org.gradle.api.artifacts.repositories.IvyArtifactRepository.html" target="_top"><code class="classname">IvyArtifactRepository</code></a> repositories.
+        </p><div class="example"><a name="publishing_ivy:apply-plugin-snippet"></a><p class="title"><b>Example&nbsp;64.1.&nbsp;Applying the &ldquo;ivy-publish&rdquo; plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'ivy-publish'</span></pre></div></div><br class="example-break"><p>
+            Applying the &ldquo;<code class="literal">ivy-publish</code>&rdquo; plugin does the following:
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Applies the &ldquo;<code class="literal">publishing</code>&rdquo; plugin
+            </li><li class="listitem">
+                Establishes a rule to automatically create a <a class="ulink" href="../dsl/org.gradle.api.publish.ivy.tasks.GenerateIvyDescriptor.html" target="_top"><code class="classname">GenerateIvyDescriptor</code></a>
+                task for each <a class="ulink" href="../dsl/org.gradle.api.publish.ivy.IvyPublication.html" target="_top"><code class="classname">IvyPublication</code></a> added (see <a class="xref" href="publishing_ivy.html#publishing_ivy:publications">Section&nbsp;64.2, &ldquo;Publications&rdquo;</a>).
+            </li><li class="listitem">
+                Establishes a rule to automatically create a <a class="ulink" href="../dsl/org.gradle.api.publish.ivy.tasks.PublishToIvyRepository.html" target="_top"><code class="classname">PublishToIvyRepository</code></a> task
+                for the combination of each <a class="ulink" href="../dsl/org.gradle.api.publish.ivy.IvyPublication.html" target="_top"><code class="classname">IvyPublication</code></a> added (see <a class="xref" href="publishing_ivy.html#publishing_ivy:publications">Section&nbsp;64.2, &ldquo;Publications&rdquo;</a>),
+                with each <a class="ulink" href="../dsl/org.gradle.api.artifacts.repositories.IvyArtifactRepository.html" target="_top"><code class="classname">IvyArtifactRepository</code></a> added (see <a class="xref" href="publishing_ivy.html#publishing_ivy:repositories">Section&nbsp;64.3, &ldquo;Repositories&rdquo;</a>).
+            </li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="publishing_ivy:publications"></a>64.2.&nbsp;Publications</h2></div></div></div><div class="note"><p>
+                If you are not familiar with project artifacts and configurations, you should read the <a class="xref" href="artifact_management.html">Chapter&nbsp;51, <i>Publishing artifacts</i></a>
+                that introduces these concepts. This chapter also describes &ldquo;publishing artifacts&rdquo; using a different mechanism than what is
+                described in this chapter. The publishing functionality described here will eventually supersede that functionality.
+            </p></div><p>
+            Publication objects describe the structure/configuration of a publication to be created. Publications are published to repositories via tasks, and the
+            configuration of the publication object determines exactly what is published. All of the publications of a project are defined in the
+            <a class="ulink" href="../dsl/org.gradle.api.publish.PublishingExtension.html#org.gradle.api.publish.PublishingExtension:publications" target="_top"><code class="classname">PublishingExtension.getPublications()</code></a> container. Each publication has a unique name within the project.
+        </p><p>
+            For the &ldquo;<code class="literal">ivy-publish</code>&rdquo; plugin to have any effect, a <a class="ulink" href="../dsl/org.gradle.api.publish.ivy.IvyPublication.html" target="_top"><code class="classname">IvyPublication</code></a> must be added to the set of publications.
+            This publication determines which artifacts are actually published as well as the details included in the associated Ivy module descriptor file.
+            A publication can be configured by adding components, customizing artifacts, and by modifying the generated module descriptor file directly.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16C51"></a>64.2.1.&nbsp;Publishing a Software Component</h3></div></div></div><p>
+                The simplest way to publish a Gradle project to an Ivy repository is to specify a <a class="ulink" href="../javadoc/org/gradle/api/component/SoftwareComponent.html" target="_top"><code class="classname">SoftwareComponent</code></a> to publish.
+                The components presently available for publication are:
+            </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;64.1.&nbsp;Software Components</b></p><div class="table-contents"><table id="N16C5B"><thead><tr>
+                        <td>Name</td>
+                        <td>Provided By</td>
+                        <td>Artifacts</td>
+                        <td>Dependencies</td>
+                    </tr></thead><tr>
+                    <td><code class="literal">java</code></td>
+                    <td><a class="link" href="java_plugin.html">Java Plugin</a></td>
+                    <td>Generated jar file</td>
+                    <td>Dependencies from 'runtime' configuration</td>
+                </tr><tr>
+                    <td><code class="literal">web</code></td>
+                    <td><a class="link" href="war_plugin.html">War Plugin</a></td>
+                    <td>Generated war file</td>
+                    <td>No dependencies</td>
+                </tr></table></div></div><p>
+                 In the following example, artifacts and runtime dependencies are taken from the `java` component, which is added by the <code class="literal">Java Plugin</code>.
+             </p><div class="example"><a name="publishing_ivy:publish-component-snippet"></a><p class="title"><b>Example&nbsp;64.2.&nbsp;Publishing a java module to Ivy</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">publications {
+        ivyJava(IvyPublication) {
+            from components.java
+        }
+    }</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16C9E"></a>64.2.2.&nbsp;Publishing custom artifacts</h3></div></div></div><p>
+                It is also possible to explicitly configure artifacts to be included in the publication. Artifacts are commonly supplied as raw files, or as instances of
+                <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.AbstractArchiveTask.html" target="_top"><code class="classname">AbstractArchiveTask</code></a> (e.g. Jar, Zip).
+            </p><p>
+                For each custom artifact, it is possible to specify the <code class="literal">name</code>, <code class="literal">extension</code>, <code class="literal">type</code>, <code class="literal">classifier</code>
+                and <code class="literal">conf</code> values to use for publication. Note that each artifacts must have a unique name/classifier/extension combination.
+            </p><p>
+                Configure custom artifacts as follows:
+            </p><div class="example"><a name="publishing_ivy:publish-custom-artifact-snippet"></a><p class="title"><b>Example&nbsp;64.3.&nbsp;Publishing additional artifact to Ivy</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task sourceJar(type: Jar) {
+        from sourceSets.main.java
+        classifier <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"source"</span>
+    }
+    publishing {
+        publications {
+            ivy(IvyPublication) {
+                from components.java
+                artifact(sourceJar) {
+                    type <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"source"</span>
+                    conf <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"runtime"</span>
+                }
+            }
+        }
+    }</pre></div></div><br class="example-break"><p>
+                See <a class="ulink" href="../dsl/org.gradle.api.publish.ivy.IvyPublication.html" target="_top"><code class="classname">IvyPublication</code></a> for more detailed documentation on how artifacts can be customized.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16CCC"></a>64.2.3.&nbsp;Identity values for the published project</h3></div></div></div><p>
+                The generated Ivy module descriptor file contains an <code class="literal">&lt;info&gt;</code> tag that identifies the module.
+                The default identity values are derived from the following project properties:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><code class="literal">organisation</code> - <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:group" target="_top"><code class="classname">Project.getGroup()</code></a></li><li class="listitem"><code class="literal">module</code> - <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:name" target="_top"><code class="classname">Project.getName()</code></a></li><li class="listitem"><code class="literal">revision</code> - <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:version" target="_top"><code class="classname">Project.getVersion()</code></a></li><li class="listitem"><code class="literal">status</code> - <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:status" target="_top"><code class="classname">Project.getStatus()</code></a></li></ul></div><p>
+                Overriding the default identity values is easy: simply specify the <code class="literal">organisation</code>, <code class="literal">module</code>
+                or <code class="literal">revision</code> attributes when configuring the <code class="literal">IvyPublication</code>.
+            </p><div class="example"><a name="publishing_ivy:publish-customize-identity"></a><p class="title"><b>Example&nbsp;64.4.&nbsp;customizing the publication identity</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">publishing {
+        publications {
+            ivy(IvyPublication) {
+                organisation <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle.sample'</span>
+                module <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'project1-sample'</span>
+                revision <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.1'</span>
+                descriptor.status = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'milestone'</span>
+
+                from components.java
+            }
+        }
+    }</pre></div></div><br class="example-break"><div class="tip">
+                Certain repositories are not able to handle all supported characters.
+                For example, the ':' character cannot be used as an identifier when publishing to a filesystem-backed repository on Windows.
+            </div><p>
+                Gradle will handle any valid Unicode character for organisation, module and revision (as well as artifact name, extension and classifier).
+                The only values that are explicitly prohibited are '<code class="literal">\</code>', '<code class="literal">/</code>' and any ISO control character. The supplied values are validated early in publication.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16D17"></a>64.2.4.&nbsp;Modifying the generated module descriptor</h3></div></div></div><p>
+                At times, the module descriptor file generated from the project information will need to be tweaked before publishing. The &ldquo;<code class="literal">ivy-publish</code>&rdquo;
+                plugin provides a hook to allow such modification.
+            </p><div class="example"><a name="publishing_ivy:descriptor-customization-snippet"></a><p class="title"><b>Example&nbsp;64.5.&nbsp;Customizing the module descriptor file</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">publications {
+        ivyCustom(IvyPublication) {
+            descriptor.withXml {
+                asNode().info[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">0</span>].appendNode(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'description'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'A demonstration of ivy descriptor customization'</span>)
+            }
+        }
+    }</pre></div></div><br class="example-break"><p>
+                In this example we are adding a 'description' element to the generated Ivy dependency descriptor, but this this hook, allows you to modify any aspect
+                of the generated descriptor. For example, you could replace the version range for a dependency with the actual version used to produce the build.
+            </p><p>
+                See <a class="ulink" href="../dsl/org.gradle.api.publish.ivy.IvyModuleDescriptor.html#org.gradle.api.publish.ivy.IvyModuleDescriptor:withXml(org.gradle.api.Action)" target="_top"><code class="classname">IvyModuleDescriptor.withXml()</code></a> for the relevant API reference documentation.
+            </p><p>
+                It is possible to modify virtually any aspect of the created descriptor should you need to.
+                This means that it is also possible to modify the descriptor in such a way that it is no longer a valid
+                Ivy module descriptor, so care must be taken when using this feature.
+            </p><p>
+                The identifier (organisation, module, revision) of the published module is an exception; these values cannot be modified in the descriptor using the `withXML` hook.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16D36"></a>64.2.5.&nbsp;Publishing multiple modules</h3></div></div></div><p>
+                Sometimes it's useful to publish multiple modules from your Gradle build, without creating a separate Gradle subproject.
+                An example is publishing a separate API and implementation jar for your library. With Gradle this is simple:
+            </p><div class="example"><a name="publishing_ivy:publish-multiple-publications"></a><p class="title"><b>Example&nbsp;64.6.&nbsp;Publishing multiple modules from a single project</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task apiJar(type: Jar) {
+        baseName <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"publishing-api"</span>
+        from sourceSets.main.output
+        exclude <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/impl/**'</span>
+    }
+    publishing {
+        publications {
+            impl(IvyPublication) {
+                organisation <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle.sample.impl'</span>
+                module <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'project2-impl'</span>
+                revision <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'2.3'</span>
+
+                from components.java
+            }
+            api(IvyPublication) {
+                organisation <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle.sample'</span>
+                module <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'project2-api'</span>
+                revision <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'2'</span>
+            }
+        }
+    }</pre></div></div><br class="example-break"><p>
+                If a project defines multiple publications then Gradle will publish each of these to the defined repositories. Each publication
+                must be given a unique identity as described above.
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="publishing_ivy:repositories"></a>64.3.&nbsp;Repositories</h2></div></div></div><p>
+            Publications are published to repositories. The repositories to publish to are defined by the <a class="ulink" href="../dsl/org.gradle.api.publish.PublishingExtension.html#org.gradle.api.publish.PublishingExtension:repositories" target="_top"><code class="classname">PublishingExtension.getRepositories()</code></a>
+            container.
+        </p><div class="example"><a name="publishing_ivy:sample_repositories"></a><p class="title"><b>Example&nbsp;64.7.&nbsp;Declaring repositories to publish to</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+        ivy {
+            url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/repo"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// change to point to your repo, e.g. http://my.org/repo</span>
+        }
+    }</pre></div></div><br class="example-break"><p>
+            The DSL used to declare repositories for publishing is the same DSL that is used to declare repositories for dependencies (<a class="ulink" href="../dsl/org.gradle.api.artifacts.dsl.RepositoryHandler.html" target="_top"><code class="classname">RepositoryHandler</code></a>).
+            However, in the context of Ivy publication only the repositories created by the <code class="literal">ivy()</code> methods can be used as publication destinations.
+            You cannot publish an <code class="literal">IvyPublication</code> to a Maven repository for example.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="publishing_ivy:publishing"></a>64.4.&nbsp;Performing a publish</h2></div></div></div><p>
+            The &ldquo;<code class="literal">ivy-publish</code>&rdquo; plugin automatically creates a <a class="ulink" href="../dsl/org.gradle.api.publish.ivy.tasks.PublishToIvyRepository.html" target="_top"><code class="classname">PublishToIvyRepository</code></a>
+            task for each <a class="ulink" href="../dsl/org.gradle.api.publish.ivy.IvyPublication.html" target="_top"><code class="classname">IvyPublication</code></a> and <a class="ulink" href="../dsl/org.gradle.api.artifacts.repositories.IvyArtifactRepository.html" target="_top"><code class="classname">IvyArtifactRepository</code></a>
+            combination in the <code class="literal">publishing.publications</code> and <code class="literal">publishing.repositories</code> containers respectively.
+        </p><p>
+            The created task is named using the pattern "<code class="literal">publish&laquo;<span class="emphasis"><em>NAME OF PUBLICATION</em></span>&raquo;PublicationTo&laquo;<span class="emphasis"><em>NAME OF REPOSITORY</em></span>&raquo;Repository</code>".
+            So in this example a single <a class="ulink" href="../dsl/org.gradle.api.publish.ivy.tasks.PublishToIvyRepository.html" target="_top"><code class="classname">PublishToIvyRepository</code></a> task is be added, named '<code class="literal">publishIvyJavaPublicationToIvyRepository</code>'.
+        </p><div class="example"><a name="publishingIvyPublishSingle"></a><p class="title"><b>Example&nbsp;64.8.&nbsp;Choosing a particular publication to publish</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
+apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'ivy-publish'</span>
+
+group = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle.sample'</span>
+version = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0'</span>
+
+publishing {
+    publications {
+        ivyJava(IvyPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        ivy {
+            url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/repo"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// change to point to your repo, e.g. http://my.org/repo</span>
+        }
+    }
+}</pre><p>Output of <strong class="userinput"><code>gradle publishIvyJavaPublicationToIvyRepository</code></strong></p><pre class="screen">&gt; gradle publishIvyJavaPublicationToIvyRepository
+:generateDescriptorFileForIvyJavaPublication
+:compileJava UP-TO-DATE
+:processResources UP-TO-DATE
+:classes UP-TO-DATE
+:jar
+:publishIvyJavaPublicationToIvyRepository
+
+BUILD SUCCESSFUL
+
+Total time: 1 secs</pre></div></div><br class="example-break"><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16DAA"></a>64.4.1.&nbsp;The &ldquo;<code class="literal">publish</code>&rdquo; lifecycle task</h3></div></div></div><p>
+                The &ldquo;<code class="literal">publish</code>&rdquo; plugin (that the &ldquo;<code class="literal">ivy-publish</code>&rdquo; plugin implicitly applies) adds a lifecycle task
+                that can be used to publish all publications to all applicable repositories named &ldquo;<code class="literal">publish</code>&rdquo;.
+            </p><p>
+                In more concrete terms, executing this task will execute all <a class="ulink" href="../dsl/org.gradle.api.publish.ivy.tasks.PublishToIvyRepository.html" target="_top"><code class="classname">PublishToIvyRepository</code></a> tasks in the project.
+                This is usually the most convenient way to perform a publish.
+            </p><div class="example"><a name="publishingIvyPublishLifecycle"></a><p class="title"><b>Example&nbsp;64.9.&nbsp;Publishing all publications via the &ldquo;publish&rdquo; lifecycle task</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle publish</code></strong></p><pre class="screen">&gt; gradle publish
+:generateDescriptorFileForIvyJavaPublication
+:compileJava UP-TO-DATE
+:processResources UP-TO-DATE
+:classes UP-TO-DATE
+:jar
+:publishIvyJavaPublicationToIvyRepository
+:publish
+
+BUILD SUCCESSFUL
+
+Total time: 1 secs</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="publishing_ivy:descriptor"></a>64.5.&nbsp;Generating the Ivy module descriptor file without publishing</h2></div></div></div><p>
+            At times it is useful to generate the Ivy module descriptor file (normally <code class="filename">ivy.xml</code>) without publishing your module to an Ivy repository.
+            Since descriptor file generation is performed by a separate task, this is very easy to do.
+        </p><p>
+            The &ldquo;<code class="literal">ivy-publish</code>&rdquo; plugin automatically wires in one <a class="ulink" href="../dsl/org.gradle.api.publish.ivy.tasks.GenerateIvyDescriptor.html" target="_top"><code class="classname">GenerateIvyDescriptor</code></a> task
+            for each registered <a class="ulink" href="../dsl/org.gradle.api.publish.ivy.IvyPublication.html" target="_top"><code class="classname">IvyPublication</code></a>.
+            This task is given a name based on the name of the publication:  "<code class="literal">generateDescriptorFileFor&laquo;<span class="emphasis"><em>NAME OF PUBLICATION</em></span>&raquo;Publication</code>".
+            So in the example above where the publication is named "<code class="literal">ivyJava</code>", the task will be named "<code class="literal">generateDescriptorFileForIvyJavaPublication</code>".
+        </p><p>
+            You can specify where the generated Ivy file will be located by setting the <code class="literal">destination</code> property on the generate task.
+            By default this file is generated to <code class="literal">build/publications/&laquo;<span class="emphasis"><em>NAME OF PUBLICATION</em></span>&raquo;/ivy.xml</code>.
+        </p><div class="example"><a name="publishingIvyGenerateDescriptor"></a><p class="title"><b>Example&nbsp;64.10.&nbsp;Generating the Ivy module descriptor file</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    tasks.generateDescriptorFileForIvyCustomPublication {
+        destination = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/generated-ivy.xml"</span>)
+    }
+}</pre><p>Output of <strong class="userinput"><code>gradle generateDescriptorFileForIvyCustomPublication</code></strong></p><pre class="screen">&gt; gradle generateDescriptorFileForIvyCustomPublication
+:generateDescriptorFileForIvyCustomPublication
+
+BUILD SUCCESSFUL
+
+Total time: 1 secs</pre></div></div><br class="example-break"><div class="note"><p>
+                The &ldquo;<code class="literal">ivy-publish</code>&rdquo; plugin leverages some experimental support for late plugin configuration,
+                and the <code class="literal">GenerateIvyDescriptor</code> task will not be constructed until the publishing extension is configured.
+                The simplest way to ensure that the publishing plugin is configured when you attempt to access the <code class="literal">GenerateIvyDescriptor</code> task
+                is to place the access inside a <code class="literal">publishing</code> block, as the example above demonstrates.
+            </p><p>
+                The same applies to any attempt to access publication-specific tasks like <a class="ulink" href="../dsl/org.gradle.api.publish.ivy.tasks.PublishToIvyRepository.html" target="_top"><code class="classname">PublishToIvyRepository</code></a>.
+                These tasks should be referenced from within a <code class="literal">publishing</code> block.
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="publishing_ivy:example"></a>64.6.&nbsp;Complete example</h2></div></div></div><p>
+            The following example demonstrates publishing with a multi-project build. Each project publishes a java component and a configured additional source artifact.
+            The descriptor file is customized to include the project description for each project.
+        </p><div class="example"><a name="publishing_ivy:complete_example"></a><p class="title"><b>Example&nbsp;64.11.&nbsp;Publishing a java module</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">subprojects {
+    apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
+    apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'ivy-publish'</span>
+
+    version = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0'</span>
+    group = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle.sample'</span>
+
+    repositories {
+        mavenCentral()
+    }
+    task sourceJar(type: Jar) {
+        from sourceSets.main.java
+        classifier <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"source"</span>
+    }
+}
+
+project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":project1"</span>) {
+    description = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"The first project"</span>
+
+    dependencies {
+       compile <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'junit:junit:4.11'</span>, project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':project2'</span>)
+    }
+}
+
+project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":project2"</span>) {
+    description = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"The second project"</span>
+
+    dependencies {
+       compile <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'commons-collections:commons-collections:3.1'</span>
+    }
+}
+
+subprojects {
+    publishing {
+        repositories {
+            ivy {
+                url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"${rootProject.buildDir}/repo"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// change to point to your repo, e.g. http://my.org/repo</span>
+            }
+        }
+        publications {
+            ivy(IvyPublication) {
+                from components.java
+                artifact(sourceJar) {
+                    type <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"source"</span>
+                    conf <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"runtime"</span>
+                }
+                descriptor.withXml {
+                    asNode().info[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">0</span>].appendNode(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'description'</span>, description)
+                }
+            }
+        }
+    }
+}</pre></div></div><br class="example-break"><p>
+            The result is that the following artifacts will be published for each project:
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">The Ivy module descriptor file: <code class="filename">ivy-1.0.xml</code>.</li><li class="listitem">The primary &ldquo;jar&rdquo; artifact for the java component: <code class="filename">project1-1.0.jar</code>.</li><li class="listitem">The source &ldquo;jar&rdquo; artifact that has been explicitly configured:<code class="filename">project1-1.0-source.jar</code>.</li></ul></div><p>
+            When <code class="literal">project1</code> is published, the module descriptor (i.e. the <code class="filename">ivy.xml</code> file) that is produced will look like&hellip;
+        </p><div class="tip"><p>Note that the <code class="literal">&laquo;PUBLICATION-TIME-STAMP&raquo;</code> in this example Ivy module descriptor will be the timestamp of when the descriptor was generated.</p></div><div class="example"><a name="publishing_ivy:output_ivy.xml"></a><p class="title"><b>Example&nbsp;64.12.&nbsp;Example generated ivy.xml</b></p><div class="example-contents"><p><code class="filename">output-ivy.xml</code></p><pre class="programlisting"><span style="color: maroon" class="hl-directive">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;ivy-module</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">version</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"2.0"</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&gt;</span>
+  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;info</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">organisation</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"org.gradle.sample"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">module</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"project1"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">revision</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"1.0"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">status</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"integration"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">publication</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"&laquo;PUBLICATION-TIME-STAMP&raquo;"</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&gt;</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;description&gt;</span>The first project<span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;/description&gt;</span>
+  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;/info&gt;</span>
+  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;configurations&gt;</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;conf</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">name</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"default"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">visibility</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"public"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">extends</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"runtime"</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">/&gt;</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;conf</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">name</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"runtime"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">visibility</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"public"</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">/&gt;</span>
+  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;/configurations&gt;</span>
+  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;publications&gt;</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;artifact</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">name</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"project1"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">type</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"jar"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">ext</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"jar"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">conf</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"runtime"</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">/&gt;</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;artifact</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">name</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"project1"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">type</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"source"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">ext</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"jar"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">conf</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"runtime"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">m:classifier</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"source"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">xmlns:m</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"http://ant.apache.org/ivy/maven"</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">/&gt;</span>
+  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;/publications&gt;</span>
+  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;dependencies&gt;</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;dependency</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">org</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"junit"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">name</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"junit"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">rev</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"4.11"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">conf</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"runtime-&amp;gt;default"</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">/&gt;</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;dependency</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">org</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"org.gradle.sample"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">name</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"project2"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">rev</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"1.0"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">conf</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"runtime-&amp;gt;default"</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">/&gt;</span>
+  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;/dependencies&gt;</span>
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;/ivy-module&gt;</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="publishing_ivy:future"></a>64.7.&nbsp;Future features</h2></div></div></div><p>
+            The &ldquo;<code class="literal">ivy-publish</code>&rdquo; plugin functionality as described above is incomplete, as the feature is still <a class="link" href="feature_lifecycle.html">incubating</a>.
+            Over the coming Gradle releases, the functionality will be expanded to include (but not limited to):
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Convenient customization of module attributes (<code class="literal">module</code>, <code class="literal">organisation</code> etc.)</li><li class="listitem">Convenient customization of dependencies reported in <code class="literal">module descriptor</code>.</li><li class="listitem">Multiple discreet publications per project</li></ul></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="comparing_builds.html" title="Chapter&nbsp;63.&nbsp;Comparing Builds">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="publishing_maven.html" title="Chapter&nbsp;65.&nbsp;Maven Publishing (new)">Next</a></div></div></div></body></html>

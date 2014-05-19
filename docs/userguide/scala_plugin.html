@@ -1,0 +1,280 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;25.&nbsp;The Scala Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="groovy_plugin.html" title="Chapter&nbsp;24.&nbsp;The Groovy Plugin"><link rel="next" href="war_plugin.html" title="Chapter&nbsp;26.&nbsp;The War Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="groovy_plugin.html" title="Chapter&nbsp;24.&nbsp;The Groovy Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="war_plugin.html" title="Chapter&nbsp;26.&nbsp;The War Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="scala_plugin"></a>Chapter&nbsp;25.&nbsp;The Scala Plugin</h1></div></div></div><p>The Scala plugin extends the Java plugin to add support for Scala projects. It can deal with
+        Scala code, mixed Scala and Java code, and even pure Java code (although we don't necessarily recommend to use it for the latter).
+        The plugin supports <span class="emphasis"><em>joint compilation</em></span>, which allows to freely mix and match Scala and Java code,
+        with dependencies in both directions. For example, a Scala class can extend a Java class that in turn extends a Scala class.
+        This makes it possible to use the best language for the job, and to rewrite any class in the other language if needed.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12CDE"></a>25.1.&nbsp;Usage</h2></div></div></div><p>To use the Scala plugin, include in your build script:</p><div class="example"><a name="useScalaPlugin"></a><p class="title"><b>Example&nbsp;25.1.&nbsp;Using the Scala plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'scala'</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12CED"></a>25.2.&nbsp;Tasks</h2></div></div></div><p>The Scala plugin adds the following tasks to the project.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;25.1.&nbsp;Scala plugin - tasks</b></p><div class="table-contents"><table id="N12CF2"><thead><tr>
+                    <td>Task name</td>
+                    <td>Depends on</td>
+                    <td>Type</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td><code class="literal">compileScala</code></td>
+                <td><code class="literal">compileJava</code></td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.scala.ScalaCompile.html" target="_top"><code class="classname">ScalaCompile</code></a></td>
+                <td>Compiles production Scala source files.</td>
+            </tr><tr>
+                <td><code class="literal">compileTestScala</code></td>
+                <td><code class="literal">compileTestJava</code></td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.scala.ScalaCompile.html" target="_top"><code class="classname">ScalaCompile</code></a></td>
+                <td>Compiles test Scala source files.</td>
+            </tr><tr>
+                <td><code class="literal">compile<em class="replaceable"><code>SourceSet</code></em>Scala</code></td>
+                <td><code class="literal">compile<em class="replaceable"><code>SourceSet</code></em>Java</code></td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.scala.ScalaCompile.html" target="_top"><code class="classname">ScalaCompile</code></a></td>
+                <td>Compiles the given source set's Scala source files.</td>
+            </tr><tr>
+                <td><code class="literal">scaladoc</code></td>
+                <td>-</td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.scala.ScalaDoc.html" target="_top"><code class="classname">ScalaDoc</code></a></td>
+                <td>Generates API documentation for the production Scala source files.</td>
+            </tr></table></div></div><p>The Scala plugin adds the following dependencies to tasks added by the Java plugin.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;25.2.&nbsp;Scala plugin - additional task dependencies</b></p><div class="table-contents"><table id="N12D57"><thead><td>Task name</td><td>Depends on</td></thead><tr>
+                <td>
+                    <code class="literal">classes</code>
+                </td>
+                <td>
+                    <code class="literal">compileScala</code>
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">testClasses</code>
+                </td>
+                <td>
+                    <code class="literal">compileTestScala</code>
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal"><em class="replaceable"><code>sourceSet</code></em>Classes</code>
+                </td>
+                <td>
+                    <code class="literal">compile<em class="replaceable"><code>SourceSet</code></em>Scala</code>
+                </td>
+            </tr></table></div></div><div class="figure"><a name="N12D8E"></a><p class="title"><b>Figure&nbsp;25.1.&nbsp;Scala plugin - tasks</b></p><div class="figure-contents"><img src="img/scalaPluginTasks.png" alt="Scala plugin - tasks"></div></div><br class="figure-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12D94"></a>25.3.&nbsp;Project layout</h2></div></div></div><p>The Scala plugin assumes the project layout shown below.  All the Scala source directories can contain
+            Scala <span class="emphasis"><em>and</em></span> Java code. The Java source directories may only contain Java source code.
+            None of these directories need to exist or have anything in them; the Scala plugin will simply compile
+            whatever it finds.
+        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;25.3.&nbsp;Scala plugin - project layout</b></p><div class="table-contents"><table id="scalalayout"><thead><tr>
+                    <td>Directory</td>
+                    <td>Meaning</td>
+                </tr></thead><tr>
+        <td>
+            <code class="filename">src/main/java</code>
+        </td>
+        <td>Production Java source</td>
+    </tr><tr>
+        <td>
+            <code class="filename">src/main/resources</code>
+        </td>
+        <td>Production resources</td>
+    </tr><tr>
+                <td>
+                    <code class="filename">src/main/scala</code>
+                </td>
+                <td>Production Scala sources. May also contain Java sources for joint compilation.</td>
+            </tr><tr>
+        <td>
+            <code class="filename">src/test/java</code>
+        </td>
+        <td>Test Java source</td>
+    </tr><tr>
+        <td>
+            <code class="filename">src/test/resources</code>
+        </td>
+        <td>Test resources</td>
+    </tr><tr>
+                <td>
+                    <code class="filename">src/test/scala</code>
+                </td>
+                <td>Test Scala sources. May also contain Java sources for joint compilation.</td>
+            </tr><tr>
+        <td>
+            <code class="filename">src/<em class="replaceable"><code>sourceSet</code></em>/java</code>
+        </td>
+        <td>Java source for the given source set</td>
+    </tr><tr>
+        <td>
+            <code class="filename">src/<em class="replaceable"><code>sourceSet</code></em>/resources</code>
+        </td>
+        <td>Resources for the given source set</td>
+    </tr><tr>
+                <td>
+                    <code class="filename">src/<em class="replaceable"><code>sourceSet</code></em>/scala</code>
+                </td>
+                <td>Scala sources for the given source set. May also contain Java sources for joint compilation.</td>
+            </tr></table></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N12E1E"></a>25.3.1.&nbsp;Changing the project layout</h3></div></div></div><p>Just like the Java plugin, the Scala plugin allows to configure custom locations for Scala production and test sources.</p><div class="example"><a name="customScalaSourceLayout"></a><p class="title"><b>Example&nbsp;25.2.&nbsp;Custom Scala source layout</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">sourceSets {
+    main {
+        scala {
+            srcDirs = [<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/scala'</span>]
+        }
+    }
+    test {
+        scala {
+            srcDirs = [<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'test/scala'</span>]
+        }
+    }
+}</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12E2D"></a>25.4.&nbsp;Dependency management</h2></div></div></div><p>
+            Scala projects need to declare a <code class="literal">scala-library</code> dependency. This dependency will then be used on compile and
+            runtime class paths. It will also be used to get hold of the Scala compiler and Scaladoc tool, respectively.
+            <sup>[<a href="#ftn.N12E35" name="N12E35" class="footnote">12</a>]</sup>
+        </p><p>
+            If Scala is used for production code, the <code class="literal">scala-library</code> dependency should be added to the
+            <code class="literal">compile</code> configuration:
+        </p><div class="example"><a name="declareScalaDependency"></a><p class="title"><b>Example&nbsp;25.3.&nbsp;Declaring a Scala dependency for production code</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.scala-lang:scala-library:2.9.1'</span>
+}</pre></div></div><br class="example-break"><p>
+            If Scala is only used for test code, the <code class="literal">scala-library</code> dependency should be added to the <code class="literal">testCompile</code>
+            configuration:
+        </p><div class="example"><a name="declareScalaTestDependency"></a><p class="title"><b>Example&nbsp;25.4.&nbsp;Declaring a Scala dependency for test code</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
+    testCompile <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.scala-lang:scala-library:2.9.2"</span>
+}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:configure_scala_classpath"></a>25.5.&nbsp;Automatic configuration of scalaClasspath</h2></div></div></div><p>
+            <code class="literal">ScalaCompile</code> and <code class="literal">ScalaDoc</code> tasks consume Scala in two ways: on their <code class="literal">classpath</code>,
+            and on their <code class="literal">scalaClasspath</code>. The former is used to locate classes referenced by the source code, and will typically
+            contain <code class="literal">scala-library</code> along with other libraries. The latter is used to load and execute the Scala compiler
+            and Scaladoc tool, respectively, and should only contain the <code class="literal">scala-compiler</code> library and its dependencies.
+        </p><p>
+            Unless a task's <code class="literal">scalaClasspath</code> is configured explicitly, the Scala (base) plugin will try to infer it
+            from the task's <code class="literal">classpath</code>. This is done as follows:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">
+                    If a <code class="literal">scala-library</code> Jar is found on <code class="literal">classpath</code>, and the project has at least one repository declared,
+                    a corresponding <code class="literal">scala-compiler</code> repository dependency will be added to <code class="literal">scalaClasspath</code>.
+                </li><li class="listitem">
+                    Otherwise, execution of the task will fail with a message saying that <code class="literal">scalaClasspath</code> could not be inferred.
+                </li></ul></div><p>
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12E95"></a>25.6.&nbsp;Convention properties</h2></div></div></div><p>The Scala plugin does not add any convention properties to the project.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12E9A"></a>25.7.&nbsp;Source set properties</h2></div></div></div><p>The Scala plugin adds the following convention properties to each source set in the project. You can
+            use these properties in your build script as though they were properties of the source set object (see
+            <a class="xref" href="plugins.html#sub:more_about_convention_objects">Section&nbsp;21.3, &ldquo;Conventions&rdquo;</a>).</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;25.4.&nbsp;Scala plugin - source set properties</b></p><div class="table-contents"><table id="N12EA2"><thead><tr>
+                    <td>Property name</td>
+                    <td>Type</td>
+                    <td>Default value</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">scala</code>
+                </td>
+                <td>
+                    <a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top"><code class="classname">SourceDirectorySet</code></a> (read-only)
+                </td>
+                <td>
+                    Not null
+                </td>
+                <td>
+                    The Scala source files of this source set. Contains all <code class="filename">.scala</code> and
+                    <code class="filename">.java</code> files found in the Scala source directories, and excludes all other
+                    types of files.
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">scala.srcDirs</code>
+                </td>
+                <td>
+                    <code class="classname">Set&lt;File&gt;</code>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">Section&nbsp;16.5, &ldquo;Specifying a set of input files&rdquo;</a>.
+                </td>
+                <td>
+                    <code class="literal">[<em class="replaceable"><code>projectDir</code></em>/src/<em class="replaceable"><code>name</code></em>/scala]</code>
+                </td>
+                <td>
+                    The source directories containing the Scala source files of this source set. May also contain
+                    Java source files for joint compilation.
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">allScala</code>
+                </td>
+                <td>
+                    <a class="ulink" href="../javadoc/org/gradle/api/file/FileTree.html" target="_top"><code class="classname">FileTree</code></a> (read-only)
+                </td>
+                <td>
+                    Not null
+                </td>
+                <td>
+                    All Scala source files of this source set. Contains only the <code class="filename">.scala</code> files
+                    found in the Scala source directories.
+                </td>
+            </tr></table></div></div><p>These convention properties are provided by a convention object of type <a class="ulink" href="../dsl/org.gradle.api.tasks.ScalaSourceSet.html" target="_top"><code class="classname">ScalaSourceSet</code></a>.</p><p>The Scala plugin also modifies some source set properties:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;25.5.&nbsp;Scala plugin - source set properties</b></p><div class="table-contents"><table id="N12F12"><thead><tr>
+                    <td>Property name</td>
+                    <td>Change</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">allJava</code>
+                </td>
+                <td>Adds all <code class="filename">.java</code> files found in the Scala source directories.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">allSource</code>
+                </td>
+                <td>Adds all source files found in the Scala source directories.</td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12F37"></a>25.8.&nbsp;Fast Scala Compiler</h2></div></div></div><p>The Scala plugin includes support for <a class="ulink" href="http://www.scala-lang.org/docu/files/tools/fsc.html" target="_top">fsc</a>,
+            the Fast Scala Compiler. <code class="literal">fsc</code> runs in a separate daemon process and can speed up
+            compilation significantly.
+            </p><div class="example"><a name="fsc"></a><p class="title"><b>Example&nbsp;25.5.&nbsp;Enabling the Fast Scala Compiler</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">compileScala {
+    scalaCompileOptions.useCompileDaemon = true
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// optionally specify host and port of the daemon:</span>
+    scalaCompileOptions.daemonServer = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"localhost:4243"</span>
+}</pre></div></div><p><br class="example-break">
+            Note that <code class="literal">fsc</code> expects to be restarted whenever the <span class="emphasis"><em>contents</em></span> of its
+            compile class path change. (It does detect changes to the compile class path itself.) This makes it
+            less suitable for multi-project builds.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12F54"></a>25.9.&nbsp;Compiling in external process</h2></div></div></div><p>
+            When <code class="literal">scalaCompileOptions.fork</code> is set to <code class="literal">true</code>, compilation will take place
+            in an external process. The details of forking depend on which compiler is used. The Ant based compiler
+            (<code class="literal">scalaCompileOptions.useAnt = true</code>) will fork a new process for every <code class="literal">ScalaCompile</code> task,
+            and does not fork by default. The Zinc based compiler (<code class="literal">scalaCompileOptions.useAnt = false</code>) will leverage
+            the Gradle compiler daemon, and does so by default.
+        </p><p>Memory settings for the external process default to the JVM's defaults. To adjust memory settings,
+            configure <code class="literal">scalaCompileOptions.forkOptions</code> as needed:
+            </p><div class="example"><a name="zinc"></a><p class="title"><b>Example&nbsp;25.6.&nbsp;Adjusting memory settings</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">tasks.withType(ScalaCompile) {
+    configure(scalaCompileOptions.forkOptions) {
+        memoryMaximumSize = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1g'</span>
+        jvmArgs = [<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'-XX:MaxPermSize=512m'</span>]
+    }
+}</pre></div></div><p><br class="example-break">
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12F78"></a>25.10.&nbsp;Incremental compilation</h2></div></div></div><p>
+            By compiling only classes whose source code has changed since the previous compilation, and classes affected by these changes,
+            incremental compilation can significantly reduce Scala compilation time. It is particularly effective when frequently compiling
+            small code increments, as is often done at development time.
+        </p><p>
+            The Scala plugin now supports incremental compilation by integrating with <a class="ulink" href="https://github.com/typesafehub/zinc" target="_top">Zinc</a>,
+            a standalone version of <a class="ulink" href="https://github.com/harrah/xsbt" target="_top">sbt</a>'s incremental Scala compiler. To switch the
+            <code class="literal">ScalaCompile</code> task from the default Ant based compiler to the new Zinc based compiler, set
+            <code class="literal">scalaCompileOptions.useAnt</code> to <code class="literal">false</code>:
+            </p><div class="example"><a name="zinc"></a><p class="title"><b>Example&nbsp;25.7.&nbsp;Activating the Zinc based compiler</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">tasks.withType(ScalaCompile) {
+    scalaCompileOptions.useAnt = false
+}</pre></div></div><p><br class="example-break">
+        </p><p>
+            Except where noted in the<a class="ulink" href="http://gradle.org/docs/current/dsl/org.gradle.api.tasks.scala.ScalaCompile.html" target="_top">API documentation</a>,
+            the Zinc based compiler supports exactly the same configuration options as the Ant based compiler. Note, however, that the Zinc compiler requires
+            Java 6 or higher to run. This means that Gradle itself has to be run with Java 6 or higher.
+        </p><p>
+            The Scala plugin adds a configuration named <code class="literal">zinc</code> to resolve the Zinc library and its dependencies. To override the
+            Zinc version that Gradle uses by default, add an explicit Zinc dependency (for example <code class="literal">zinc "com.typesafe.zinc:zinc:0.1.4"</code>).
+            Regardless of which Zinc version is used, Zinc will always use the Scala compiler found on the <code class="literal">scalaTools</code> configuration.
+        </p><p>
+            Just like Gradle's Ant based compiler, the Zinc based compiler supports joint compilation of Java and Scala code. By default, all Java and Scala code
+            under <code class="literal">src/main/scala</code> will participate in joint compilation. With the Zinc based compiler, even Java code will be compiled incrementally.
+        </p><p>
+            Incremental compilation requires dependency analysis of the source code. The results of this analysis are stored in the file designated
+            by <code class="literal">scalaCompileOptions.incrementalOptions.analysisFile</code> (which has a sensible default). In a multi-project build, analysis
+            files are passed on to downstream <code class="literal">ScalaCompile</code> tasks to enable incremental compilation across project boundaries. For
+            <code class="literal">ScalaCompile</code> tasks added by the Scala plugin, no configuration is necessary to make this work. For other
+            <code class="literal">ScalaCompile</code> tasks, <code class="literal">scalaCompileOptions.incrementalOptions.publishedCode</code> needs to be configured to point
+            to the classes folder or Jar archive by which the code is passed on to compile class paths of downstream <code class="literal">ScalaCompile</code> tasks.
+            Note that if <code class="literal">publishedCode</code> is not set correctly, downstream tasks may not recompile code affected by upstream changes,
+            leading to incorrect compilation results.
+        </p><p>
+            Due to the overhead of dependency analysis, a clean compilation or a compilation after a larger code change may take longer than with the Ant based compiler.
+            For CI builds and release builds, we currently recommend to use the Ant based compiler.
+        </p><p>
+            Note that Zinc's Nailgun based daemon mode is not supported. Instead, we plan to enhance Gradle's own compiler daemon to stay alive across Gradle
+            invocations, reusing the same Scala compiler. This is expected to yield another significant speedup for Scala compilation.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12FCC"></a>25.11.&nbsp;Eclipse Integration</h2></div></div></div><p>
+            When the Eclipse plugin encounters a Scala project, it adds additional configuration to make the project work with Scala IDE out of the box.
+            Specifically, the plugin adds a Scala nature and dependency container.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12FD1"></a>25.12.&nbsp;IntelliJ IDEA Integration</h2></div></div></div><p>
+            When the IDEA plugin encounters a Scala project, it adds additional configuration to make the project work with IDEA out of the box. Specifically,
+            the plugin adds a Scala facet and a Scala compiler library that matches the Scala version on the project's class path.
+        </p></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N12E35" name="ftn.N12E35" class="para">12</a>] </sup>See <a class="xref" href="scala_plugin.html#sec:configure_scala_classpath">Section&nbsp;25.5, &ldquo;Automatic configuration of scalaClasspath&rdquo;</a>.</p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="groovy_plugin.html" title="Chapter&nbsp;24.&nbsp;The Groovy Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="war_plugin.html" title="Chapter&nbsp;26.&nbsp;The War Plugin">Next</a></div></div></div></body></html>

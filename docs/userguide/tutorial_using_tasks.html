@@ -1,0 +1,222 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;6.&nbsp;Build Script Basics</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="troubleshooting.html" title="Chapter&nbsp;5.&nbsp;Troubleshooting"><link rel="next" href="tutorial_java_projects.html" title="Chapter&nbsp;7.&nbsp;Java Quickstart"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="troubleshooting.html" title="Chapter&nbsp;5.&nbsp;Troubleshooting">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_java_projects.html" title="Chapter&nbsp;7.&nbsp;Java Quickstart">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="tutorial_using_tasks"></a>Chapter&nbsp;6.&nbsp;Build Script Basics</h1></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N101A5"></a>6.1.&nbsp;Projects and tasks</h2></div></div></div><p>Everything in Gradle sits on top of two basic concepts: <em class="firstterm">projects</em> and <em class="firstterm">tasks</em>.</p><p>
+        Every Gradle build is made up of one or more <em class="firstterm">projects</em>.
+        What a project represents depends on what it is that you are doing with Gradle.
+        For example, a project might represent a library JAR or a web application. It might represent a
+        distribution ZIP assembled from the JARs produced by other projects. A project does not necessarily represent
+        a thing to be built. It might represent a thing to be done, such as deploying your application to staging or
+        production environments. Don't worry if this seems a little vague for now. Gradle's build-by-convention support adds
+        a more concrete definition for what a project is.
+    </p><p>Each project is made up of one or more <em class="firstterm">tasks</em>. A task represents some atomic piece
+        of work which a build performs. This might be compiling some classes, creating a JAR, generating javadoc,
+        or publishing some archives to a repository.</p><p>For now, we will look at defining some simple tasks in a build with one project. Later chapters will look at
+        working with multiple projects and more about working with projects and tasks.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N101BC"></a>6.2.&nbsp;Hello world</h2></div></div></div><p>You run a Gradle build using the <span class="command"><strong>gradle</strong></span> command. The <span class="command"><strong>gradle</strong></span> command
+            looks for a file called <code class="filename">build.gradle</code> in the current directory.
+            <sup>[<a href="#ftn.N101CA" name="N101CA" class="footnote">2</a>]</sup>
+            We call this <code class="filename">build.gradle</code> file a <em class="firstterm">build script</em>, although strictly speaking it is
+            a build configuration script, as we will see later. The build script defines a project and its tasks.
+        </p><p>To try this out, create the following build script named <code class="filename">build.gradle</code>.
+        </p><div class="example"><a name="hello"></a><p class="title"><b>Example&nbsp;6.1.&nbsp;The first build script</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task hello {
+    doLast {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello world!'</span>
+    }
+}</pre></div></div><br class="example-break"><p>In a command-line shell, enter into the containing directory and execute the build script by running
+            <strong class="userinput"><code>gradle -q hello</code></strong>:
+        </p><div class="tip"><h3 class="title">What does <code class="option">-q</code> do?</h3><p>Most of the examples in this user guide are run with the <code class="option">-q</code> command-line option.
+                This suppresses Gradle's log messages, so that only the output of the tasks is shown. This keeps the example
+                output in this user guide a little clearer. You don't need to use this option if you don't want.
+                See <a class="xref" href="logging.html">Chapter&nbsp;18, <i>Logging</i></a> for more details about the command-line options which affect Gradle's output.
+            </p></div><div class="example"><a name="hello"></a><p class="title"><b>Example&nbsp;6.2.&nbsp;Execution of a build script</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
+Hello world!</pre></div></div><br class="example-break"><p>What's going on here? This build script defines a single task, called <code class="literal">hello</code>, and
+            adds an action to it. When you run <strong class="userinput"><code>gradle hello</code></strong>, Gradle executes the
+            <code class="literal">hello</code> task, which in turn executes the action you've provided. The action is simply a
+            closure containing some Groovy code to execute.
+        </p><p>If you think this looks similar to Ant's targets, well, you are right. Gradle tasks are the equivalent to
+            Ant targets. But as you will see, they are much more powerful. We have used a different terminology than Ant
+            as we think the word <span class="emphasis"><em>task</em></span> is more expressive than the word <span class="emphasis"><em>target</em></span>.
+            Unfortunately this introduces a terminology clash with Ant, as Ant calls its commands, such as
+            <code class="literal">javac</code> or <code class="literal">copy</code>, tasks. So when we talk about tasks,
+            we <span class="emphasis"><em>always</em></span> mean Gradle tasks, which are the equivalent to Ant's targets. If we talk
+            about Ant tasks (Ant commands), we explicitly say <span class="emphasis"><em>ant task</em></span>.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10222"></a>6.3.&nbsp;A shortcut task definition</h2></div></div></div><p>There is a shorthand way to define a task like our <code class="literal">hello</code> task above, which is more
+            concise.</p><div class="example"><a name="helloShortcut"></a><p class="title"><b>Example&nbsp;6.3.&nbsp;A task definition shortcut</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task hello &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello world!'</span>
+}</pre></div></div><br class="example-break"><p>Again, this defines a task called <code class="literal">hello</code> with a single closure to execute.
+            We will use this task definition style throughout the user guide.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10239"></a>6.4.&nbsp;Build scripts are code</h2></div></div></div><p>Gradle's build scripts expose to you the full power of Groovy. As an appetizer, have a look at this:
+        </p><div class="example"><a name="upper"></a><p class="title"><b>Example&nbsp;6.4.&nbsp;Using Groovy in Gradle's tasks</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task upper &lt;&lt; {
+    String someString = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'mY_nAmE'</span>
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Original: "</span> + someString 
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Upper case: "</span> + someString.toUpperCase()
+}</pre><p>Output of <strong class="userinput"><code>gradle -q upper</code></strong></p><pre class="screen">&gt; gradle -q upper
+Original: mY_nAmE
+Upper case: MY_NAME</pre></div></div><br class="example-break"><p>or</p><div class="example"><a name="count"></a><p class="title"><b>Example&nbsp;6.5.&nbsp;Using Groovy in Gradle's tasks</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task count &lt;&lt; {
+    4.times { print <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$it "</span> }
+}</pre><p>Output of <strong class="userinput"><code>gradle -q count</code></strong></p><pre class="screen">&gt; gradle -q count
+0 1 2 3</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:task_dependencies"></a>6.5.&nbsp;Task dependencies</h2></div></div></div><p>As you probably have guessed, you can declare dependencies between your tasks.
+        </p><div class="example"><a name="intro"></a><p class="title"><b>Example&nbsp;6.6.&nbsp;Declaration of dependencies between tasks</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task hello &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello world!'</span>
+}
+task intro(dependsOn: hello) &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"I'm Gradle"</span>
+}</pre><p>Output of <strong class="userinput"><code>gradle -q intro</code></strong></p><pre class="screen">&gt; gradle -q intro
+Hello world!
+I'm Gradle</pre></div></div><br class="example-break"><p>To add a dependency, the corresponding task does not need to exist.</p><div class="example"><a name="lazyDependsOn"></a><p class="title"><b>Example&nbsp;6.7.&nbsp;Lazy dependsOn - the other task does not exist (yet)</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task taskX(dependsOn: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskY'</span>) &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskX'</span>
+}
+task taskY &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskY'</span>
+}</pre><p>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p><pre class="screen">&gt; gradle -q taskX
+taskY
+taskX</pre></div></div><br class="example-break"><p>The dependency of <code class="literal">taskX</code> to <code class="literal">taskY</code> is declared before
+            <code class="literal">taskY</code> is defined. This is very important for multi-project builds. Task dependencies are
+            discussed in more detail in <a class="xref" href="more_about_tasks.html#sec:adding_dependencies_to_tasks">Section&nbsp;15.4, &ldquo;Adding dependencies to a task&rdquo;</a>.
+        </p><p>Please notice that you can't use shortcut notation (see <a class="xref" href="tutorial_using_tasks.html#sec:shortcut_notations">Section&nbsp;6.8, &ldquo;Shortcut notations&rdquo;</a>)
+        when referring to a task that is not yet defined.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1029B"></a>6.6.&nbsp;Dynamic tasks</h2></div></div></div><p>The power of Groovy can be used for more than defining what a task does. For example, you can also use it
+            to dynamically create tasks.
+        </p><div class="example"><a name="dynamic"></a><p class="title"><b>Example&nbsp;6.8.&nbsp;Dynamic creation of a task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">4.times { counter -&gt;
+    task <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"task$counter"</span> &lt;&lt; {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"I'm task number $counter"</span>
+    }
+}</pre><p>Output of <strong class="userinput"><code>gradle -q task1</code></strong></p><pre class="screen">&gt; gradle -q task1
+I'm task number 1</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N102B0"></a>6.7.&nbsp;Manipulating existing tasks</h2></div></div></div><p>Once tasks are created they can be accessed via an <span class="emphasis"><em>API</em></span>. This is different to Ant. For
+            example you can create additional dependencies.
+        </p><div class="example"><a name="dynamicDepends"></a><p class="title"><b>Example&nbsp;6.9.&nbsp;Accessing a task via API - adding a dependency</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">4.times { counter -&gt;
+    task <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"task$counter"</span> &lt;&lt; {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"I'm task number $counter"</span>
+    }
+}
+task0.dependsOn task2, task3</pre><p>Output of <strong class="userinput"><code>gradle -q task0</code></strong></p><pre class="screen">&gt; gradle -q task0
+I'm task number 2
+I'm task number 3
+I'm task number 0</pre></div></div><br class="example-break"><p>Or you can add behavior to an existing task.</p><div class="example"><a name="helloEnhanced"></a><p class="title"><b>Example&nbsp;6.10.&nbsp;Accessing a task via API - adding behaviour</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task hello &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello Earth'</span>
+}
+hello.doFirst {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello Venus'</span>
+}
+hello.doLast {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello Mars'</span>
+}
+hello &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello Jupiter'</span>
+}</pre><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
+Hello Venus
+Hello Earth
+Hello Mars
+Hello Jupiter</pre></div></div><br class="example-break"><p>The calls <code class="literal">doFirst</code> and <code class="literal">doLast</code> can be executed multiple times.
+            They add an action to the beginning or the end of the task's actions list. When the task executes, the
+            actions in the action list are executed in order. The <code class="literal">&lt;&lt;</code> operator is simply an
+            alias for <code class="literal">doLast</code>.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:shortcut_notations"></a>6.8.&nbsp;Shortcut notations</h2></div></div></div><p>As you might have noticed in the previous examples, there is a convenient notation for accessing an
+            <span class="emphasis"><em>existing</em></span> task. Each task is available as a property of the build script:
+        </p><div class="example"><a name="helloWithShortCut"></a><p class="title"><b>Example&nbsp;6.11.&nbsp;Accessing task as a property of the build script</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task hello &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello world!'</span>
+}
+hello.doLast {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Greetings from the $hello.name task."</span>
+}</pre><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
+Hello world!
+Greetings from the hello task.</pre></div></div><br class="example-break"><p>This enables very readable code, especially when using the out of the box tasks provided by the plugins
+            (e.g. <code class="literal">compile</code>).</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:extra_task_properties"></a>6.9.&nbsp;Extra task properties</h2></div></div></div><p>You can add your own properties to a task. To add a property named <code class="literal">myProperty</code>,
+            set <code class="literal">ext.myProperty</code> to an initial value. From that point on, the property can be read
+            and set like a predefined task property.
+        </p><div class="example"><a name="extraTaskProperties"></a><p class="title"><b>Example&nbsp;6.12.&nbsp;Adding extra properties to a task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task myTask {
+    ext.myProperty = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"myValue"</span>
+}
+
+task printTaskProperties &lt;&lt; {
+    println myTask.myProperty
+}</pre><p>Output of <strong class="userinput"><code>gradle -q printTaskProperties</code></strong></p><pre class="screen">&gt; gradle -q printTaskProperties
+myValue</pre></div></div><br class="example-break">
+        Extra properties aren't limited to tasks. You can read more about them in <a class="xref" href="writing_build_scripts.html#sec:extra_properties">Section&nbsp;13.4.2, &ldquo;Extra properties&rdquo;</a>.
+    </div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10326"></a>6.10.&nbsp;Using Ant Tasks</h2></div></div></div><p>Ant tasks are first-class citizens in Gradle. Gradle provides excellent integration for Ant tasks by simply
+            relying on Groovy. Groovy is shipped with the fantastic <code class="literal">AntBuilder</code>. Using Ant tasks
+            from Gradle is as convenient and more powerful than using Ant tasks from a <code class="filename">build.xml</code>
+            file. From the example below, you can learn how to execute ant tasks and how to access ant properties:
+        </p><div class="example"><a name="antLoadfile"></a><p class="title"><b>Example&nbsp;6.13.&nbsp;Using AntBuilder to execute ant.loadfile target</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task loadfile &lt;&lt; {
+    def files = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'../antLoadfileResources'</span>).listFiles().sort()
+    files.each { File file -&gt;
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (file.isFile()) {
+            ant.loadfile(srcFile: file, property: file.name)
+            println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">" *** $file.name ***"</span>
+            println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"${ant.properties[file.name]}"</span>
+        }
+    }
+}</pre><p>Output of <strong class="userinput"><code>gradle -q loadfile</code></strong></p><pre class="screen">&gt; gradle -q loadfile
+*** agile.manifesto.txt ***
+Individuals and interactions over processes and tools
+Working software over comprehensive documentation
+Customer collaboration  over contract negotiation
+Responding to change over following a plan
+ *** gradle.manifesto.txt ***
+Make the impossible possible, make the possible easy and make the easy elegant.
+(inspired by Moshe Feldenkrais)</pre></div></div><br class="example-break"><p>There is lots more you can do with Ant in your build scripts. You can find out more in <a class="xref" href="ant.html">Chapter&nbsp;17, <i>Using Ant from Gradle</i></a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10346"></a>6.11.&nbsp;Using methods</h2></div></div></div><p>Gradle scales in how you can organize your build logic. The first level of organizing your build logic for
+            the example above, is extracting a method.
+        </p><div class="example"><a name="antLoadfileWithMethod"></a><p class="title"><b>Example&nbsp;6.14.&nbsp;Using methods to organize your build logic</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task checksum &lt;&lt; {
+    fileList(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'../antLoadfileResources'</span>).each {File file -&gt;
+        ant.checksum(file: file, property: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"cs_$file.name"</span>)
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$file.name Checksum: ${ant.properties["</span>cs_$file.name<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"]}"</span>
+    }
+}
+
+task loadfile &lt;&lt; {
+    fileList(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'../antLoadfileResources'</span>).each {File file -&gt;
+        ant.loadfile(srcFile: file, property: file.name)
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"I'm fond of $file.name"</span>
+    }
+}
+
+File[] fileList(String dir) {
+    file(dir).listFiles({file -&gt; file.isFile() } as FileFilter).sort()
+}</pre><p>Output of <strong class="userinput"><code>gradle -q loadfile</code></strong></p><pre class="screen">&gt; gradle -q loadfile
+I'm fond of agile.manifesto.txt
+I'm fond of gradle.manifesto.txt</pre></div></div><br class="example-break"><p>Later you will see that such methods can be shared among subprojects in multi-project builds. If your
+            build logic becomes more complex, Gradle offers you other very convenient ways to organize it. We have
+            devoted a whole chapter to this. See <a class="xref" href="organizing_build_logic.html">Chapter&nbsp;59, <i>Organizing Build Logic</i></a>.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:default_tasks"></a>6.12.&nbsp;Default tasks</h2></div></div></div><p>Gradle allows you to define one or more default tasks for your build.
+        </p><div class="example"><a name="defaultTasks"></a><p class="title"><b>Example&nbsp;6.15.&nbsp;Defining a default tasks</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">defaultTasks <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'clean'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'run'</span>
+
+task clean &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Default Cleaning!'</span>
+}
+
+task run &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Default Running!'</span>
+}
+
+task other &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"I'm not a default task!"</span>
+}</pre><p>Output of <strong class="userinput"><code>gradle -q</code></strong></p><pre class="screen">&gt; gradle -q
+Default Cleaning!
+Default Running!</pre></div></div><br class="example-break"><p>This is equivalent to running <strong class="userinput"><code>gradle clean run</code></strong>. In a multi-project build every
+            subproject can have its own specific default tasks. If a subproject does not specify default tasks, the
+            default tasks of the parent project are used (if defined).
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="configure-by-dag"></a>6.13.&nbsp;Configure by DAG</h2></div></div></div><p>As we later describe in full detail (see <a class="xref" href="build_lifecycle.html">Chapter&nbsp;55, <i>The Build Lifecycle</i></a>), Gradle has a
+            configuration phase and an execution phase. After the configuration phase, Gradle knows all tasks that should
+            be executed. Gradle offers you a hook to make use of this information. A use-case for this would be to check
+            if the release task is among the tasks to be executed. Depending on this, you can assign different values
+            to some variables.
+        </p><p>In the following example, execution of the <code class="literal">distribution</code> and <code class="literal">release</code> tasks results in different value of the <code class="literal">version</code> variable.</p><div class="example"><a name="configByDagNoRelease"></a><p class="title"><b>Example&nbsp;6.16.&nbsp;Different outcomes of build depending on chosen tasks</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task distribution &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"We build the zip with version=$version"</span>
+}
+
+task release(dependsOn: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'distribution'</span>) &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'We release now'</span>
+}
+
+gradle.taskGraph.whenReady {taskGraph -&gt;
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (taskGraph.hasTask(release)) {
+        version = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0'</span>
+    } <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">else</span> {
+        version = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0-SNAPSHOT'</span>
+    }
+}</pre><p>Output of <strong class="userinput"><code>gradle -q distribution</code></strong></p><pre class="screen">&gt; gradle -q distribution
+We build the zip with version=1.0-SNAPSHOT</pre><p>Output of <strong class="userinput"><code>gradle -q release</code></strong></p><pre class="screen">&gt; gradle -q release
+We build the zip with version=1.0
+We release now</pre></div></div><br class="example-break"><p>The important thing is that <code class="literal">whenReady</code> affects the release task <span class="emphasis"><em>before</em></span> the release task is executed.
+        This works even when the release task is not the <span class="emphasis"><em>primary</em></span> task (i.e., the task passed to the <span class="command"><strong>gradle</strong></span> command).
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N103B3"></a>6.14.&nbsp;Where to next?</h2></div></div></div><p>
+            In this chapter, we have had a first look at tasks. But this is not the end of the story for tasks. If you want to jump into more of the details,
+            have a look at <a class="xref" href="more_about_tasks.html">Chapter&nbsp;15, <i>More about Tasks</i></a>.
+        </p><p>
+            Otherwise, continue on to the tutorials in <a class="xref" href="tutorial_java_projects.html">Chapter&nbsp;7, <i>Java Quickstart</i></a> and <a class="xref" href="artifact_dependencies_tutorial.html">Chapter&nbsp;8, <i>Dependency Management Basics</i></a>.
+        </p></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N101CA" name="ftn.N101CA" class="para">2</a>] </sup>There are command line switches to change this behavior. See <a class="xref" href="gradle_command_line.html">Appendix&nbsp;D, <i>Gradle Command Line</i></a>)</p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="troubleshooting.html" title="Chapter&nbsp;5.&nbsp;Troubleshooting">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_java_projects.html" title="Chapter&nbsp;7.&nbsp;Java Quickstart">Next</a></div></div></div></body></html>

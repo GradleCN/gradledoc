@@ -1,0 +1,36 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;9.&nbsp;Groovy Quickstart</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="artifact_dependencies_tutorial.html" title="Chapter&nbsp;8.&nbsp;Dependency Management Basics"><link rel="next" href="web_project_tutorial.html" title="Chapter&nbsp;10.&nbsp;Web Application Quickstart"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="artifact_dependencies_tutorial.html" title="Chapter&nbsp;8.&nbsp;Dependency Management Basics">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="web_project_tutorial.html" title="Chapter&nbsp;10.&nbsp;Web Application Quickstart">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="tutorial_groovy_projects"></a>Chapter&nbsp;9.&nbsp;Groovy Quickstart</h1></div></div></div><p>To build a Groovy project, you use the <em class="firstterm">Groovy plugin</em>. This plugin extends the Java
+        plugin to add Groovy compilation capabilities to your project. Your project can contain Groovy source code,
+        Java source code, or a mix of the two. In every other respect, a Groovy project is identical to a Java project,
+        which we have already seen in <a class="xref" href="tutorial_java_projects.html">Chapter&nbsp;7, <i>Java Quickstart</i></a>.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N106BE"></a>9.1.&nbsp;A basic Groovy project</h2></div></div></div><p>Let's look at an example. To use the Groovy plugin, add the following to your build file:</p><div class="example"><a name="groovyQuickstart"></a><p class="title"><b>Example&nbsp;9.1.&nbsp;Groovy plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'groovy'</span></pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/groovy/quickstart</code> which is in both the binary and source distributions of Gradle.</p></div></div></div><br class="example-break"><p>This will also apply the Java plugin to the project, if it has not already been applied. The Groovy plugin
+            extends the <code class="literal">compile</code> task to look for source files in directory
+            <code class="filename">src/main/groovy</code>, and the <code class="literal">compileTest</code> task to look for test source
+            files in directory <code class="filename">src/test/groovy</code>. The compile tasks use joint compilation for these
+            directories, which means they can contain a mixture of java and groovy source files.
+        </p><p>To use the groovy compilation tasks, you must also declare the Groovy version to use and where to find the
+            Groovy libraries. You do this by adding a dependency to the <code class="literal">groovy</code> configuration.
+            The <code class="literal">compile</code> configuration inherits this dependency, so the groovy libraries will
+            be included in classpath when compiling Groovy and Java source.  For our sample, we will use Groovy 2.2.0
+            from the public Maven repository:</p><div class="example"><a name="groovyQuickstart"></a><p class="title"><b>Example&nbsp;9.2.&nbsp;Dependency on Groovy 2.2.0</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.codehaus.groovy:groovy-all:2.2.0'</span>
+}</pre></div></div><br class="example-break"><p>Here is our complete build file:</p><div class="example"><a name="groovyQuickstart"></a><p class="title"><b>Example&nbsp;9.3.&nbsp;Groovy example - complete build file</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'eclipse'</span>
+apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'groovy'</span>
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.codehaus.groovy:groovy-all:2.2.0'</span>
+    testCompile <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'junit:junit:4.11'</span>
+}</pre></div></div><br class="example-break"><p>Running <strong class="userinput"><code>gradle build</code></strong> will compile, test and JAR your project.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10707"></a>9.2.&nbsp;Summary</h2></div></div></div><p>This chapter describes a very simple Groovy project. Usually, a real project will require more than this.
+            Because a Groovy project <span class="emphasis"><em>is</em></span> a Java project, whatever you can do with a Java project,
+            you can also do with a Groovy project.
+        </p><p>
+            You can find out more about the Groovy plugin in <a class="xref" href="groovy_plugin.html">Chapter&nbsp;24, <i>The Groovy Plugin</i></a>, and you can find more
+            sample Groovy projects in the <code class="filename">samples/groovy</code> directory in the Gradle distribution.
+        </p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="artifact_dependencies_tutorial.html" title="Chapter&nbsp;8.&nbsp;Dependency Management Basics">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="web_project_tutorial.html" title="Chapter&nbsp;10.&nbsp;Web Application Quickstart">Next</a></div></div></div></body></html>

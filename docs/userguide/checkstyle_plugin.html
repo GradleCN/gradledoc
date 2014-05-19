@@ -1,0 +1,48 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;29.&nbsp;The Checkstyle Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="jetty_plugin.html" title="Chapter&nbsp;28.&nbsp;The Jetty Plugin"><link rel="next" href="codenarc_plugin.html" title="Chapter&nbsp;30.&nbsp;The CodeNarc Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="jetty_plugin.html" title="Chapter&nbsp;28.&nbsp;The Jetty Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="codenarc_plugin.html" title="Chapter&nbsp;30.&nbsp;The CodeNarc Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="checkstyle_plugin"></a>Chapter&nbsp;29.&nbsp;The Checkstyle Plugin</h1></div></div></div><p>The Checkstyle plugin performs quality checks on your project's Java source files using <a class="ulink" href="http://checkstyle.sourceforge.net/index.html" target="_top">Checkstyle</a>
+        and generates reports from these checks.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13341"></a>29.1.&nbsp;Usage</h2></div></div></div><p>To use the Checkstyle plugin, include in your build script:</p><div class="example"><a name="useCheckstylePlugin"></a><p class="title"><b>Example&nbsp;29.1.&nbsp;Using the Checkstyle plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'checkstyle'</span></pre></div></div><br class="example-break"><p>The plugin adds a number of tasks to the project that perform the quality checks. You can execute the checks by running <strong class="userinput"><code>gradle check</code></strong>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13355"></a>29.2.&nbsp;Tasks</h2></div></div></div><p>The Checkstyle plugin adds the following tasks to the project:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;29.1.&nbsp;Checkstyle plugin - tasks</b></p><div class="table-contents"><table id="N1335A"><thead><tr>
+                    <td>Task name</td>
+                    <td>Depends on</td>
+                    <td>Type</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">checkstyleMain</code>
+                </td>
+                <td><code class="literal">classes</code></td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.plugins.quality.Checkstyle.html" target="_top"><code class="classname">Checkstyle</code></a></td>
+                <td>Runs Checkstyle against the production Java source files.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">checkstyleTest</code>
+                </td>
+                <td><code class="literal">testClasses</code></td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.plugins.quality.Checkstyle.html" target="_top"><code class="classname">Checkstyle</code></a></td>
+                <td>Runs Checkstyle against the test Java source files.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">checkstyle<em class="replaceable"><code>SourceSet</code></em></code>
+                </td>
+                <td><code class="literal"><em class="replaceable"><code>sourceSet</code></em>Classes</code></td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.plugins.quality.Checkstyle.html" target="_top"><code class="classname">Checkstyle</code></a></td>
+                <td>Runs Checkstyle against the given source set's Java source files.</td>
+            </tr></table></div></div><p>The Checkstyle plugin adds the following dependencies to tasks defined by the Java plugin.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;29.2.&nbsp;Checkstyle plugin - additional task dependencies</b></p><div class="table-contents"><table id="N133B1"><thead><td>Task name</td><td>Depends on</td></thead><tr>
+                <td><code class="literal">check</code></td>
+                <td>All Checkstyle tasks, including <code class="literal">checkstyleMain</code> and <code class="literal">checkstyleTest</code>.</td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N133C8"></a>29.3.&nbsp;Project layout</h2></div></div></div><p>The Checkstyle plugin expects the following project layout:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;29.3.&nbsp;Checkstyle plugin - project layout</b></p><div class="table-contents"><table id="N133CD"><thead><tr>
+                    <td>File</td>
+                    <td>Meaning</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="filename">config/checkstyle/checkstyle.xml</code>
+                </td>
+                <td>Checkstyle configuration file</td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N133E4"></a>29.4.&nbsp;Dependency management</h2></div></div></div><p>The Checkstyle plugin adds the following dependency configurations:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;29.4.&nbsp;Checkstyle plugin - dependency configurations</b></p><div class="table-contents"><table id="N133E9"><thead><tr>
+                    <td>Name</td>
+                    <td>Meaning</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="filename">checkstyle</code>
+                </td>
+                <td>The Checkstyle libraries to use</td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13400"></a>29.5.&nbsp;Configuration</h2></div></div></div><p>See <a class="ulink" href="../dsl/org.gradle.api.plugins.quality.CheckstyleExtension.html" target="_top"><code class="classname">CheckstyleExtension</code></a>.</p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="jetty_plugin.html" title="Chapter&nbsp;28.&nbsp;The Jetty Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="codenarc_plugin.html" title="Chapter&nbsp;30.&nbsp;The CodeNarc Plugin">Next</a></div></div></div></body></html>

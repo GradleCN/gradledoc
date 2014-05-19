@@ -1,0 +1,106 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;14.&nbsp;Tutorial - 'This and That'</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="writing_build_scripts.html" title="Chapter&nbsp;13.&nbsp;Writing Build Scripts"><link rel="next" href="more_about_tasks.html" title="Chapter&nbsp;15.&nbsp;More about Tasks"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="writing_build_scripts.html" title="Chapter&nbsp;13.&nbsp;Writing Build Scripts">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="more_about_tasks.html" title="Chapter&nbsp;15.&nbsp;More about Tasks">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="tutorial_this_and_that"></a>Chapter&nbsp;14.&nbsp;Tutorial - 'This and That'</h1></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:directory_creation"></a>14.1.&nbsp;Directory creation</h2></div></div></div><p>There is a common situation, that multiple tasks depend on the existence of a directory. Of course you can
+            deal with this by adding a
+            <code class="literal">mkdir</code>
+            to the beginning of those tasks. But this is kind of bloated. There is a better solution (works only if the
+            tasks that need the directory have a
+            <span class="emphasis"><em>dependsOn</em></span>
+            relationship):
+        </p><div class="example"><a name="makeDirectory"></a><p class="title"><b>Example&nbsp;14.1.&nbsp;Directory creation with mkdir</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">classesDir = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build/classes'</span>)
+task resources &lt;&lt; {
+    classesDir.mkdirs()
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// do something</span>
+}
+task compile(dependsOn: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'resources'</span>) &lt;&lt; {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (classesDir.isDirectory()) {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'The class directory exists. I can operate'</span>
+    }
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// do something</span>
+}</pre><p>Output of <strong class="userinput"><code>gradle -q compile</code></strong></p><pre class="screen">&gt; gradle -q compile
+The class directory exists. I can operate</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:gradle_properties_and_system_properties"></a>14.2.&nbsp;Gradle properties and system properties</h2></div></div></div><p>Gradle offers a variety of ways to add properties to your build. With the <code class="option">-D</code> command line
+            option you can pass a system property to the JVM which runs Gradle. The <code class="option">-D</code> option of the
+            <span class="command"><strong>gradle</strong></span> command has the same effect as the <code class="option">-D</code> option of the
+            <span class="command"><strong>java</strong></span> command.
+        </p><p>You can also directly add properties to your project objects using properties files. You can place a
+            <code class="filename">gradle.properties</code> file in the Gradle user home directory (defaults to
+            <code class="filename"><em class="replaceable"><code>USER_HOME</code></em>/.gradle</code>) or in your project directory. For
+            multi-project builds you can place <code class="filename">gradle.properties</code> files in any subproject directory.
+            The properties of the <code class="filename">gradle.properties</code> can be accessed via the project object. The
+            properties file in the user's home directory has precedence over property files in the project directories.
+        </p><p>You can also add properties directly to your project object via the <code class="option">-P</code>
+            command line option. For more exotic use cases you can even pass properties <span class="emphasis"><em>directly</em></span>
+            to the project object via system and environment properties. For example if you run a build on a continuous
+            integration server where you have no admin rights for the <span class="emphasis"><em>machine</em></span>. Your build script
+            needs properties which values should not be seen by others. Therefore you can't use the <code class="option">-P</code>
+            option. In this case you can add an environment property in the project administration section (invisible to
+            normal users).
+            <sup>[<a href="#ftn.N10C0B" name="N10C0B" class="footnote">6</a>]</sup>
+            If the environment property follows the pattern
+            <code class="literal">ORG_GRADLE_PROJECT_<em class="replaceable"><code>propertyName</code></em>=somevalue</code>,
+            <code class="literal">propertyName</code> is added to your project object. We also support the same mechanism for
+            system properties. The only difference is the pattern, which is
+            <code class="literal">org.gradle.project.<em class="replaceable"><code>propertyName</code></em></code>.
+        </p><p>With the <code class="filename">gradle.properties</code> files you can also set system properties. If a property
+            in such a file has the prefix <code class="literal">systemProp.</code> the property and its value are added to the 
+            system properties, without the prefix.
+            In a multi project build, <code class="literal">systemProp.</code> properties set in any project except the root will be ignored.
+            That is, only <code class="literal">systemProp.</code> in the root project's <code class="filename">gradle.properties</code> file will be set as system properties.
+        </p><div class="example"><a name="properties"></a><p class="title"><b>Example&nbsp;14.2.&nbsp;Setting properties with a gradle.properties file</b></p><div class="example-contents"><p><code class="filename">gradle.properties</code></p><pre class="programlisting">gradlePropertiesProp=gradlePropertiesValue
+systemProjectProp=shouldBeOverWrittenBySystemProp
+envProjectProp=shouldBeOverWrittenByEnvProp
+systemProp.system=systemValue</pre><p><code class="filename">build.gradle</code></p><pre class="programlisting">task printProps &lt;&lt; {
+    println commandLineProjectProp
+    println gradlePropertiesProp
+    println systemProjectProp
+    println envProjectProp
+    println System.properties[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'system'</span>]
+}</pre><p>Output of <strong class="userinput"><code>gradle -q -PcommandLineProjectProp=commandLineProjectPropValue -Dorg.gradle.project.systemProjectProp=systemPropertyValue printProps</code></strong></p><pre class="screen">&gt; gradle -q -PcommandLineProjectProp=commandLineProjectPropValue -Dorg.gradle.project.systemProjectProp=systemPropertyValue printProps
+commandLineProjectPropValue
+gradlePropertiesValue
+systemPropertyValue
+envPropertyValue
+systemValue</pre></div></div><br class="example-break"><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:checking_for_project_properties"></a>14.2.1.&nbsp;Checking for project properties</h3></div></div></div><p>You can access a project property in your build script simply by using its name as you would use a
+                variable. In case this property does not exists, an exception is thrown and the build fails. If your
+                build script relies on optional properties the user might set for example in a gradle.properties file,
+                you need to check for existence before you can access them. You can do this by using the method
+                <code class="literal">hasProperty('propertyName')</code>
+                which returns
+                <code class="literal">true</code>
+                or <code class="literal">false</code>.
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:configuring_using_external_script"></a>14.3.&nbsp;Configuring the project using an external build script</h2></div></div></div><p>You can configure the current project using an external build script. All of the Gradle build language
+            is available in the external script. You can even apply other scripts from the external script.
+        </p><div class="example"><a name="configureProjectUsingScript"></a><p class="title"><b>Example&nbsp;14.3.&nbsp;Configuring the project using an external build script</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply from: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'other.gradle'</span></pre><p><code class="filename">other.gradle</code></p><pre class="programlisting">println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"configuring $project"</span>
+task hello &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello from other script'</span>
+}</pre><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
+configuring root project 'configureProjectUsingScript'
+hello from other script</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:configuring_arbitrary_objects"></a>14.4.&nbsp;Configuring arbitrary objects</h2></div></div></div><p>You can configure arbitrary objects in the following very readable way.
+        </p><div class="example"><a name="configureObject"></a><p class="title"><b>Example&nbsp;14.4.&nbsp;Configuring arbitrary objects</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task configure &lt;&lt; {
+    pos = configure(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> java.text.FieldPosition(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">10</span>)) {
+        beginIndex = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">1</span>
+        endIndex = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">5</span>
+    }
+    println pos.beginIndex
+    println pos.endIndex
+}</pre><p>Output of <strong class="userinput"><code>gradle -q configure</code></strong></p><pre class="screen">&gt; gradle -q configure
+1
+5</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10C8A"></a>14.5.&nbsp;Configuring arbitrary objects using an external script</h2></div></div></div><p>You can also configure arbitrary objects using an external script.
+        </p><div class="example"><a name="configureObjectUsingScript"></a><p class="title"><b>Example&nbsp;14.5.&nbsp;Configuring arbitrary objects using a script</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task configure &lt;&lt; {
+    pos = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> java.text.FieldPosition(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">10</span>)
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Apply the script</span>
+    apply from: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'other.gradle'</span>, to: pos
+    println pos.beginIndex
+    println pos.endIndex
+}</pre><p><code class="filename">other.gradle</code></p><pre class="programlisting">beginIndex = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">1</span>;
+endIndex = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">5</span>;</pre><p>Output of <strong class="userinput"><code>gradle -q configure</code></strong></p><pre class="screen">&gt; gradle -q configure
+1
+5</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:caching"></a>14.6.&nbsp;Caching</h2></div></div></div><p>To improve responsiveness Gradle caches all compiled scripts by default. This includes all build scripts,
+            initialization scripts, and other scripts. The first time you run a build for a project, Gradle creates a
+            <code class="filename">.gradle</code> directory in which it puts the compiled script. The next time you run this
+            build, Gradle uses the compiled script, if the script has not changed since it was compiled.  Otherwise the
+            script gets compiled and the new version is stored in the cache. If you run Gradle with the
+            <code class="option">--recompile-scripts</code> option, the cached script is discarded and the script is compiled and stored
+            in the cache. This way you can force Gradle to rebuild the cache.
+        </p></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N10C0B" name="ftn.N10C0B" class="para">6</a>] </sup>
+                    <span class="emphasis"><em>Teamcity</em></span> or <span class="emphasis"><em>Bamboo</em></span> are for example CI servers which
+                    offer this functionality.
+                </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="writing_build_scripts.html" title="Chapter&nbsp;13.&nbsp;Writing Build Scripts">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="more_about_tasks.html" title="Chapter&nbsp;15.&nbsp;More about Tasks">Next</a></div></div></div></body></html>

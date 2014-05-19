@@ -1,0 +1,191 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;7.&nbsp;Java Quickstart</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="tutorial_using_tasks.html" title="Chapter&nbsp;6.&nbsp;Build Script Basics"><link rel="next" href="artifact_dependencies_tutorial.html" title="Chapter&nbsp;8.&nbsp;Dependency Management Basics"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_using_tasks.html" title="Chapter&nbsp;6.&nbsp;Build Script Basics">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="artifact_dependencies_tutorial.html" title="Chapter&nbsp;8.&nbsp;Dependency Management Basics">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="tutorial_java_projects"></a>Chapter&nbsp;7.&nbsp;Java Quickstart</h1></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N103C9"></a>7.1.&nbsp;The Java plugin</h2></div></div></div><p>As we have seen, Gradle is a general-purpose build tool. It can build pretty much anything you care to
+            implement in your build script. Out-of-the-box, however, it doesn't build anything unless you add code to
+            your build script to do so.</p><p>Most Java projects are pretty similar as far as the basics go: you need to compile your Java
+            source files, run some unit tests, and create a JAR file containing your classes. It would be nice if you
+            didn't have to code all this up for every project. Luckily, you don't have to.
+            Gradle solves this problem through the use of <em class="firstterm">plugins</em>. A plugin is an extension to Gradle
+            which configures your project in some way, typically by adding some pre-configured tasks which together do
+            something useful. Gradle ships with a number of plugins, and you can easily write your own and share them with
+            others. One such plugin is the <em class="firstterm">Java plugin</em>. This plugin adds some tasks to your
+            project which will compile and unit test your Java source code, and bundle it into a JAR file.
+        </p><p>The Java plugin is convention based. This means that the plugin defines default values for many aspects of the
+            project, such as where the Java source files are located. If you follow the convention in your project, you
+            generally don't need to do much in your build script to get a useful build. Gradle allows you to customize your
+            project if you don't want to or cannot follow the convention in some way. In fact, because support for Java
+            projects is implemented as a plugin, you don't have to use the plugin at all to build a Java project, if
+            you don't want to.
+        </p><p>We have in-depth coverage with many examples about the Java plugin, dependency management and multi-project
+            builds in later chapters. In this chapter we want to give you an initial idea of how to use the Java plugin to
+            build a Java project.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N103DA"></a>7.2.&nbsp;A basic Java project</h2></div></div></div><p>Let's look at a simple example. To use the Java plugin, add the following to your build file:</p><div class="example"><a name="javaQuickstart"></a><p class="title"><b>Example&nbsp;7.1.&nbsp;Using the Java plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span></pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/java/quickstart</code> which is in both the binary and source distributions of Gradle.</p></div></div></div><br class="example-break"><p>This is all you need to define a Java project. This will apply the Java plugin to your project, which adds
+            a number of tasks to your project.</p><div class="tip"><h3 class="title">What tasks are available?</h3><p>You can use <strong class="userinput"><code>gradle tasks</code></strong> to list the tasks of a project. This will let you see
+            the tasks that the Java plugin has added to your project.
+        </p></div><p>Gradle expects to find your production source code under <code class="filename">src/main/java</code> and your test
+            source code under <code class="filename">src/test/java</code>. In addition, any files under
+            <code class="filename">src/main/resources</code> will be included in the JAR file as resources, and any files under
+            <code class="filename">src/test/resources</code> will be included in the classpath used to run the tests. All output
+            files are created under the <code class="filename">build</code> directory, with the JAR file ending up in the
+            <code class="filename">build/libs</code> directory.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10410"></a>7.2.1.&nbsp;Building the project</h3></div></div></div><p>The Java plugin adds quite a few tasks to your project. However, there are only a handful of tasks
+                that you will need to use to build the project. The most commonly used task is the <code class="literal">build</code> task,
+                which does a full build of the project. When you run <strong class="userinput"><code>gradle build</code></strong>, Gradle will
+                compile and test your code, and create a JAR file containing your main classes and resources:</p><div class="example"><a name="javaQuickstart"></a><p class="title"><b>Example&nbsp;7.2.&nbsp;Building a Java project</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle build</code></strong></p><pre class="screen">&gt; gradle build
+:compileJava
+:processResources
+:classes
+:jar
+:assemble
+:compileTestJava
+:processTestResources
+:testClasses
+:test
+:check
+:build
+
+BUILD SUCCESSFUL
+
+Total time: 1 secs</pre></div></div><br class="example-break"><p>Some other useful tasks are:</p><div class="variablelist"><dl><dt><span class="term">clean</span></dt><dd><p>Deletes the <code class="filename">build</code> directory, removing all built files.</p></dd><dt><span class="term">assemble</span></dt><dd><p>Compiles and jars your code, but does not run the unit tests. Other plugins add more
+                            artifacts to this task. For example, if you use the War plugin, this task will also build
+                            the WAR file for your project.
+                        </p></dd><dt><span class="term">check</span></dt><dd><p>Compiles and tests your code. Other plugins add more checks to this task. For example, if
+                            you use the Code-quality plugin, this task will also run Checkstyle against your source
+                            code.
+                        </p></dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1043D"></a>7.2.2.&nbsp;External dependencies</h3></div></div></div><p>Usually, a Java project will have some dependencies on external JAR files. To reference these JAR
+                files in the project, you need to tell Gradle where to find them. In Gradle, artifacts such as JAR
+                files, are located in a <em class="firstterm">repository</em>. A repository can be used for fetching the
+                dependencies of a project, or for publishing the artifacts of a project, or both. For this example,
+                we will use the public Maven repository:</p><div class="example"><a name="javaQuickstart"></a><p class="title"><b>Example&nbsp;7.3.&nbsp;Adding Maven repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+    mavenCentral()
+}</pre></div></div><br class="example-break"><p>Let's add some dependencies. Here, we will declare that our production classes have a compile-time
+                dependency on commons collections, and that our test classes have a compile-time dependency on junit:</p><div class="example"><a name="javaQuickstart"></a><p class="title"><b>Example&nbsp;7.4.&nbsp;Adding dependencies</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
+    compile group: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'commons-collections'</span>, name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'commons-collections'</span>, version: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'3.2'</span>
+    testCompile group: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'junit'</span>, name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'junit'</span>, version: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'4.+'</span>
+}</pre></div></div><br class="example-break"><p>You can find out more in <a class="xref" href="artifact_dependencies_tutorial.html">Chapter&nbsp;8, <i>Dependency Management Basics</i></a>.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10460"></a>7.2.3.&nbsp;customizing the project</h3></div></div></div><p>The Java plugin adds a number of properties to your project. These properties have default values
+                which are usually sufficient to get started. It's easy to change these values if they don't suit. Let's
+                look at this for our sample. Here we will specify the version number for our Java project, along
+                with the Java version our source is written in. We also add some attributes to the JAR manifest.
+            </p><div class="example"><a name="javaQuickstart"></a><p class="title"><b>Example&nbsp;7.5.&nbsp;Customization of MANIFEST.MF</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">sourceCompatibility = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">1.5</span>
+version = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0'</span>
+jar {
+    manifest {
+        attributes <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Implementation-Title'</span>: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Gradle Quickstart'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Implementation-Version'</span>: version
+    }
+}</pre></div></div><br class="example-break"><div class="tip"><h3 class="title">What properties are available?</h3><p>You can use <strong class="userinput"><code>gradle properties</code></strong> to list the properties of a project. This will allow
+                you to see the properties added by the Java plugin, and their default values.</p></div><p>The tasks which the Java plugin adds are regular tasks, exactly the same as if they were declared in
+                the build file. This means you can use any of the mechanisms shown in earlier chapters to customize
+                these tasks. For example, you can set the properties of a task, add behaviour to a task, change the
+                dependencies of a task, or replace a task entirely. In our sample, we will configure the
+                <code class="literal">test</code> task, which is of type <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a>, to
+                add a system property when the tests are executed: </p><div class="example"><a name="javaQuickstart"></a><p class="title"><b>Example&nbsp;7.6.&nbsp;Adding a test system property</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">test {
+    systemProperties <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'property'</span>: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'value'</span>
+}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1048B"></a>7.2.4.&nbsp;Publishing the JAR file</h3></div></div></div><p>Usually the JAR file needs to be published somewhere. To do this, you need to tell Gradle where to
+                publish the JAR file. In Gradle, artifacts such as JAR files are published to repositories. In our
+                sample, we will publish to a local directory. You can also publish to a remote location, or multiple
+                locations.
+            </p><div class="example"><a name="javaQuickstart"></a><p class="title"><b>Example&nbsp;7.7.&nbsp;Publishing the JAR file</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">uploadArchives {
+    repositories {
+       flatDir {
+           dirs <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'repos'</span>
+       }
+    }
+}</pre></div></div><br class="example-break"><p>To publish the JAR file, run <strong class="userinput"><code>gradle uploadArchives</code></strong>.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1049F"></a>7.2.5.&nbsp;Creating an Eclipse project</h3></div></div></div><p>To import your project into Eclipse, you need to add another plugin to your build file:</p><div class="example"><a name="javaQuickstart"></a><p class="title"><b>Example&nbsp;7.8.&nbsp;Eclipse plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'eclipse'</span></pre></div></div><br class="example-break"><p>Now execute <strong class="userinput"><code>gradle eclipse</code></strong> command to generate Eclipse project files. More on Eclipse
+                task can be found in <a class="xref" href="eclipse_plugin.html">Chapter&nbsp;38, <i>The Eclipse Plugin</i></a>.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N104B6"></a>7.2.6.&nbsp;Summary</h3></div></div></div><p>Here's the complete build file for our sample:</p><div class="example"><a name="javaQuickstart"></a><p class="title"><b>Example&nbsp;7.9.&nbsp;Java example - complete build file</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
+apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'eclipse'</span>
+
+sourceCompatibility = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">1.5</span>
+version = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0'</span>
+jar {
+    manifest {
+        attributes <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Implementation-Title'</span>: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Gradle Quickstart'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Implementation-Version'</span>: version
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'commons-collections'</span>, name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'commons-collections'</span>, version: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'3.2'</span>
+    testCompile group: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'junit'</span>, name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'junit'</span>, version: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'4.+'</span>
+}
+
+test {
+    systemProperties <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'property'</span>: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'value'</span>
+}
+
+uploadArchives {
+    repositories {
+       flatDir {
+           dirs <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'repos'</span>
+       }
+    }
+}</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:examples"></a>7.3.&nbsp;Multi-project Java build</h2></div></div></div><p>Now let's look at a typical multi-project build. Below is the layout for the project:
+        </p><div class="example"><a name="javaMultiProject"></a><p class="title"><b>Example&nbsp;7.10.&nbsp;Multi-project build - hierarchical layout</b></p><div class="example-contents"><p>Build layout</p><pre class="programlisting">multiproject/
+  api/
+  services/webservice/
+  shared/</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/java/multiproject</code> which is in both the binary and source distributions of Gradle.</p></div></div></div><br class="example-break"><p>Here we have three projects. Project <code class="literal">api</code> produces a JAR file which is shipped to the
+            client to provide them a Java client for your XML webservice. Project <code class="literal">webservice</code> is a
+            webapp which returns XML. Project <code class="literal">shared</code> contains code used both by <code class="literal">api</code>
+            and <code class="literal">webservice</code>.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N104ED"></a>7.3.1.&nbsp;Defining a multi-project build</h3></div></div></div><p>To define a multi-project build, you need to create a <em class="firstterm">settings file</em>. The settings
+                file lives in the root directory of the source tree, and specifies which projects to include in the
+                build. It must be called <code class="filename">settings.gradle</code>. For this example, we are using a simple
+                hierarchical layout. Here is the corresponding settings file:
+            </p><div class="example"><a name="javaMultiProject"></a><p class="title"><b>Example&nbsp;7.11.&nbsp;Multi-project build - settings.gradle file</b></p><div class="example-contents"><p><code class="filename">settings.gradle</code></p><pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"shared"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"api"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"services:webservice"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"services:shared"</span></pre></div></div><br class="example-break"><p>You can find out more about the settings file in <a class="xref" href="multi_project_builds.html">Chapter&nbsp;56, <i>Multi-project Builds</i></a>.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10507"></a>7.3.2.&nbsp;Common configuration</h3></div></div></div><p>For most multi-project builds, there is some configuration which is common to all projects.
+                In our sample, we will define this common configuration in the root project, using a technique called
+                <em class="firstterm">configuration injection</em>. Here, the root project is like a container and the
+                <code class="literal">subprojects</code> method iterates over the elements of this container - the projects in
+                this instance - and injects the specified configuration. This way we can easily define the manifest
+                content for all archives, and some common dependencies:
+            </p><div class="example"><a name="javaMultiProject"></a><p class="title"><b>Example&nbsp;7.12.&nbsp;Multi-project build - common configuration</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">subprojects {
+    apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
+    apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'eclipse-wtp'</span>
+
+    repositories {
+       mavenCentral()
+    }
+
+    dependencies {
+        testCompile <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'junit:junit:4.11'</span>
+    }
+
+    version = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0'</span>
+
+    jar {
+        manifest.attributes provider: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'gradle'</span>
+    }
+}</pre></div></div><br class="example-break"><p>Notice that our sample applies the Java plugin to each subproject. This means the tasks and
+                configuration properties we have seen in the previous section are available in each subproject.
+                So, you can compile, test, and JAR all the projects by running <strong class="userinput"><code>gradle build</code></strong> from
+                the root project directory.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10521"></a>7.3.3.&nbsp;Dependencies between projects</h3></div></div></div><p>You can add dependencies between projects in the same build, so that, for example, the JAR file of one
+                project is used to compile another project. In the <code class="literal">api</code> build file we will add a dependency
+                on the JAR produced by the <code class="literal">shared</code> project. Due to this dependency, Gradle will
+                ensure that project <code class="literal">shared</code> always gets built before project <code class="literal">api</code>.
+            </p><div class="example"><a name="javaMultiProject"></a><p class="title"><b>Example&nbsp;7.13.&nbsp;Multi-project build - dependencies between projects</b></p><div class="example-contents"><p><code class="filename">api/build.gradle</code></p><pre class="programlisting">dependencies {
+    compile project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':shared'</span>)
+}</pre></div></div><br class="example-break">
+            See <a class="xref" href="multi_project_builds.html#disable_dependency_projects">Section&nbsp;56.7.1, &ldquo;Disabling the build of dependency projects&rdquo;</a> for how to disable this functionality.
+        </div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10540"></a>7.3.4.&nbsp;Creating a distribution</h3></div></div></div><p>
+                We also add a distribution, that gets shipped to the client:
+            </p><div class="example"><a name="javaMultiProject"></a><p class="title"><b>Example&nbsp;7.14.&nbsp;Multi-project build - distribution file</b></p><div class="example-contents"><p><code class="filename">api/build.gradle</code></p><pre class="programlisting">task dist(type: Zip) {
+    dependsOn spiJar
+    from <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/dist'</span>
+    into(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'libs'</span>) {
+        from spiJar.archivePath
+        from configurations.runtime
+    }
+}
+
+artifacts {
+   archives dist
+}</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1054F"></a>7.4.&nbsp;Where to next?</h2></div></div></div><p>
+            In this chapter, you have seen how to do some of the things you commonly need to build a Java based
+            project. This chapter is not exhaustive, and there are many other things you can do with Java projects in
+            Gradle.
+            You can find out more about the Java plugin in <a class="xref" href="java_plugin.html">Chapter&nbsp;23, <i>The Java Plugin</i></a>, and you can find more sample
+            Java projects in the <code class="filename">samples/java</code> directory in the Gradle distribution.
+        </p><p>
+            Otherwise, continue on to <a class="xref" href="artifact_dependencies_tutorial.html">Chapter&nbsp;8, <i>Dependency Management Basics</i></a>.
+        </p><p>
+        </p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_using_tasks.html" title="Chapter&nbsp;6.&nbsp;Build Script Basics">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="artifact_dependencies_tutorial.html" title="Chapter&nbsp;8.&nbsp;Dependency Management Basics">Next</a></div></div></div></body></html>

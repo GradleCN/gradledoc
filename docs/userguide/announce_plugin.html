@@ -1,0 +1,46 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;42.&nbsp;The Announce Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="project_reports_plugin.html" title="Chapter&nbsp;41.&nbsp;The Project Report Plugin"><link rel="next" href="build_announcements_plugin.html" title="Chapter&nbsp;43.&nbsp;The Build Announcements Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="project_reports_plugin.html" title="Chapter&nbsp;41.&nbsp;The Project Report Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="build_announcements_plugin.html" title="Chapter&nbsp;43.&nbsp;The Build Announcements Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="announce_plugin"></a>Chapter&nbsp;42.&nbsp;The Announce Plugin</h1></div></div></div><p>The Gradle announce allows to send custom announcements during a build. The following notification systems are supported:
+	</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><a class="ulink" href="http://twitter.com" target="_top">Twitter</a></li><li class="listitem"><a class="ulink" href="http://manpages.ubuntu.com/manpages/gutsy/man1/notify-send.1.html" target="_top">notify-send</a> (Ubuntu)</li><li class="listitem"><a class="ulink" href="https://sites.google.com/site/snarlapp/home" target="_top">Snarl</a> (Windows)</li><li class="listitem"><a class="ulink" href="http://growl.info/" target="_top">Growl</a> (Mac OS X)</li></ul></div><p>
+	</p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N145A0"></a>42.1.&nbsp;Usage</h2></div></div></div><p>To use the announce plugin, apply it to your build script:</p><div class="example"><a name="useAnnouncePlugin"></a><p class="title"><b>Example&nbsp;42.1.&nbsp;Using the announce plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'announce'</span></pre></div></div><br class="example-break"><p>Next, configure your notification service(s) of choice (see table below for which configuration properties are available):</p><div class="example"><a name="useAnnouncePlugin"></a><p class="title"><b>Example&nbsp;42.2.&nbsp;Configure the announce plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">announce {  
+  username = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'myId'</span>
+  password = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'myPassword'</span>
+}</pre></div></div><br class="example-break"><p>Finally, send announcements with the <code class="literal">announce</code> method:</p><div class="example"><a name="useAnnouncePlugin"></a><p class="title"><b>Example&nbsp;42.3.&nbsp;Using the announce plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task helloWorld &lt;&lt; {  
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Hello, world!"</span>
+}  
+
+helloWorld.doLast {  
+    announce.announce(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"helloWorld completed!"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"twitter"</span>)
+    announce.announce(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"helloWorld completed!"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"local"</span>)
+}</pre></div></div><br class="example-break"><p>The <code class="literal">announce</code> method takes two String arguments: The message to be sent, and the notification
+            service to be used. The following table lists supported notification services and their configuration properties.
+        </p></div><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;42.1.&nbsp;Announce Plugin Notification Services</b></p><div class="table-contents"><table id="N145CF"><thead><tr>
+               <td>Notification Service</td>
+               <td>Operating System</td>
+               <td>Configuration Properties</td>
+               <td>Further Information</td>
+           </tr></thead><tr>
+           <td>twitter</td>
+           <td>Any</td>
+           <td>username, password</td>
+           <td></td>
+       </tr><tr>
+           <td>snarl</td>
+           <td>Windows</td>
+           <td></td>
+           <td></td>
+       </tr><tr>
+           <td>growl</td>
+           <td>Mac OS X</td>
+           <td></td>
+           <td></td>
+       </tr><tr>
+           <td>notify-send</td>
+           <td>Ubuntu</td>
+           <td></td>
+           <td>Requires the notify-send package to be installed. Use <code class="literal">sudo apt-get install libnotify-bin</code>
+               to install it.</td>
+       </tr><tr>
+           <td>local</td>
+           <td>Windows, Mac OS X, Ubuntu</td>
+           <td></td>
+           <td>Automatically chooses between snarl, growl, and notify-send depending on the current operating system.</td>
+       </tr></table></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N14623"></a>42.2.&nbsp;Configuration</h2></div></div></div><p>See <a class="ulink" href="../dsl/org.gradle.api.plugins.announce.AnnouncePluginExtension.html" target="_top"><code class="classname">AnnouncePluginExtension</code></a>.</p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="project_reports_plugin.html" title="Chapter&nbsp;41.&nbsp;The Project Report Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="build_announcements_plugin.html" title="Chapter&nbsp;43.&nbsp;The Build Announcements Plugin">Next</a></div></div></div></body></html>

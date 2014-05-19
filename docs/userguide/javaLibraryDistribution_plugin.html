@@ -1,0 +1,39 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;46.&nbsp;The Java Library Distribution Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="application_plugin.html" title="Chapter&nbsp;45.&nbsp;The Application Plugin"><link rel="next" href="build_init_plugin.html" title="Chapter&nbsp;47.&nbsp;Build Init Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="application_plugin.html" title="Chapter&nbsp;45.&nbsp;The Application Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="build_init_plugin.html" title="Chapter&nbsp;47.&nbsp;Build Init Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="javaLibraryDistribution_plugin"></a>Chapter&nbsp;46.&nbsp;The Java Library Distribution Plugin</h1></div></div></div><div class="note"><p>
+            The Java library distribution plugin is currently <a class="link" href="feature_lifecycle.html">incubating</a>. Please be aware that the DSL and other configuration may change in later Gradle versions.
+        </p></div><p>The Java library distribution plugin adds support for building a distribution ZIP for a Java library. The distribution contains the
+        JAR file for the library and its dependencies.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N14905"></a>46.1.&nbsp;Usage</h2></div></div></div><p>To use the Java library distribution plugin, include in your build script:</p><div class="example"><a name="usejavaLibraryPlugin"></a><p class="title"><b>Example&nbsp;46.1.&nbsp;Using the java library distribution plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java-library-distribution'</span></pre></div></div><br class="example-break"><p>To define the name for the distribution you have to set the <code class="literal">baseName</code> property as shown below:
+        </p><div class="example"><a name="useApplicationPlugin"></a><p class="title"><b>Example&nbsp;46.2.&nbsp;Configure the distribution name</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">distributions {
+    main{
+        baseName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'my-name'</span>
+    }
+}</pre></div></div><br class="example-break"><p>The plugin build a distribution for your library. The distribution will package up the runtime dependencies of the library
+            All files stored in <code class="filename">src/main/dist</code> will be added to the root of the archive distribution. You can run
+            <strong class="userinput"><code>gradle distZip</code></strong> to create a ZIP containing the distribution.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1492B"></a>46.2.&nbsp;Tasks</h2></div></div></div><p>The Java library distribution plugin adds the following tasks to the project.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;46.1.&nbsp;Java library distribution plugin - tasks</b></p><div class="table-contents"><table id="N14930"><thead><tr>
+                    <td>Task name</td>
+                    <td>Depends on</td>
+                    <td>Type</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">distZip</code>
+                </td>
+                <td>
+                    <code class="literal">jar</code>
+                </td>
+                <td>
+                    <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Zip.html" target="_top"><code class="classname">Zip</code></a>
+                </td>
+                <td>Creates a full distribution ZIP archive including runtime libraries.</td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="java_library_distribution_resources"></a>46.3.&nbsp;Including other resources in the distribution</h2></div></div></div><p>
+            All of the files from the <code class="filename">src/dist</code> directory are copied. To include any static files in the distribution, simply arrange
+            them in the <code class="filename">src/dist</code> directory, or add it to the content of the distribution.
+        </p><div class="example"><a name="includeTaskOutputInApplicationDistribution"></a><p class="title"><b>Example&nbsp;46.3.&nbsp;Include files in the distribution</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">distributions {
+    main {
+        baseName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'my-name'</span>
+        contents {
+            from { <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/dist'</span> }
+        }
+    }
+}</pre></div></div><br class="example-break"></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="application_plugin.html" title="Chapter&nbsp;45.&nbsp;The Application Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="build_init_plugin.html" title="Chapter&nbsp;47.&nbsp;Build Init Plugin">Next</a></div></div></div></body></html>

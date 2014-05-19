@@ -1,0 +1,172 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;13.&nbsp;Writing Build Scripts</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="tutorial_gradle_gui.html" title="Chapter&nbsp;12.&nbsp;Using the Gradle Graphical User Interface"><link rel="next" href="tutorial_this_and_that.html" title="Chapter&nbsp;14.&nbsp;Tutorial - 'This and That'"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_gradle_gui.html" title="Chapter&nbsp;12.&nbsp;Using the Gradle Graphical User Interface">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_this_and_that.html" title="Chapter&nbsp;14.&nbsp;Tutorial - 'This and That'">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="writing_build_scripts"></a>Chapter&nbsp;13.&nbsp;Writing Build Scripts</h1></div></div></div><p>This chapter looks at some of the details of writing a build script.</p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N109CC"></a>13.1.&nbsp;The Gradle build language</h2></div></div></div><p>Gradle provides a <em class="firstterm">domain specific language</em>, or DSL, for describing builds.
+            This build language is based on Groovy, with some additions to make it easier to describe a build.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:project_api"></a>13.2.&nbsp;The Project API</h2></div></div></div><p>In the tutorial in <a class="xref" href="tutorial_java_projects.html">Chapter&nbsp;7, <i>Java Quickstart</i></a> we used, for example, the
+            <code class="literal">apply()</code> method. Where does this method come from? We said earlier that the build script
+            defines a project in Gradle. For each project in the build, Gradle creates an instance of type
+            <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> and associates this <code class="classname">Project</code> object with
+            the build script. As the build script executes, it configures this <code class="classname">Project</code> object:
+        </p><div class="tip"><h3 class="title">Getting help writing build scripts</h3><p>Don't forget that your build script is simply Groovy code that drives the Gradle API. And the
+                <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> interface is your starting point for accessing everything
+                in the Gradle API. So, if you're wondering what 'tags' are available in your build script, you can
+                start with the documentation for the <code class="classname">Project</code> interface.
+            </p></div><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Any method you call in your build script, which <span class="emphasis"><em>is not defined</em></span>
+                    in the build script, is delegated to the <code class="classname">Project</code> object.
+                </p></li><li class="listitem"><p>Any property you access in your build script, which <span class="emphasis"><em>is not defined</em></span>
+                    in the build script, is delegated to the <code class="classname">Project</code> object.
+                </p></li></ul></div><p>Let's try this out and try to access the <code class="literal">name</code> property of the
+            <code class="classname">Project</code> object.
+        </p><div class="example"><a name="projectApi"></a><p class="title"><b>Example&nbsp;13.1.&nbsp;Accessing property of the Project object</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">println name
+println project.name</pre><p>Output of <strong class="userinput"><code>gradle -q check</code></strong></p><pre class="screen">&gt; gradle -q check
+projectApi
+projectApi</pre></div></div><br class="example-break"><p>Both <code class="literal">println</code> statements print out the same property. The first uses auto-delegation to
+            the <code class="classname">Project</code> object, for properties not defined in the build script. The other
+            statement uses the <code class="literal">project</code> property available to any build script, which returns the
+            associated <code class="classname">Project</code> object. Only if you define a property or a method which has the
+            same name as a member of the <code class="classname">Project</code> object, you need to use the <code class="literal">project</code>
+            property.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10A37"></a>13.2.1.&nbsp;Standard project properties</h3></div></div></div><p>The <code class="classname">Project</code> object provides some standard properties, which are available in
+                your build script. The following table lists a few of the commonly used ones.
+            </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;13.1.&nbsp;Project Properties</b></p><div class="table-contents"><table id="N10A3F"><thead><tr>
+                        <td>Name</td>
+                        <td>Type</td>
+                        <td>Default Value</td>
+                    </tr></thead><tr>
+                    <td><code class="literal">project</code></td>
+                    <td><a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a></td>
+                    <td>The <code class="classname">Project</code> instance</td>
+                </tr><tr>
+                    <td><code class="literal">name</code></td>
+                    <td><code class="classname">String</code></td>
+                    <td>The name of the project directory.</td>
+                </tr><tr>
+                    <td><code class="literal">path</code></td>
+                    <td><code class="classname">String</code></td>
+                    <td>The absolute path of the project.</td>
+                </tr><tr>
+                    <td><code class="literal">description</code></td>
+                    <td><code class="classname">String</code></td>
+                    <td>A description for the project.</td>
+                </tr><tr>
+                    <td><code class="literal">projectDir</code></td>
+                    <td><code class="classname">File</code></td>
+                    <td>The directory containing the build script.</td>
+                </tr><tr>
+                    <td><code class="literal">buildDir</code></td>
+                    <td><code class="classname">File</code></td>
+                    <td><code class="filename"><em class="replaceable"><code>projectDir</code></em>/build</code></td>
+                </tr><tr>
+                    <td><code class="literal">group</code></td>
+                    <td><code class="classname">Object</code></td>
+                    <td><code class="literal">unspecified</code></td>
+                </tr><tr>
+                    <td><code class="literal">version</code></td>
+                    <td><code class="classname">Object</code></td>
+                    <td><code class="literal">unspecified</code></td>
+                </tr><tr>
+                    <td><code class="literal">ant</code></td>
+                    <td><a class="ulink" href="../javadoc/org/gradle/api/AntBuilder.html" target="_top"><code class="classname">AntBuilder</code></a></td>
+                    <td>An <code class="classname">AntBuilder</code> instance</td>
+                </tr></table></div></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10AD2"></a>13.3.&nbsp;The Script API</h2></div></div></div><p>When Gradle executes a script, it compiles the script into a class which implements <a class="ulink" href="../dsl/org.gradle.api.Script.html" target="_top"><code class="classname">Script</code></a>.
+            This means that all of the properties and methods declared by the <code class="classname">Script</code> interface
+            are available in your script.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10ADF"></a>13.4.&nbsp;Declaring variables</h2></div></div></div><p>There are two kinds of variables that can be declared in a build script: local variables and extra properties.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10AE4"></a>13.4.1.&nbsp;Local variables</h3></div></div></div><p>Local variables are declared with the <code class="literal">def</code> keyword. They are only visible in the scope where they have been declared.
+                Local variables are a feature of the underlying Groovy language.
+            </p><div class="example"><a name="localVariables"></a><p class="title"><b>Example&nbsp;13.2.&nbsp;Using local variables</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">def dest = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"dest"</span>
+
+task copy(type: Copy) {
+    from <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"source"</span>
+    into dest
+}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:extra_properties"></a>13.4.2.&nbsp;Extra properties</h3></div></div></div><p>All enhanced objects in Gradle's domain model can hold extra user-defined properties. This includes, but is not limited to, projects, tasks,
+                and source sets. Extra properties can be added, read and set via the owning object's <code class="literal">ext</code> property. Alternatively, an
+                <code class="literal">ext</code> block can be used to add multiple properties at once.
+            </p><div class="example"><a name="extraProperties"></a><p class="title"><b>Example&nbsp;13.3.&nbsp;Using extra properties</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"java"</span>
+
+ext {
+    springVersion = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"3.1.0.RELEASE"</span>
+    emailNotification = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"build@master.org"</span>
+}
+
+sourceSets.all { ext.purpose = null }
+
+sourceSets {
+    main {
+        purpose = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"production"</span>
+    }
+    test {
+        purpose = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"test"</span>
+    }
+    plugin {
+        purpose = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"production"</span>
+    }
+}
+
+task printProperties &lt;&lt; {
+    println springVersion
+    println emailNotification
+    sourceSets.matching { it.purpose == <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"production"</span> }.each { println it.name }
+}</pre><p>Output of <strong class="userinput"><code>gradle -q printProperties</code></strong></p><pre class="screen">&gt; gradle -q printProperties
+3.1.0.RELEASE
+build@master.org
+main
+plugin</pre></div></div><br class="example-break"><p>In this example, an <code class="literal">ext</code> block adds two extra properties to the <code class="literal">project</code> object. Additionally,
+                a property named <code class="literal">purpose</code> is added to each source set by setting <code class="literal">ext.purpose</code> to
+                <code class="literal">null</code> (<code class="literal">null</code> is a permissible value). Once the properties have been added, they can be read and set like
+                predefined properties.
+            </p><p>By requiring special syntax for adding a property, Gradle can fail fast when an attempt is made to set a (predefined or extra) property
+                but the property is misspelled or does not exist.
+                <sup>[<a href="#ftn.N10B28" name="N10B28" class="footnote">5</a>]</sup>
+                Extra properties can be accessed from anywhere their owning object can be accessed, giving them a wider scope than local variables.
+                Extra properties on a parent project are visible from subprojects.
+            </p><p>For further details on extra properties and their API, see <a class="ulink" href="../dsl/org.gradle.api.plugins.ExtraPropertiesExtension.html" target="_top"><code class="classname">ExtraPropertiesExtension</code></a>.</p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10B36"></a>13.5.&nbsp;Some Groovy basics</h2></div></div></div><p>Groovy provides plenty of features for creating DSLs, and the Gradle build language takes advantage of these.
+            Understanding how the build language works will help you when you write your build script, and in particular,
+            when you start to write custom plugins and tasks.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10B3B"></a>13.5.1.&nbsp;Groovy JDK</h3></div></div></div><p>
+                Groovy adds lots of useful methods to JVM classes. For example, <code class="classname">Iterable</code> gets
+                an <code class="literal">each</code> method, which iterates over the elements of the <code class="classname">Iterable</code>:
+            </p><div class="example"><a name="groovyBasics"></a><p class="title"><b>Example&nbsp;13.4.&nbsp;Groovy JDK methods</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Iterable gets an each() method</span>
+configurations.runtime.each { File f -&gt; println f }</pre></div></div><br class="example-break"><p>Have a look at <a class="ulink" href="http://groovy.codehaus.org/groovy-jdk/" target="_top">http://groovy.codehaus.org/groovy-jdk/</a> for more details.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10B58"></a>13.5.2.&nbsp;Property accessors</h3></div></div></div><p>
+               Groovy automatically converts a property reference into a call to the appropriate getter or setter method.
+            </p><div class="example"><a name="groovyBasics"></a><p class="title"><b>Example&nbsp;13.5.&nbsp;Property accessors</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Using a getter method</span>
+println project.buildDir
+println getProject().getBuildDir()
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Using a setter method</span>
+project.buildDir = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'target'</span>
+getProject().setBuildDir(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'target'</span>)</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10B67"></a>13.5.3.&nbsp;Optional parentheses on method calls</h3></div></div></div><p>
+                Parentheses are optional for method calls.
+            </p><div class="example"><a name="groovyBasics"></a><p class="title"><b>Example&nbsp;13.6.&nbsp;Method call without parentheses</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">test.systemProperty <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'some.prop'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'value'</span>
+test.systemProperty(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'some.prop'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'value'</span>)</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10B76"></a>13.5.4.&nbsp;List and map literals</h3></div></div></div><p>
+                Groovy provides some shortcuts for defining <code class="classname">List</code> and <code class="classname">Map</code>
+                instances.
+            </p><div class="example"><a name="groovyBasics"></a><p class="title"><b>Example&nbsp;13.7.&nbsp;List and map literals</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// List literal</span>
+test.includes = [<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org/gradle/api/**'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org/gradle/internal/**'</span>]
+
+List&lt;String&gt; list = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> ArrayList&lt;String&gt;()
+list.add(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org/gradle/api/**'</span>)
+list.add(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org/gradle/internal/**'</span>)
+test.includes = list
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Map literal</span>
+apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
+
+Map&lt;String, String&gt; map = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> HashMap&lt;String, String&gt;()
+map.put(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'plugin'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>)
+apply(map)</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10B8B"></a>13.5.5.&nbsp;Closures as the last parameter in a method</h3></div></div></div><p>The Gradle DSL uses closures in many places. You can find out more about closures <a class="ulink" href="http://groovy.codehaus.org/Closures" target="_top">here</a>.
+                When the last parameter of a method is a closure, you can place the closure after the method call:
+            </p><div class="example"><a name="groovyBasics"></a><p class="title"><b>Example&nbsp;13.8.&nbsp;Closure as method parameter</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"in a closure"</span>
+}
+repositories() { println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"in a closure"</span> }
+repositories({ println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"in a closure"</span> })</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10B9E"></a>13.5.6.&nbsp;Closure delegate</h3></div></div></div><p>
+                Each closure has a <code class="literal">delegate</code> object, which Groovy uses to look up variable and method
+                references which are not local variables or parameters of the closure. Gradle uses this for
+                <em class="firstterm">configuration closures</em>, where the <code class="literal">delegate</code> object is set to
+                the object to be configured.
+            </p><div class="example"><a name="groovyBasics"></a><p class="title"><b>Example&nbsp;13.9.&nbsp;Closure delegates</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
+    assert delegate == project.dependencies
+    compile(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'junit:junit:4.11'</span>)
+    delegate.compile(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'junit:junit:4.11'</span>)
+}</pre></div></div><br class="example-break"></div></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N10B28" name="ftn.N10B28" class="para">5</a>] </sup>As of Gradle 1.0-milestone-9, using <code class="literal">ext</code> to add extra properties is strongly encouraged but not yet enforced.
+                        Therefore, Gradle will not fail when an unknown property is set. However, it will print a warning.
+                    </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_gradle_gui.html" title="Chapter&nbsp;12.&nbsp;Using the Gradle Graphical User Interface">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_this_and_that.html" title="Chapter&nbsp;14.&nbsp;Tutorial - 'This and That'">Next</a></div></div></div></body></html>

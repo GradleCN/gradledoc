@@ -1,0 +1,192 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;55.&nbsp;The Build Lifecycle</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="nativeBinaries.html" title="Chapter&nbsp;54.&nbsp;Building native binaries"><link rel="next" href="multi_project_builds.html" title="Chapter&nbsp;56.&nbsp;Multi-project Builds"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="nativeBinaries.html" title="Chapter&nbsp;54.&nbsp;Building native binaries">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="multi_project_builds.html" title="Chapter&nbsp;56.&nbsp;Multi-project Builds">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="build_lifecycle"></a>Chapter&nbsp;55.&nbsp;The Build Lifecycle</h1></div></div></div><p>We said earlier, that the core of Gradle is a language for dependency based programming. In Gradle terms this
+        means that you can define tasks and dependencies between tasks. Gradle guarantees that these tasks are executed
+        in the order of their dependencies, and that each task is executed only once. Those tasks form a
+        <a class="ulink" href="http://en.wikipedia.org/wiki/Directed_acyclic_graph" target="_top">Directed Acyclic Graph</a>. There are
+        build tools that build up such a dependency graph as they execute their tasks. Gradle builds the complete
+        dependency graph <span class="emphasis"><em>before</em></span> any task is executed. This lies at the heart of Gradle and makes
+        many things possible which would not be possible otherwise.
+    </p><p>Your build scripts configure this dependency graph. Therefore they are strictly speaking <span class="emphasis"><em>build
+        configuration scripts</em></span>.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:build_phases"></a>55.1.&nbsp;Build phases</h2></div></div></div><p>A Gradle build has three distinct phases.
+        </p><div class="variablelist"><dl><dt><span class="term">Initialization</span></dt><dd><p>Gradle supports single and multi-project builds. During the initialization phase, Gradle
+                        determines which projects are going to take part in the build, and creates a
+                        <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> instance for each of these projects.
+                    </p></dd><dt><span class="term">Configuration</span></dt><dd><p>During this phase the project objects are configured.
+                        The build scripts of <span class="emphasis"><em>all</em></span> projects which are part of the build are
+                        executed. Gradle 1.4 introduces an <a class="link" href="feature_lifecycle.html">incubating</a> opt-in feature called <em class="firstterm">configuration on demand</em>.
+                        In this mode, Gradle configures only relevant projects (see <a class="xref" href="multi_project_builds.html#sec:configuration_on_demand">Section&nbsp;56.1.1.1, &ldquo;Configuration on demand&rdquo;</a>).
+                    </p></dd><dt><span class="term">Execution</span></dt><dd><p>Gradle determines the subset of the tasks, created and configured during the configuration
+                        phase, to be executed. The subset is determined by the task name arguments passed to the
+                        <span class="command"><strong>gradle</strong></span> command and the current directory. Gradle then executes each of the
+                        selected tasks.
+                    </p></dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:settings_file"></a>55.2.&nbsp;Settings file</h2></div></div></div><p>Beside the build script files, Gradle defines a settings file. The settings file is determined by Gradle
+            via a naming convention. The default name for this file is <code class="filename">settings.gradle</code>. Later in
+            this chapter we explain how Gradle looks for a settings file.
+        </p><p>The settings file gets executed during the initialization phase. A multiproject build must have a
+            <code class="filename">settings.gradle</code>
+            file in the root project of the multiproject hierarchy. It is required because in the
+            settings file it is defined, which projects are taking part in the multi-project build (see
+            <a class="xref" href="multi_project_builds.html">Chapter&nbsp;56, <i>Multi-project Builds</i></a>). For a single-project build, a settings file is optional.
+            You might need it for example, to add libraries to your build script classpath (see <a class="xref" href="organizing_build_logic.html">Chapter&nbsp;59, <i>Organizing Build Logic</i></a>). Let's first do some introspection with a single project
+            build:
+        </p><div class="example"><a name="buildlifecycle"></a><p class="title"><b>Example&nbsp;55.1.&nbsp;Single project build</b></p><div class="example-contents"><p><code class="filename">settings.gradle</code></p><pre class="programlisting">println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'This is executed during the initialization phase.'</span></pre><p><code class="filename">build.gradle</code></p><pre class="programlisting">println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'This is executed during the configuration phase.'</span>
+
+task configured {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'This is also executed during the configuration phase.'</span>
+}
+
+task test &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'This is executed during the execution phase.'</span>
+}</pre><p>Output of <strong class="userinput"><code>gradle test</code></strong></p><pre class="screen">&gt; gradle test
+This is executed during the initialization phase.
+This is executed during the configuration phase.
+This is also executed during the configuration phase.
+:test
+This is executed during the execution phase.
+
+BUILD SUCCESSFUL
+
+Total time: 1 secs</pre></div></div><br class="example-break"><p>For a build script, the property access and method calls are delegated to a project object. Similarly
+            property access and method calls within the settings file is delegated to a settings object. Have a look at
+            <a class="ulink" href="../dsl/org.gradle.api.initialization.Settings.html" target="_top"><code class="classname">Settings</code></a>.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:multi_project_builds"></a>55.3.&nbsp;Multi-project builds</h2></div></div></div><p>A multi-project build is a build where you build more than one project during a single execution of
+            Gradle. You have to declare the projects taking part in the multiproject build in the settings file. There
+            is much more to say about multi-project builds in the chapter dedicated to this topic (see <a class="xref" href="multi_project_builds.html">Chapter&nbsp;56, <i>Multi-project Builds</i></a>).
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:project_locations"></a>55.3.1.&nbsp;Project locations</h3></div></div></div><p>Multi-project builds are always represented by a tree with a single root. Each element in the tree
+                represents a project. A project has a path which denotes the position
+                of the project in the multi-project build tree. In majority of cases the project path is consistent with
+                the physical location of the project in the file system. However, this behavior is configurable.
+                The project tree is created in the <code class="filename">settings.gradle</code> file.
+                By default it is assumed that the location of the settings
+                file is also the location of the root project. But you can redefine the location of the root project
+                in the settings file.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:building_the_tree"></a>55.3.2.&nbsp;Building the tree</h3></div></div></div><p>In the settings file you can use a set of methods to build the project tree. Hierarchical and flat
+                physical layouts get special support.
+            </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N15D95"></a>55.3.2.1.&nbsp;Hierarchical layouts</h4></div></div></div><div class="example"><a name="standardLayouts"></a><p class="title"><b>Example&nbsp;55.2.&nbsp;Hierarchical layout</b></p><div class="example-contents"><p><code class="filename">settings.gradle</code></p><pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'project1'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'project2:child'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'project3:child1'</span></pre></div></div><br class="example-break"><p>The <code class="literal">include</code> method takes project paths as arguments.
+                    The project path is assumed to be equal to the relative physical file system path.
+                    For example, a path 'services:api' is mapped by default to a folder 'services/api'
+                    (relative from the project root). You only need to specify the leaves of the tree.
+                    This means that the inclusion of the path 'services:hotels:api' will result in creating 3 projects:
+                    'services', 'services:hotels' and 'services:hotels:api'.
+                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N15DA7"></a>55.3.2.2.&nbsp;Flat layouts</h4></div></div></div><div class="example"><a name="standardLayouts"></a><p class="title"><b>Example&nbsp;55.3.&nbsp;Flat layout</b></p><div class="example-contents"><p><code class="filename">settings.gradle</code></p><pre class="programlisting">includeFlat <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'project3'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'project4'</span></pre></div></div><br class="example-break"><p>The <code class="literal">includeFlat</code> method takes directory names as an argument. Those directories
+                    need to exist as siblings of the root project directory. The location of those directories
+                    are considered as child projects of the root project in the multi-project tree.
+                </p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:modifying_element_of_the_project_tree"></a>55.3.3.&nbsp;Modifying elements of the project tree</h3></div></div></div><p>The multi-project tree created in the settings file is made up of so called <em class="firstterm">project descriptors</em>.
+                You can modify these descriptors in the settings file at any time. To access a descriptor you can do:
+            </p><div class="example"><a name="customLayout"></a><p class="title"><b>Example&nbsp;55.4.&nbsp;Modification of elements of the project tree</b></p><div class="example-contents"><p><code class="filename">settings.gradle</code></p><pre class="programlisting">println rootProject.name
+println project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':projectA'</span>).name</pre></div></div><br class="example-break"><p>Using this descriptor you can change the name, project directory and build file of a project.
+            </p><div class="example"><a name="customLayout"></a><p class="title"><b>Example&nbsp;55.5.&nbsp;Modification of elements of the project tree</b></p><div class="example-contents"><p><code class="filename">settings.gradle</code></p><pre class="programlisting">rootProject.name = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'main'</span>
+project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':projectA'</span>).projectDir = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(settingsDir, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'../my-project-a'</span>)
+project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':projectA'</span>).buildFileName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'projectA.gradle'</span></pre></div></div><br class="example-break"><p>Have a look at <a class="ulink" href="../javadoc/org/gradle/api/initialization/ProjectDescriptor.html" target="_top"><code class="classname">ProjectDescriptor</code></a> for more details.</p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:initialization"></a>55.4.&nbsp;Initialization</h2></div></div></div><p>How does Gradle know whether to do a single or multiproject build? If you trigger a multiproject build
+            from the directory where the settings file is, things are easy. But Gradle also allows you to execute the
+            build from within any subproject taking part in the build.
+            <sup>[<a href="#ftn.N15DE5" name="N15DE5" class="footnote">20</a>]</sup>
+            If you execute Gradle from within a project that has no <code class="filename">settings.gradle</code> file,
+            Gradle does the following:
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>It searches for a <code class="filename">settings.gradle</code> in a directory called <code class="filename">master</code>
+                    which has the same nesting level as the current dir.
+                </p></li><li class="listitem"><p>If no <code class="filename">settings.gradle</code> is found, it searches the parent directories for the existence of a
+                    <code class="filename">settings.gradle</code> file.
+                </p></li><li class="listitem"><p>If no <code class="filename">settings.gradle</code> file is found, the build is executed as a single project build.
+                </p></li><li class="listitem"><p>If a <code class="filename">settings.gradle</code> file is found, Gradle checks if the current project is part of the
+                    multiproject hierarchy defined in the found <code class="filename">settings.gradle</code> file. If not, the build is executed as a
+                    single project build. Otherwise a multiproject build is executed.
+                </p></li></ul></div><p>What is the purpose of this behavior? Somehow Gradle has to find out, whether the project you are into, is
+            a subproject of a multiproject build or not. Of course, if it is a subproject, only the subproject and its
+            dependent projects are build. But Gradle needs to create the build configuration for the whole multiproject
+            build (see <a class="xref" href="multi_project_builds.html">Chapter&nbsp;56, <i>Multi-project Builds</i></a>). Via the <code class="option">-u</code>
+            command line option, you can tell Gradle not to look in the parent hierarchy for a <code class="filename">settings.gradle</code> file. The
+            current project is then always build as a single project build. If the current project contains a
+            <code class="filename">settings.gradle</code> file, the <code class="option">-u</code> option has no meaning. Such a build is always executed as:
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>a single project build, if the <code class="filename">settings.gradle</code> file does not define a multiproject hierarchy
+                </p></li><li class="listitem"><p>a multiproject build, if the <code class="filename">settings.gradle</code> file does define a multiproject hierarchy.
+                </p></li></ul></div><p>The auto search for a settings file does only work for multi-project builds with a physical hierarchical
+            or flat layout. For a flat layout you must additionally obey to the naming convention described above.
+            Gradle supports arbitrary physical layouts for a multiproject build. But for such arbitrary layouts you need
+            to execute the build from the directory where the settings file is located. For how to run partial builds
+            from the root see <a class="xref" href="multi_project_builds.html#sec:running_partial_build_from_the_root">Section&nbsp;56.4, &ldquo;Running tasks by their absolute path&rdquo;</a>. In our next release we want to
+            enable partial builds from subprojects by specifying the location of the settings file as a command line
+            parameter. Gradle creates Project objects for every project taking part in the build. For a single
+            project build this is only one project. For a multi-project build these are the projects specified in
+            Settings object (plus the root project). Each project object has by default a name equals to the name of its
+            top level directory. Every project except the root project has a parent project and might have child projects.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:configuration_and_execution_of_a_single_project_build"></a>55.5.&nbsp;Configuration and execution of a single project build</h2></div></div></div><p>For a single project build, the workflow of the <span class="emphasis"><em>after initialization</em></span>
+            phases are pretty simple. The build script is executed against the project object that was created during
+            the initialization phase. Then Gradle looks for tasks with names equal to those passed as command line
+            arguments. If these task names exist, they are executed as a separate build in the order you have passed
+            them. The configuration and execution for multi-project builds is discussed in <a class="xref" href="multi_project_builds.html">Chapter&nbsp;56, <i>Multi-project Builds</i></a>.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="build_lifecycle_events"></a>55.6.&nbsp;Responding to the lifecycle in the build script</h2></div></div></div><p>Your build script can receive notifications as the build progresses through its lifecycle. These
+            notifications generally take 2 forms: You can either implement a particular listener interface, or you can
+            provide a closure to execute when the notification is fired. The examples below use closures. For details on
+            how to use the listener interfaces, refer to the API documentation.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15E46"></a>55.6.1.&nbsp;Project evaluation</h3></div></div></div><p>You can receive a notification immediately before and after a project is evaluated. This can be used
+                to do things like performing additional configuration once all the definitions in a build script have
+                been applied, or for some custom logging or profiling.
+            </p><p>Below is an example which adds a <code class="literal">test</code> task to each project with the
+                <code class="literal">hasTests</code> property set to true.
+            </p><div class="example"><a name="projectEvaluateEvents"></a><p class="title"><b>Example&nbsp;55.6.&nbsp;Adding of test task to each project which has certain property set</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">allprojects {
+    afterEvaluate { project -&gt;
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (project.hasTests) {
+            println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Adding test task to $project"</span>
+            project.task(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'test'</span>) &lt;&lt; {
+                println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Running tests for $project"</span>
+            }
+        }
+    }
+}</pre><p><code class="filename">projectA.gradle</code></p><pre class="programlisting">hasTests = true</pre><p>Output of <strong class="userinput"><code>gradle -q test</code></strong></p><pre class="screen">&gt; gradle -q test
+Adding test task to project ':projectA'
+Running tests for project ':projectA'</pre></div></div><br class="example-break"><p>This example uses method <code class="literal">Project.afterEvaluate()</code> to add a closure which is executed
+                after the project is evaluated.</p><p>It is also possible to receive notifications when any project is evaluated. This example performs
+                some custom logging of project evaluation. Notice that the <code class="literal">afterProject</code> notification
+                is received regardless of whether the project evaluates successfully or fails with an exception.
+            </p><div class="example"><a name="buildProjectEvaluateEvents"></a><p class="title"><b>Example&nbsp;55.7.&nbsp;Notifications</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">gradle.afterProject {project, projectState -&gt;
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (projectState.failure) {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Evaluation of $project FAILED"</span>
+    } <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">else</span> {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Evaluation of $project succeeded"</span>
+    }
+}</pre><p>Output of <strong class="userinput"><code>gradle -q test</code></strong></p><pre class="screen">&gt; gradle -q test
+Evaluation of root project 'buildProjectEvaluateEvents' succeeded
+Evaluation of project ':projectA' succeeded
+Evaluation of project ':projectB' FAILED</pre></div></div><br class="example-break"><p>You can also add a <a class="ulink" href="../javadoc/org/gradle/api/ProjectEvaluationListener.html" target="_top"><code class="classname">ProjectEvaluationListener</code></a> to the
+                <a class="ulink" href="../dsl/org.gradle.api.invocation.Gradle.html" target="_top"><code class="classname">Gradle</code></a> to receive these events.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15E8F"></a>55.6.2.&nbsp;Task creation</h3></div></div></div><p>You can receive a notification immediately after a task is added to a project. This can be used
+                to set some default values or add behaviour before the task is made available in the build file.</p><p>The following example sets the <code class="literal">srcDir</code> property of each task as it is created.</p><div class="example"><a name="taskCreationEvents"></a><p class="title"><b>Example&nbsp;55.8.&nbsp;Setting of certain property to all tasks</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">tasks.whenTaskAdded { task -&gt;
+    task.srcDir = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/main/java'</span>
+}
+
+task a
+
+println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"source dir is $a.srcDir"</span></pre><p>Output of <strong class="userinput"><code>gradle -q a</code></strong></p><pre class="screen">&gt; gradle -q a
+source dir is src/main/java</pre></div></div><br class="example-break"><p>You can also add an <a class="ulink" href="../javadoc/org/gradle/api/Action.html" target="_top"><code class="classname">Action</code></a> to a
+                <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskContainer.html" target="_top"><code class="classname">TaskContainer</code></a> to receive these events.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15EB5"></a>55.6.3.&nbsp;Task execution graph ready</h3></div></div></div><p>You can receive a notification immediately after the task execution graph has been populated. We
+                have seen this already in <a class="xref" href="tutorial_using_tasks.html#configure-by-dag">Section&nbsp;6.13, &ldquo;Configure by DAG&rdquo;</a>.
+            </p><p>You can also add a <a class="ulink" href="../javadoc/org/gradle/api/execution/TaskExecutionGraphListener.html" target="_top"><code class="classname">TaskExecutionGraphListener</code></a> to the
+                <a class="ulink" href="../javadoc/org/gradle/api/execution/TaskExecutionGraph.html" target="_top"><code class="classname">TaskExecutionGraph</code></a> to receive these events.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15EC9"></a>55.6.4.&nbsp;Task execution</h3></div></div></div><p>You can receive a notification immediately before and after any task is executed.</p><p>The following example logs the start and end of each task execution. Notice that the
+                <code class="literal">afterTask</code> notification is received regardless of whether the task completes
+                successfully or fails with an exception.</p><div class="example"><a name="taskExecutionEvents"></a><p class="title"><b>Example&nbsp;55.9.&nbsp;Logging of start and end of each task execution</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task ok
+
+task broken(dependsOn: ok) &lt;&lt; {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">throw</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> RuntimeException(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'broken'</span>)
+}
+
+gradle.taskGraph.beforeTask { Task task -&gt;
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"executing $task ..."</span>
+}
+
+gradle.taskGraph.afterTask { Task task, TaskState state -&gt;
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (state.failure) {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"FAILED"</span>
+    }
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">else</span> {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"done"</span>
+    }
+}</pre><p>Output of <strong class="userinput"><code>gradle -q broken</code></strong></p><pre class="screen">&gt; gradle -q broken
+executing task ':ok' ...
+done
+executing task ':broken' ...
+FAILED</pre></div></div><br class="example-break"><p>You can also use a <a class="ulink" href="../javadoc/org/gradle/api/execution/TaskExecutionListener.html" target="_top"><code class="classname">TaskExecutionListener</code></a> to the
+                <a class="ulink" href="../javadoc/org/gradle/api/execution/TaskExecutionGraph.html" target="_top"><code class="classname">TaskExecutionGraph</code></a> to receive these events.
+            </p></div></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N15DE5" name="ftn.N15DE5" class="para">20</a>] </sup>Gradle supports partial multiproject builds (see <a class="xref" href="multi_project_builds.html">Chapter&nbsp;56, <i>Multi-project Builds</i></a>).
+                </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="nativeBinaries.html" title="Chapter&nbsp;54.&nbsp;Building native binaries">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="multi_project_builds.html" title="Chapter&nbsp;56.&nbsp;Multi-project Builds">Next</a></div></div></div></body></html>

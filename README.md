@@ -9,6 +9,5 @@ gradle 中文文档
 
 
 
-HOST webpages using github:
-http://llitfkitfk.github.io/gradledoc/docs/userguide/userguide.html
-
+在线浏览地址:
+http://pkaq.github.io/gradledoc/docs/userguide/userguide.html

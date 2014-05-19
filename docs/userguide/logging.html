@@ -1,0 +1,152 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;18.&nbsp;Logging</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="ant.html" title="Chapter&nbsp;17.&nbsp;Using Ant from Gradle"><link rel="next" href="gradle_daemon.html" title="Chapter&nbsp;19.&nbsp;The Gradle Daemon"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="ant.html" title="Chapter&nbsp;17.&nbsp;Using Ant from Gradle">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="gradle_daemon.html" title="Chapter&nbsp;19.&nbsp;The Gradle Daemon">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="logging"></a>Chapter&nbsp;18.&nbsp;Logging</h1></div></div></div><p>The log is the main 'UI' of a build tool. If it is too verbose, real warnings and problems are easily hidden
+        by this. On the other hand you need the relevant information for figuring out if things have gone wrong. Gradle
+        defines 6 log levels, as shown in <a class="xref" href="logging.html#logLevels" title="Table&nbsp;18.1.&nbsp;Log levels">Table&nbsp;18.1, &ldquo;Log levels&rdquo;</a>. There are two Gradle-specific log levels, in
+        addition to the ones you might normally see. Those levels are <span class="emphasis"><em>QUIET</em></span> and
+        <span class="emphasis"><em>LIFECYCLE</em></span>. The latter is the default, and is used to report build progress.
+    </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;18.1.&nbsp;Log levels</b></p><div class="table-contents"><table id="logLevels"><thead><tr>
+                <td>Level</td>
+                <td>Used for</td>
+            </tr></thead><tr>
+            <td>ERROR</td>
+            <td>Error messages</td>
+        </tr><tr>
+            <td>QUIET</td>
+            <td>Important information messages</td>
+        </tr><tr>
+            <td>WARNING</td>
+            <td>Warning messages</td>
+        </tr><tr>
+            <td>LIFECYCLE</td>
+            <td>Progress information messages</td>
+        </tr><tr>
+            <td>INFO</td>
+            <td>Information messages</td>
+        </tr><tr>
+            <td>DEBUG</td>
+            <td>Debug messages</td>
+        </tr></table></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:choosing_a_log_level"></a>18.1.&nbsp;Choosing a log level</h2></div></div></div><p>You can use the command line switches shown in <a class="xref" href="logging.html#logLevelCommandLineOptions" title="Table&nbsp;18.2.&nbsp;Log level command-line options">Table&nbsp;18.2, &ldquo;Log level command-line options&rdquo;</a> to choose
+            different log levels. In <a class="xref" href="logging.html#stacktraces" title="Table&nbsp;18.3.&nbsp;Stacktrace command-line options">Table&nbsp;18.3, &ldquo;Stacktrace command-line options&rdquo;</a> you find the command line switches which affect
+            stacktrace logging.
+        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;18.2.&nbsp;Log level command-line options</b></p><div class="table-contents"><table id="logLevelCommandLineOptions"><thead><tr>
+                    <td>Option</td>
+                    <td>Outputs Log Levels</td>
+                </tr></thead><tr>
+                <td>no logging options</td>
+                <td>LIFECYCLE and higher</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">-q</code> or <code class="literal">--quiet</code>
+                </td>
+                <td>QUIET and higher</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">-i</code> or <code class="literal">--info</code>
+                </td>
+                <td>INFO and higher</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">-d</code> or <code class="literal">--debug</code>
+                </td>
+                <td>DEBUG and higher (that is, all log messages)</td>
+            </tr></table></div></div><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;18.3.&nbsp;Stacktrace command-line options</b></p><div class="table-contents"><table id="stacktraces"><thead><tr>
+                    <td>Option</td>
+                    <td>Meaning</td>
+                </tr></thead><tr>
+                <td>No stacktrace options</td>
+                <td>No stacktraces are printed to the console in case of a build error (e.g. a compile error). Only in
+                    case of internal exceptions will stacktraces be printed. If the <code class="literal">DEBUG</code> log level
+                    is chosen, truncated stacktraces are always printed.
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">-s</code> or <code class="literal">--stacktrace</code>
+                </td>
+                <td>Truncated stacktraces are printed. We recommend this over full stacktraces. Groovy full stacktraces
+                    are extremely verbose (Due to the underlying dynamic invocation mechanisms. Yet they usually do not
+                    contain relevant information for what has gone wrong in <span class="emphasis"><em>your</em></span> code.)
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">-S</code> or <code class="literal">--full-stacktrace</code>
+                </td>
+                <td>The full stacktraces are printed out.</td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:sending_your_own_log_messages"></a>18.2.&nbsp;Writing your own log messages</h2></div></div></div><p>A simple option for logging in your build file is to write messages to standard output. Gradle redirects
+            anything written to standard output to it's logging system at the <code class="literal">QUIET</code> log level.</p><div class="example"><a name="logging_to_stdout"></a><p class="title"><b>Example&nbsp;18.1.&nbsp;Using stdout to write log messages</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'A message which is logged at QUIET level'</span></pre></div></div><br class="example-break"><p>Gradle also provides a <code class="literal">logger</code> property to a build script, which is an instance of
+            <a class="ulink" href="../javadoc/org/gradle/api/logging/Logger.html" target="_top"><code class="classname">Logger</code></a>. This interface extends the SLF4J
+            <code class="classname">Logger</code> interface and adds a few Gradle specific methods to it. Below is an example
+            of how this is used in the build script:
+        </p><div class="example"><a name="logging_ex"></a><p class="title"><b>Example&nbsp;18.2.&nbsp;Writing your own log messages</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">logger.quiet(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'An info log message which is always logged.'</span>)
+logger.error(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'An error log message.'</span>)
+logger.warn(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'A warning log message.'</span>)
+logger.lifecycle(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'A lifecycle info log message.'</span>)
+logger.info(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'An info log message.'</span>)
+logger.debug(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'A debug log message.'</span>)
+logger.trace(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'A trace log message.'</span>)</pre></div></div><br class="example-break"><p>You can also hook into Gradle's logging system from within other classes used in the build (classes from
+            the <code class="filename">buildSrc</code> directory for example). Simply use an SLF4J logger. You can use this
+            logger the same way as you use the provided logger in the build script.
+        </p><div class="example"><a name="logging_with_slf4j"></a><p class="title"><b>Example&nbsp;18.3.&nbsp;Using SLF4J to write log messages</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.slf4j.Logger
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.slf4j.LoggerFactory
+
+Logger slf4jLogger = LoggerFactory.getLogger(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'some-logger'</span>)
+slf4jLogger.info(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'An info log message logged using SLF4j'</span>)</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:external_tools"></a>18.3.&nbsp;Logging from external tools and libraries</h2></div></div></div><p>Internally, Gradle uses Ant and Ivy. Both have their own logging system. Gradle redirects their logging
+            output into the Gradle logging system. There is a 1:1 mapping from the Ant/Ivy log levels to the Gradle log
+            levels, except the Ant/Ivy <code class="literal">TRACE</code> log level, which is mapped to Gradle
+            <code class="literal">DEBUG</code> log level. This means the default Gradle log level will not show any Ant/Ivy output
+            unless it is an error or a warning.
+        </p><p>There are many tools out there which still use standard output for logging. By default, Gradle redirects
+            standard output to the <code class="literal">QUIET</code> log level and standard error to the <code class="literal">ERROR</code>
+            level. This behavior is configurable. The project object provides a
+            <a class="ulink" href="../javadoc/org/gradle/api/logging/LoggingManager.html" target="_top"><code class="classname">LoggingManager</code></a>, which allows you to change the log levels that
+            standard out or error are redirected to when your build script is evaluated.</p><div class="example"><a name="project_stdout_capture"></a><p class="title"><b>Example&nbsp;18.4.&nbsp;Configuring standard output capture</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">logging.captureStandardOutput LogLevel.INFO
+println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'A message which is logged at INFO level'</span></pre></div></div><br class="example-break"><p>
+            To change the log level for standard out or error during task execution, tasks also provide a <a class="ulink" href="../javadoc/org/gradle/api/logging/LoggingManager.html" target="_top"><code class="classname">LoggingManager</code></a>.
+        </p><div class="example"><a name="task_stdout_capture"></a><p class="title"><b>Example&nbsp;18.5.&nbsp;Configuring standard output capture for a task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task logInfo {
+    logging.captureStandardOutput LogLevel.INFO
+    doFirst {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'A task message which is logged at INFO level'</span>
+    }
+}</pre></div></div><br class="example-break"><p>Gradle also provides integration with the Java Util Logging, Jakarta Commons Logging and Log4j logging
+            toolkits. Any log messages which your build classes write using these logging toolkits will be redirected to
+            Gradle's logging system.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:changing_what_gradle_logs"></a>18.4.&nbsp;Changing what Gradle logs</h2></div></div></div><p>You can replace much of Gradle's logging UI with your own. You might do this, for example, if you want to
+            customize the UI in some way - to log more or less information, or to change the formatting. You replace
+            the logging using the <a class="ulink" href="../dsl/org.gradle.api.invocation.Gradle.html#org.gradle.api.invocation.Gradle:useLogger(java.lang.Object)" target="_top"><code class="classname">Gradle.useLogger()</code></a> method. This
+            is accessible from a build script, or an init script, or via the embedding API.
+            Note that this completely disables Gradle's default output.
+            Below is an example init script which changes how task execution and build completion is logged.
+        </p><div class="example"><a name="custom_logging_ui"></a><p class="title"><b>Example&nbsp;18.6.&nbsp;Customizing what Gradle logs</b></p><div class="example-contents"><p><code class="filename">init.gradle</code></p><pre class="programlisting">useLogger(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> CustomEventLogger())
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> CustomEventLogger <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> BuildAdapter <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">implements</span> TaskExecutionListener {
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> beforeExecute(Task task) {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"[$task.name]"</span>
+    }
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> afterExecute(Task task, TaskState state) {
+        println()
+    }
+    
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> buildFinished(BuildResult result) {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build completed'</span>
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (result.failure != null) {
+            result.failure.printStackTrace()
+        }
+    }
+}</pre><p>Output of <strong class="userinput"><code>gradle -I init.gradle build</code></strong></p><pre class="screen">&gt; gradle -I init.gradle build
+[compile]
+compiling source
+
+[testCompile]
+compiling test source
+
+[test]
+running unit tests
+
+[build]
+
+build completed</pre></div></div><br class="example-break"><p>Your logger can implement any of the listener interfaces listed below.
+            When you register a logger, only the logging for the interfaces that it implements is replaced. Logging
+            for the other interfaces is left untouched.
+            You can find out more about the listener interfaces in <a class="xref" href="build_lifecycle.html#build_lifecycle_events">Section&nbsp;55.6, &ldquo;Responding to the lifecycle in the build script&rdquo;</a>.
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><a class="ulink" href="../javadoc/org/gradle/BuildListener.html" target="_top"><code class="classname">BuildListener</code></a></p></li><li class="listitem"><p><a class="ulink" href="../javadoc/org/gradle/api/ProjectEvaluationListener.html" target="_top"><code class="classname">ProjectEvaluationListener</code></a></p></li><li class="listitem"><p><a class="ulink" href="../javadoc/org/gradle/api/execution/TaskExecutionGraphListener.html" target="_top"><code class="classname">TaskExecutionGraphListener</code></a></p></li><li class="listitem"><p><a class="ulink" href="../javadoc/org/gradle/api/execution/TaskExecutionListener.html" target="_top"><code class="classname">TaskExecutionListener</code></a></p></li><li class="listitem"><p><a class="ulink" href="../javadoc/org/gradle/api/execution/TaskActionListener.html" target="_top"><code class="classname">TaskActionListener</code></a></p></li></ul></div><p>
+        </p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="ant.html" title="Chapter&nbsp;17.&nbsp;Using Ant from Gradle">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="gradle_daemon.html" title="Chapter&nbsp;19.&nbsp;The Gradle Daemon">Next</a></div></div></div></body></html>

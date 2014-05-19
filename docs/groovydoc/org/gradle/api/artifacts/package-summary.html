@@ -1,0 +1,367 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+<title>org.gradle.api.artifacts (Gradle API 1.12)</title>
+<META NAME="keywords" CONTENT="org.gradle.api.artifacts package">
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../../stylesheet.css" TITLE="Style">
+<link href="../../../../groovy.ico" type="image/x-icon" rel="shortcut icon">
+<link href="../../../../groovy.ico" type="image/x-icon" rel="icon">
+<SCRIPT type="text/javascript">
+function windowTitle()
+{
+    parent.document.title="org.gradle.api.artifacts (Gradle API 1.12)";
+}
+</SCRIPT>
+<NOSCRIPT>
+</NOSCRIPT>
+
+</head>
+
+<body BGCOLOR="white" onload="windowTitle();">
+<hr>
+
+<!-- ========= START OF TOP NAVBAR ======= -->
+<a name="navbar_top"><!-- --></a>
+<table summary="" width="100%" border="0" cellpadding="1" cellspacing="0">
+<tbody><tr>
+<td colspan="2" class="NavBarCell1" bgcolor="#eeeeff">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table summary="" border="0" cellpadding="0" cellspacing="3">
+  <tbody><tr valign="top" align="center">
+  <td class="NavBarCell1" bgcolor="#eeeeff">    <a href="../../../../overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td class="NavBarCell1Rev" bgcolor="#ffffff"> &nbsp;<font class="NavBarFont1Rev"><b>Package</b></font>&nbsp;</td>
+  <td class="NavBarCell1" bgcolor="#eeeeff">    <font class="NavBarFont1">Class</font>&nbsp;</td>
+  <!--
+  <td class="NavBarCell1" bgcolor="#eeeeff">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  -->
+  <td class="NavBarCell1" bgcolor="#eeeeff">    <a href="../../../../deprecated-list.html"><font class="NavBarFont1"><b>Deprecated</b></font></a>&nbsp;</td>
+  <td class="NavBarCell1" bgcolor="#eeeeff">    <a href="../../../../index-all.html"><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td class="NavBarCell1" bgcolor="#eeeeff">    <a href="../../../../help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</tbody></table>
+</td>
+<td rowspan="3" valign="top" align="right"><em>
+    <b>Groovy Documentation</b>
+</em>
+</td>
+</tr>
+
+<tr>
+<td class="NavBarCell2" bgcolor="white"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td class="NavBarCell2" bgcolor="white"><font size="-2">
+  <a href="../../../../index.html?org/gradle/api/artifacts/package-summary.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="package-summary.html" target="_top"><b>NO FRAMES</b></a>  &nbsp;
+&nbsp;<script type="text/javascript">
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="../../../../allclasses-frame.html"><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+  <A HREF="../../../../allclasses-frame.html"><B>All Classes</B></A>
+</noscript>
+
+
+</font></td>
+</tr>
+</tbody></table>
+<!-- ========= END OF TOP NAVBAR ========= -->
+
+
+<HR>
+<H2>
+Package org.gradle.api.artifacts
+</H2>
+
+ Classes for declaring and using artifacts and artifact dependencies.
+ 
+
+
+<P>&nbsp;</P>
+
+
+
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+    <TR BGCOLOR="#90DDF7" CLASS="TableHeadingColor">
+    <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
+    <B>Interface Summary</B></FONT></TH>
+    </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ArtifactIdentifier.html" title="class in org/gradle/api/artifacts">ArtifactIdentifier</A></B></TD>
+        <TD>The identifier for a module artifact.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ArtifactRepositoryContainer.html" title="class in org/gradle/api/artifacts">ArtifactRepositoryContainer</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ClientModule.html" title="class in org/gradle/api/artifacts">ClientModule</A></B></TD>
+        <TD>To model a module in your dependency declarations. </TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ComponentMetadataDetails.html" title="class in org/gradle/api/artifacts">ComponentMetadataDetails</A></B></TD>
+        <TD>Describes a resolved component's metadata, which typically originates from
+ a component descriptor (Ivy file, Maven POM). </TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ConfigurablePublishArtifact.html" title="class in org/gradle/api/artifacts">ConfigurablePublishArtifact</A></B></TD>
+        <TD>A PublishArtifact whose properties can be modified.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Configuration.html" title="class in org/gradle/api/artifacts">Configuration</A></B></TD>
+        <TD>A <TT>Configuration</TT> represents a group of artifacts and their dependencies.
+ </TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ConfigurationContainer.html" title="class in org/gradle/api/artifacts">ConfigurationContainer</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ConflictResolution.html" title="class in org/gradle/api/artifacts">ConflictResolution</A></B></TD>
+        <TD>The conflict resolution</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Dependency.html" title="class in org/gradle/api/artifacts">Dependency</A></B></TD>
+        <TD>A <TT>Dependency</TT> represents a dependency on the artifacts from a particular source. </TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="DependencyArtifact.html" title="class in org/gradle/api/artifacts">DependencyArtifact</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="DependencyResolutionListener.html" title="class in org/gradle/api/artifacts">DependencyResolutionListener</A></B></TD>
+        <TD>A <TT>DependencyResolutionListener</TT> is notified as dependencies are resolved.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="DependencyResolveDetails.html" title="class in org/gradle/api/artifacts">DependencyResolveDetails</A></B></TD>
+        <TD>Provides details about a dependency when it is resolved.
+ </TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="DependencySet.html" title="class in org/gradle/api/artifacts">DependencySet</A></B></TD>
+        <TD>A set of artifact dependencies.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ExcludeRule.html" title="class in org/gradle/api/artifacts">ExcludeRule</A></B></TD>
+        <TD>An <TT>ExcludeRule</TT> is used to describe transitive dependencies that should be excluded when resolving
+ dependencies.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ExcludeRuleContainer.html" title="class in org/gradle/api/artifacts">ExcludeRuleContainer</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ExternalDependency.html" title="class in org/gradle/api/artifacts">ExternalDependency</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ExternalModuleDependency.html" title="class in org/gradle/api/artifacts">ExternalModuleDependency</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="FileCollectionDependency.html" title="class in org/gradle/api/artifacts">FileCollectionDependency</A></B></TD>
+        <TD>A <TT>FileCollectionDependency</TT> is a Dependency on a collection of local files which are not stored in a
+ repository.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="LenientConfiguration.html" title="class in org/gradle/api/artifacts">LenientConfiguration</A></B></TD>
+        <TD>Resolved configuration that does not fail eagerly when some dependencies are not resolved, or some artifacts do not exist.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Module.html" title="class in org/gradle/api/artifacts">Module</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ModuleDependency.html" title="class in org/gradle/api/artifacts">ModuleDependency</A></B></TD>
+        <TD>A <TT>ModuleDependency</TT> is a <a href='../../../../org/gradle/api/artifacts/Dependency.html' title='Dependency'>Dependency</a> on a module outside the current
+ project.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ModuleIdentifier.html" title="class in org/gradle/api/artifacts">ModuleIdentifier</A></B></TD>
+        <TD>The identifier of a module.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ModuleVersionIdentifier.html" title="class in org/gradle/api/artifacts">ModuleVersionIdentifier</A></B></TD>
+        <TD>The identifier of a module version.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ModuleVersionSelector.html" title="class in org/gradle/api/artifacts">ModuleVersionSelector</A></B></TD>
+        <TD>Selects a module version</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ProjectDependency.html" title="class in org/gradle/api/artifacts">ProjectDependency</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="PublishArtifact.html" title="class in org/gradle/api/artifacts">PublishArtifact</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="PublishArtifactSet.html" title="class in org/gradle/api/artifacts">PublishArtifactSet</A></B></TD>
+        <TD>A set of artifacts to be published.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ResolutionStrategy.html" title="class in org/gradle/api/artifacts">ResolutionStrategy</A></B></TD>
+        <TD>Defines the strategies around dependency resolution.
+ </TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ResolvableDependencies.html" title="class in org/gradle/api/artifacts">ResolvableDependencies</A></B></TD>
+        <TD>A set of Dependency objects which can be resolved to a set of <TT>File</TT> instances.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ResolvedArtifact.html" title="class in org/gradle/api/artifacts">ResolvedArtifact</A></B></TD>
+        <TD>Information about a resolved artifact.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ResolvedConfiguration.html" title="class in org/gradle/api/artifacts">ResolvedConfiguration</A></B></TD>
+        <TD>A <TT>ResolvedConfiguration</TT> represents the result of resolving a Configuration, and provides access
+ to both the artifacts and the meta-data of the result.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ResolvedDependency.html" title="class in org/gradle/api/artifacts">ResolvedDependency</A></B></TD>
+        <TD>Information about a resolved dependency.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ResolvedModuleVersion.html" title="class in org/gradle/api/artifacts">ResolvedModuleVersion</A></B></TD>
+        <TD>Represents meta-data about a resolved module version.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="SelfResolvingDependency.html" title="class in org/gradle/api/artifacts">SelfResolvingDependency</A></B></TD>
+        <TD>A <TT>SelfResolvingDependency</TT> is a Dependency which is able to resolve itself, independent of a
+ repository.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="UnresolvedDependency.html" title="class in org/gradle/api/artifacts">UnresolvedDependency</A></B></TD>
+        <TD>Unsuccessfully resolved dependency.</TD>
+        </TR>
+
+</TABLE>
+&nbsp;
+<P>
+<DL>
+</DL>
+<hr>
+    
+
+
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+    <TR BGCOLOR="#90DDF7" CLASS="TableHeadingColor">
+    <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
+    <B>Class Summary</B></FONT></TH>
+    </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Configuration.Namer.html" title="class in org/gradle/api/artifacts">Configuration.Namer</A></B></TD>
+        <TD>A <a href='../../../../org/gradle/api/Namer.html' title='Namer'>Namer</a> namer for configurations that returns <a href='#getName()'>getName()</a>.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ResolveException.html" title="class in org/gradle/api/artifacts">ResolveException</A></B></TD>
+        <TD></TD>
+        </TR>
+
+</TABLE>
+&nbsp;
+<P>
+<DL>
+</DL>
+<hr>
+    
+
+
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+    <TR BGCOLOR="#90DDF7" CLASS="TableHeadingColor">
+    <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
+    <B>Enum Summary</B></FONT></TH>
+    </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="Configuration.State.html" title="class in org/gradle/api/artifacts">Configuration.State</A></B></TD>
+        <TD>The states a configuration can be into. </TD>
+        </TR>
+
+</TABLE>
+&nbsp;
+<P>
+<DL>
+</DL>
+<hr>
+    
+
+
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+    <TR BGCOLOR="#90DDF7" CLASS="TableHeadingColor">
+    <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
+    <B>Exception Summary</B></FONT></TH>
+    </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="PublishException.html" title="class in org/gradle/api/artifacts">PublishException</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="UnknownConfigurationException.html" title="class in org/gradle/api/artifacts">UnknownConfigurationException</A></B></TD>
+        <TD></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="UnknownRepositoryException.html" title="class in org/gradle/api/artifacts">UnknownRepositoryException</A></B></TD>
+        <TD>An <TT>UnknownRepositoryException</TT> is thrown when a repository referenced by name cannot be found.</TD>
+        </TR>
+
+</TABLE>
+&nbsp;
+<P>
+<DL>
+</DL>
+<hr>
+    
+
+
+
+
+<p>Gradle API 1.12</p>
+<hr>
+</body>
+</html>

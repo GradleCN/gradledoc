@@ -1,0 +1,142 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;8.&nbsp;Dependency Management Basics</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="tutorial_java_projects.html" title="Chapter&nbsp;7.&nbsp;Java Quickstart"><link rel="next" href="tutorial_groovy_projects.html" title="Chapter&nbsp;9.&nbsp;Groovy Quickstart"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_java_projects.html" title="Chapter&nbsp;7.&nbsp;Java Quickstart">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_groovy_projects.html" title="Chapter&nbsp;9.&nbsp;Groovy Quickstart">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="artifact_dependencies_tutorial"></a>Chapter&nbsp;8.&nbsp;Dependency Management Basics</h1></div></div></div><p>
+        This chapter introduces some of the basics of dependency management in Gradle.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10568"></a>8.1.&nbsp;What is dependency management?</h2></div></div></div><p>
+            Very roughly, dependency management is made up of two pieces. Firstly, Gradle needs to
+            know about the things that your project needs to build or run, in order to find them. We call these incoming
+            files the <em class="firstterm">dependencies</em> of the project.
+            Secondly, Gradle needs to build and upload the things that your project produces. We call these outgoing files
+            the <em class="firstterm">publications</em> of the project. Let's look at these two pieces in more detail:
+        </p><p>Most projects are not completely self-contained. They need files built by other projects in order to
+            be compiled or tested and so on. For example, in order to use Hibernate in my project, I need to include some
+            Hibernate jars in the classpath when I compile my source. To run my tests, I might also need to include some
+            additional jars in the test classpath, such as a particular JDBC driver or the Ehcache jars.
+        </p><p>
+            These incoming files form the dependencies of the project.
+            Gradle allows you to tell it what the dependencies of your project are, so that it can take care of
+            finding these dependencies, and making them available in your build.
+            The dependencies might need to be downloaded from a remote Maven or Ivy repository, or located in a local directory, or
+            may need to be built by another project in the same multi-project build.
+            We call this process <em class="firstterm">dependency resolution</em>.
+        </p><p>
+            Often, the dependencies of a project will themselves have dependencies. For example, Hibernate core requires
+            several other libraries to be present on the classpath with it runs. So, when Gradle runs the tests for your
+            project, it also needs to find these dependencies and make them available. We call these <em class="firstterm">transitive dependencies</em>.
+        </p><p>
+            The main purpose of most projects is to build some files that are to be used outside the project.
+            For example, if your project produces a java library, you need to build a jar, and maybe a source jar and
+            some documentation, and publish them somewhere.
+        </p><p>These outgoing files form the publications of the project. Gradle also takes care of this important work for you. You declare the
+            publications of your project, and Gradle take care of building them and publishing them somewhere.
+            Exactly what "publishing" means depends on what you want to do. You might want to copy the files to a local directory,
+            or upload them to a remote Maven or Ivy repository. Or you might use the files in another project in the same
+            multi-project build.
+            We call this process <em class="firstterm">publication</em>.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10586"></a>8.2.&nbsp;Declaring your dependencies</h2></div></div></div><p>
+            Let's look at some dependency declarations. Here's a basic build script:
+        </p><div class="example"><a name="basicDependencyDeclarations"></a><p class="title"><b>Example&nbsp;8.1.&nbsp;Declaring dependencies</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.hibernate'</span>, name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hibernate-core'</span>, version: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'3.6.7.Final'</span>
+    testCompile group: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'junit'</span>, name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'junit'</span>, version: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'4.+'</span>
+}</pre></div></div><br class="example-break"><p>What's going on here? This build script says a few things about the project.
+            Firstly, it states that Hibernate core 3.6.7.Final is required
+            to compile the project's production source. By implication, Hibernate core and its dependencies are also required
+            at runtime.
+            The build script also states that any junit &gt;= 4.0 is required to compile the project's tests.
+            It also tells Gradle to look in the Maven central repository for any dependencies that are required.
+            The following sections go into the details.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="configurations"></a>8.3.&nbsp;Dependency configurations</h2></div></div></div><p>In Gradle dependencies are grouped into <em class="firstterm">configurations</em>. A configuration is simply a named set of dependencies.
+            We will refer to them as <em class="firstterm">dependency configurations</em>. You can use them to declare the external dependencies of your project.
+            As we will see later, they are also used to declare the publications of your project.</p><p>
+            The Java plugin defines a number of standard configurations. These configurations represent the classpaths that the
+            Java plugin uses. Some are listed below, and you can find more details in <a class="xref" href="java_plugin.html#tab:configurations" title="Table&nbsp;23.5.&nbsp;Java plugin - dependency configurations">Table&nbsp;23.5, &ldquo;Java plugin - dependency configurations&rdquo;</a>.
+        </p><div class="variablelist"><dl><dt><span class="term">compile</span></dt><dd><p>The dependencies required to compile the production source of the project.</p></dd><dt><span class="term">runtime</span></dt><dd><p>
+                        The dependencies required by the production classes at runtime. By default, also includes the
+                        compile time dependencies.
+                    </p></dd><dt><span class="term">testCompile</span></dt><dd><p>
+                        The dependencies required to compile the test source of the project. By default, also includes
+                        the compiled production classes and the compile time dependencies.
+                    </p></dd><dt><span class="term">testRuntime</span></dt><dd><p>
+                        The dependencies required to run the tests. By default, also includes the compile, runtime and test compile
+                        dependencies.
+                    </p></dd></dl></div><p>
+            Various plugins add further standard configurations. You can also define your own custom configurations to use in your
+            build. Please see <a class="xref" href="dependency_management.html#sub:configurations">Section&nbsp;50.3, &ldquo;Dependency configurations&rdquo;</a> for the details of defining and customizing dependency configurations.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N105C6"></a>8.4.&nbsp;External dependencies</h2></div></div></div><p>There are various types of dependencies that you can declare. One such type is an <em class="firstterm">external dependency</em>.
+            This a dependency on some files built outside the current build, and stored in a repository of some kind, such as Maven central, or
+            a corporate Maven or Ivy repository, or a directory in the local file system.
+        </p><p>
+            To define an external dependency, you add it to a dependency configuration:
+        </p><div class="example"><a name="externalDependencies"></a><p class="title"><b>Example&nbsp;8.2.&nbsp;Definition of an external dependency</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
+    compile group: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.hibernate'</span>, name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hibernate-core'</span>, version: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'3.6.7.Final'</span>
+}</pre></div></div><br class="example-break"><p>
+            An external dependency is identified using <code class="literal">group</code>, <code class="literal">name</code> and <code class="literal">version</code> attributes.
+            Depending on which kind of repository you are using, <code class="literal">group</code> and <code class="literal">version</code> may be optional.
+        </p><p>There is a shortcut form for declaring external dependencies, which uses a string of the form <code class="literal">"<em class="replaceable"><code>group</code></em>:<em class="replaceable"><code>name</code></em>:<em class="replaceable"><code>version</code></em>"</code>.
+        </p><div class="example"><a name="externalDependencies"></a><p class="title"><b>Example&nbsp;8.3.&nbsp;Shortcut definition of an external dependency</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
+    compile <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.hibernate:hibernate-core:3.6.7.Final'</span>
+}</pre></div></div><br class="example-break"><p>To find out more about defining and working with dependencies, have a look at <a class="xref" href="dependency_management.html#sec:how_to_declare_your_dependencies">Section&nbsp;50.4, &ldquo;How to declare your dependencies&rdquo;</a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10608"></a>8.5.&nbsp;Repositories</h2></div></div></div><p>
+            How does Gradle find the files for external dependencies? Gradle looks for them in a <em class="firstterm">repository</em>.
+            A repository is really just a collection of files, organized by <code class="literal">group</code>, <code class="literal">name</code> and
+            <code class="literal">version</code>. Gradle understands several different repository formats, such as Maven and Ivy, and several
+            different ways of accessing the repository, such as using the local file system or HTTP.
+        </p><p>By default, Gradle does not define any repositories. You need to define at least one before you can use external dependencies.
+            One option is use the Maven central repository:</p><div class="example"><a name="defineMavenCentral"></a><p class="title"><b>Example&nbsp;8.4.&nbsp;Usage of Maven central repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+    mavenCentral()
+}</pre></div></div><br class="example-break"><p>Or a remote Maven repository:</p><div class="example"><a name="defineRemoteMavenRepo"></a><p class="title"><b>Example&nbsp;8.5.&nbsp;Usage of a remote Maven repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+    maven {
+        url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://repo.mycompany.com/maven2"</span>
+    }
+}</pre></div></div><br class="example-break"><p>Or a remote Ivy repository:</p><div class="example"><a name="defineRemoteIvyRepo"></a><p class="title"><b>Example&nbsp;8.6.&nbsp;Usage of a remote Ivy directory</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+    ivy {
+        url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://repo.mycompany.com/repo"</span>
+    }
+}</pre></div></div><br class="example-break"><p>You can also have repositories on the local file system. This works for both Maven and Ivy repositories.</p><div class="example"><a name="defineRemoteIvyRepo"></a><p class="title"><b>Example&nbsp;8.7.&nbsp;Usage of a local Ivy directory</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+    ivy {
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// URL can refer to a local directory</span>
+        url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"../local-repo"</span>
+    }
+}</pre></div></div><br class="example-break"><p>A project can have multiple repositories. Gradle will look for a dependency in each repository in the order they are specified, stopping
+            at the first repository that contains the requested module.
+        </p><p>To find out more about defining and working with repositories, have a look at <a class="xref" href="dependency_management.html#sec:repositories">Section&nbsp;50.6, &ldquo;Repositories&rdquo;</a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10650"></a>8.6.&nbsp;Publishing artifacts</h2></div></div></div><p>
+            Dependency configurations are also used to publish files.<sup>[<a href="#ftn.N10655" name="N10655" class="footnote">3</a>]</sup>
+            We call these files <em class="firstterm">publication artifacts</em>, or usually just <em class="firstterm">artifacts</em>.
+        </p><p>
+            The plugins do a pretty good job of defining the artifacts of a project, so you usually don't need to do anything special to tell Gradle
+            what needs to be published. However, you do need to tell Gradle where to publish the artifacts. You do this by attaching repositories
+            to the <code class="literal">uploadArchives</code> task. Here's an example of publishing to a remote Ivy repository:
+        </p><div class="example"><a name="publishIvyRepository"></a><p class="title"><b>Example&nbsp;8.8.&nbsp;Publishing to an Ivy repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">uploadArchives {
+    repositories {
+        ivy {
+            credentials {
+                username <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"username"</span>
+                password <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"pw"</span>
+            }
+            url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://repo.mycompany.com"</span>
+        }
+    }
+}</pre></div></div><br class="example-break"><p>
+            Now, when you run <strong class="userinput"><code>gradle uploadArchives</code></strong>, Gradle will build and upload your Jar.
+            Gradle will also generate and upload an <code class="filename">ivy.xml</code> as well.
+        </p><p>
+            You can also publish to Maven repositories. The syntax is slightly different.<sup>[<a href="#ftn.N10678" name="N10678" class="footnote">4</a>]</sup>
+            Note that you also need to apply the Maven plugin in order to publish to a Maven repository. In this instance, Gradle
+            will generate and upload a <code class="filename">pom.xml</code>.
+        </p><div class="example"><a name="publishMavenRepository"></a><p class="title"><b>Example&nbsp;8.9.&nbsp;Publishing to a Maven repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'maven'</span>
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"file://localhost/tmp/myRepo/"</span>)
+        }
+    }
+}</pre></div></div><br class="example-break"><p>To find out more about publication, have a look at <a class="xref" href="artifact_management.html">Chapter&nbsp;51, <i>Publishing artifacts</i></a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1068E"></a>8.7.&nbsp;Where to next?</h2></div></div></div><p>
+            For all the details of dependency resolution, see <a class="xref" href="dependency_management.html">Chapter&nbsp;50, <i>Dependency Management</i></a>, and for artifact publication see <a class="xref" href="artifact_management.html">Chapter&nbsp;51, <i>Publishing artifacts</i></a>.
+        </p><p>
+            If you are interested in the DSL elements mentioned here, have a look at <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:configurations(groovy.lang.Closure)" target="_top"><code class="classname">Project.configurations{}</code></a>,
+            <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:repositories(groovy.lang.Closure)" target="_top"><code class="classname">Project.repositories{}</code></a> and <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:dependencies(groovy.lang.Closure)" target="_top"><code class="classname">Project.dependencies{}</code></a>.
+        </p><p>Otherwise, continue on to some of the other <a class="link" href="tutorials.html">tutorials</a>.</p></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N10655" name="ftn.N10655" class="para">3</a>] </sup>We think this is confusing, and we are gradually teasing apart the two concepts in the Gradle DSL.</p></div><div class="footnote"><p><sup>[<a href="#N10678" name="ftn.N10678" class="para">4</a>] </sup>We are working to make the syntax consistent for resolving from and publishing to Maven repositories.</p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_java_projects.html" title="Chapter&nbsp;7.&nbsp;Java Quickstart">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_groovy_projects.html" title="Chapter&nbsp;9.&nbsp;Groovy Quickstart">Next</a></div></div></div></body></html>

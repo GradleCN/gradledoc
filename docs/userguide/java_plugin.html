@@ -1,0 +1,1128 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;23.&nbsp;The Java Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="standard_plugins.html" title="Chapter&nbsp;22.&nbsp;Standard Gradle plugins"><link rel="next" href="groovy_plugin.html" title="Chapter&nbsp;24.&nbsp;The Groovy Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="standard_plugins.html" title="Chapter&nbsp;22.&nbsp;Standard Gradle plugins">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="groovy_plugin.html" title="Chapter&nbsp;24.&nbsp;The Groovy Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="java_plugin"></a>Chapter&nbsp;23.&nbsp;The Java Plugin</h1></div></div></div><p>The Java plugin adds Java compilation, testing and bundling capabilities to a project. It serves as the basis
+        for many of the other Gradle plugins.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N11E80"></a>23.1.&nbsp;Usage</h2></div></div></div><p>To use the Java plugin, include in your build script:</p><div class="example"><a name="useJavaPlugin"></a><p class="title"><b>Example&nbsp;23.1.&nbsp;Using the Java plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N11E8F"></a>23.2.&nbsp;Source sets</h2></div></div></div><p>The Java plugin introduces the concept of a <em class="firstterm">source set</em>. A source set is simply a group of
+            source files which are compiled and executed together. These source files may include Java source files and
+            resource files. Other plugins add the ability to include Groovy and Scala source files in a source set.
+            A source set has an associated compile classpath, and runtime classpath.
+        </p><p>
+            One use for source sets is to group source files into logical groups which describe their purpose. For example,
+            you might use a source set to define an integration test suite, or you might use separate source sets to define
+            the API and implementation classes of your project.
+        </p><p>The Java plugin defines two standard source sets, called <code class="literal">main</code> and <code class="literal">test</code>.
+            The <code class="literal">main</code> source set contains your production source code, which is compiled and assembled
+            into a JAR file. The <code class="literal">test</code> source set contains your unit test source code, which is
+            compiled and executed using JUnit or TestNG.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N11EA7"></a>23.3.&nbsp;Tasks</h2></div></div></div><p>The Java plugin adds a number of tasks to your project, as shown below.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.1.&nbsp;Java plugin - tasks</b></p><div class="table-contents"><table id="N11EAC"><thead><tr>
+                    <td>Task name</td>
+                    <td>Depends on</td>
+                    <td>Type</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">compileJava</code>
+                </td>
+                <td>All tasks which produce the compile classpath. This includes the <code class="literal">jar</code> task for
+                    project dependencies included in the <code class="literal">compile</code> configuration.
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.compile.JavaCompile.html" target="_top"><code class="classname">JavaCompile</code></a></td>
+                <td>Compiles production Java source files using javac.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">processResources</code>
+                </td>
+                <td>-</td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Copy.html" target="_top"><code class="classname">Copy</code></a></td>
+                <td>Copies production resources into the production classes directory.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">classes</code>
+                </td>
+                <td>
+                    <code class="literal">compileJava</code> and <code class="literal">processResources</code>.
+                    Some plugins add additional compilation tasks.
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
+                <td>Assembles the production classes directory.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">compileTestJava</code>
+                </td>
+                <td>
+                    <code class="literal">compile</code>, plus all tasks which produce the test compile classpath.
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.compile.JavaCompile.html" target="_top"><code class="classname">JavaCompile</code></a></td>
+                <td>Compiles test Java source files using javac.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">processTestResources</code>
+                </td>
+                <td>-</td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Copy.html" target="_top"><code class="classname">Copy</code></a></td>
+                <td>Copies test resources into the test classes directory.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">testClasses</code>
+                </td>
+                <td>
+                    <code class="literal">compileTestJava</code> and <code class="literal">processTestResources</code>.
+                    Some plugins add additional test compilation tasks.
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
+                <td>Assembles the test classes directory.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">jar</code>
+                </td>
+                <td>
+                    <code class="literal">compile</code>
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Jar.html" target="_top"><code class="classname">Jar</code></a></td>
+                <td>Assembles the JAR file</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">javadoc</code>
+                </td>
+                <td><code class="literal">compile</code></td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.javadoc.Javadoc.html" target="_top"><code class="classname">Javadoc</code></a></td>
+                <td>Generates API documentation for the production Java source, using Javadoc </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">test</code>
+                </td>
+                <td>
+                    <code class="literal">compile</code>,
+                    <code class="literal">compileTest</code>,
+                    plus all tasks which produce the test runtime classpath.
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a></td>
+                <td>Runs the unit tests using JUnit or TestNG.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">uploadArchives</code>
+                </td>
+                <td>
+                    The tasks which produce the artifacts in the <code class="literal">archives</code> configuration, including <code class="literal">jar</code>.
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Upload.html" target="_top"><code class="classname">Upload</code></a></td>
+                <td>Uploads the artifacts in the <code class="literal">archives</code> configuration, including the JAR file.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">clean</code>
+                </td>
+                <td>-</td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a></td>
+                <td>Deletes the project build directory.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">clean<em class="replaceable"><code>TaskName</code></em></code>
+                </td>
+                <td>-</td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a></td>
+                <td>Deletes the output files produced by the specified task. For example <code class="literal">cleanJar</code>
+                    will delete the JAR file created by the <code class="literal">jar</code> task, and
+                    <code class="literal">cleanTest</code> will delete the test results created by the <code class="literal">test</code> task.
+                </td>
+            </tr></table></div></div><p>For each source set you add to the project, the Java plugin adds the following compilation tasks:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.2.&nbsp;Java plugin - source set tasks</b></p><div class="table-contents"><table id="java_source_set_tasks"><thead><tr>
+                    <td>Task name</td>
+                    <td>Depends on</td>
+                    <td>Type</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">compile<em class="replaceable"><code>SourceSet</code></em>Java</code>
+                </td>
+                <td>
+                    All tasks which produce the source set's compile classpath.
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.compile.JavaCompile.html" target="_top"><code class="classname">JavaCompile</code></a></td>
+                <td>Compiles the given source set's Java source files using javac.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">process<em class="replaceable"><code>SourceSet</code></em>Resources</code>
+                </td>
+                <td>-</td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Copy.html" target="_top"><code class="classname">Copy</code></a></td>
+                <td>Copies the given source set's resources into the classes directory.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal"><em class="replaceable"><code>sourceSet</code></em>Classes</code>
+                </td>
+                <td>
+                    <code class="literal">compile<em class="replaceable"><code>SourceSet</code></em>Java</code> and
+                    <code class="literal">process<em class="replaceable"><code>SourceSet</code></em>Resources</code>.
+                    Some plugins add additional compilation tasks for the source set.
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
+                <td>Assembles the given source set's classes directory.</td>
+            </tr></table></div></div><p>The Java plugin also adds a number of tasks which form a lifecycle for the project:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.3.&nbsp;Java plugin - lifecycle tasks</b></p><div class="table-contents"><table id="N1204B"><thead><tr>
+                    <td>Task name</td>
+                    <td>Depends on</td>
+                    <td>Type</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">assemble</code>
+                </td>
+                <td>
+                    All archive tasks in the project, including <code class="literal">jar</code>. Some plugins add additional
+                    archive tasks to the project.
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
+                <td>Assembles all the archives in the project.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">check</code>
+                </td>
+                <td>
+                    All verification tasks in the project, including <code class="literal">test</code>. Some plugins add
+                    additional verification tasks to the project.
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
+                <td>Performs all verification tasks in the project.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">build</code>
+                </td>
+                <td>
+                    <code class="literal">check</code> and <code class="literal">assemble</code>
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
+                <td>Performs a full build of the project.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">buildNeeded</code>
+                </td>
+                <td>
+                    <code class="literal">build</code> and <code class="literal">build</code> tasks in all project lib dependencies of the
+                    <code class="literal">testRuntime</code> configuration.
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
+                <td>Performs a full build of the project and all projects it depends on.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">buildDependents</code>
+                </td>
+                <td>
+                    <code class="literal">build</code> and <code class="literal">build</code> tasks in all projects with a project lib
+                    dependency on this project in a <code class="literal">testRuntime</code> configuration.
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
+                <td>Performs a full build of the project and all projects which depend on it.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">build<em class="replaceable"><code>ConfigurationName</code></em></code>
+                </td>
+                <td>
+                    The tasks which produce the artifacts in configuration <em class="replaceable"><code>ConfigurationName</code></em>.
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
+                <td>Assembles the artifacts in the specified configuration.
+                    The task is added by the Base plugin which is implicitly applied by the Java plugin.
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">upload<em class="replaceable"><code>ConfigurationName</code></em></code>
+                </td>
+                <td>
+                    The tasks which uploads the artifacts in configuration <em class="replaceable"><code>ConfigurationName</code></em>.
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Upload.html" target="_top"><code class="classname">Upload</code></a></td>
+                <td>Assembles and uploads the artifacts in the specified configuration.
+                    The task is added by the Base plugin which is implicitly applied by the Java plugin.
+                </td>
+            </tr></table></div></div><p>The following diagram shows the relationships between these tasks.</p><div class="figure"><a name="N12113"></a><p class="title"><b>Figure&nbsp;23.1.&nbsp;Java plugin - tasks</b></p><div class="figure-contents"><img src="img/javaPluginTasks.png" alt="Java plugin - tasks"></div></div><br class="figure-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12119"></a>23.4.&nbsp;Project layout</h2></div></div></div><p>The Java plugin assumes the project layout shown below. None of these directories need exist or have
+            anything in them. The Java plugin will compile whatever it finds, and handles anything which is missing.
+        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.4.&nbsp;Java plugin - default project layout</b></p><div class="table-contents"><table id="javalayout"><thead><tr>
+                    <td>Directory</td>
+                    <td>Meaning</td>
+                </tr></thead><tr>
+        <td>
+            <code class="filename">src/main/java</code>
+        </td>
+        <td>Production Java source</td>
+    </tr><tr>
+        <td>
+            <code class="filename">src/main/resources</code>
+        </td>
+        <td>Production resources</td>
+    </tr><tr>
+        <td>
+            <code class="filename">src/test/java</code>
+        </td>
+        <td>Test Java source</td>
+    </tr><tr>
+        <td>
+            <code class="filename">src/test/resources</code>
+        </td>
+        <td>Test resources</td>
+    </tr><tr>
+        <td>
+            <code class="filename">src/<em class="replaceable"><code>sourceSet</code></em>/java</code>
+        </td>
+        <td>Java source for the given source set</td>
+    </tr><tr>
+        <td>
+            <code class="filename">src/<em class="replaceable"><code>sourceSet</code></em>/resources</code>
+        </td>
+        <td>Resources for the given source set</td>
+    </tr></table></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1217C"></a>23.4.1.&nbsp;Changing the project layout</h3></div></div></div><p>You configure the project layout by configuring the appropriate source set. This is discussed in
+                more detail in the following sections. Here is a brief example which changes the main Java and resource
+                source directories.
+            </p><div class="example"><a name="customJavaSourceLayout"></a><p class="title"><b>Example&nbsp;23.2.&nbsp;Custom Java source layout</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">sourceSets {
+    main {
+        java {
+            srcDir <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/java'</span>
+        }
+        resources {
+            srcDir <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/resources'</span>
+        }
+    }
+}</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:java_plugin_and_dependency_management"></a>23.5.&nbsp;Dependency management</h2></div></div></div><p>The Java plugin adds a number of dependency configurations to your project, as shown below. It assigns
+            those configurations to tasks such as <code class="literal">compileJava</code> and <code class="literal">test</code>.
+        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.5.&nbsp;Java plugin - dependency configurations</b></p><div class="table-contents"><table id="tab:configurations"><thead><tr>
+                    <td>Name</td>
+                    <td>Extends</td>
+                    <td>Used by tasks</td>
+                    <td>Meaning</td>
+                </tr></thead><tr>
+                <td>compile</td>
+                <td>-</td>
+                <td>compileJava</td>
+                <td>Compile time dependencies</td>
+            </tr><tr>
+                <td>runtime</td>
+                <td>compile</td>
+                <td>-</td>
+                <td>Runtime dependencies</td>
+            </tr><tr>
+                <td>testCompile</td>
+                <td>compile</td>
+                <td>compileTestJava</td>
+                <td>Additional dependencies for compiling tests.</td>
+            </tr><tr>
+                <td>testRuntime</td>
+                <td>runtime, testCompile</td>
+                <td>test</td>
+                <td>Additional dependencies for running tests only.</td>
+            </tr><tr>
+                <td>archives</td>
+                <td>-</td>
+                <td>uploadArchives</td>
+                <td>Artifacts (e.g. jars) produced by this project.</td>
+            </tr><tr>
+                <td>default</td>
+                <td>runtime</td>
+                <td>-</td>
+                <td>The default configuration used by a project dependency on this project. Contains the artifacts and
+                    dependencies required by this project at runtime.
+                </td>
+            </tr></table></div></div><div class="figure"><a name="N121FE"></a><p class="title"><b>Figure&nbsp;23.2.&nbsp;Java plugin - dependency configurations</b></p><div class="figure-contents"><img src="img/javaPluginConfigurations.png" alt="Java plugin - dependency configurations"></div></div><br class="figure-break"><p>For each source set you add to the project, the Java plugins adds the following dependency configurations:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.6.&nbsp;Java plugin - source set dependency configurations</b></p><div class="table-contents"><table id="java_source_set_configurations"><thead><tr>
+                    <td>Name</td>
+                    <td>Extends</td>
+                    <td>Used by tasks</td>
+                    <td>Meaning</td>
+                </tr></thead><tr>
+                <td><em class="replaceable"><code>sourceSet</code></em>Compile</td>
+                <td>-</td>
+                <td>compile<em class="replaceable"><code>SourceSet</code></em>Java</td>
+                <td>Compile time dependencies for the given source set</td>
+            </tr><tr>
+                <td><em class="replaceable"><code>sourceSet</code></em>Runtime</td>
+                <td><em class="replaceable"><code>sourceSet</code></em>Compile</td>
+                <td>-</td>
+                <td>Runtime time dependencies for the given source set</td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1223E"></a>23.6.&nbsp;Convention properties</h2></div></div></div><p>
+            The Java plugin adds a number of convention properties to the project, shown below. You can use these properties
+            in your build script as though they were properties of the project object (see
+            <a class="xref" href="plugins.html#sub:more_about_convention_objects">Section&nbsp;21.3, &ldquo;Conventions&rdquo;</a>).
+        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.7.&nbsp;Java plugin - directory properties</b></p><div class="table-contents"><table id="javaconventionDir"><thead><tr>
+                    <td>Property name</td>
+                    <td>Type</td>
+                    <td>Default value</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+        <td>
+            <code class="literal">reportsDirName</code>
+        </td>
+        <td>
+            <code class="classname">String</code>
+        </td>
+        <td>
+            <code class="filename">reports</code>
+        </td>
+        <td>
+            The name of the directory to generate reports into, relative to the build directory.
+        </td>
+    </tr><tr>
+        <td>
+            <code class="literal">reportsDir</code>
+        </td>
+        <td>
+            <code class="classname">File</code> (read-only)
+        </td>
+        <td>
+            <code class="filename"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>reportsDirName</code></em></code>
+        </td>
+        <td>
+            The directory to generate reports into.
+        </td>
+    </tr><tr>
+                <td>
+                    <code class="literal">testResultsDirName</code>
+                </td>
+                <td>
+                    <code class="classname">String</code>
+                </td>
+                <td>
+                    <code class="literal">test-results</code>
+                </td>
+                <td>
+                    The name of the directory to generate test result .xml files into, relative to the build directory.
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">testResultsDir</code>
+                </td>
+                <td>
+                    <code class="classname">File</code> (read-only)
+                </td>
+                <td>
+                    <code class="literal"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>testResultsDirName</code></em></code>
+                </td>
+                <td>
+                    The directory to generate test result .xml files into.
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">testReportDirName</code>
+                </td>
+                <td>
+                    <code class="classname">String</code>
+                </td>
+                <td>
+                    <code class="literal">tests</code>
+                </td>
+                <td>
+                    The name of the directory to generate the test report into, relative to the reports directory.
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">testReportDir</code>
+                </td>
+                <td>
+                    <code class="classname">File</code> (read-only)
+                </td>
+                <td>
+                    <code class="literal"><em class="replaceable"><code>reportsDir</code></em>/<code class="literal">testReportDirName</code></code>
+                </td>
+                <td>
+                    The directory to generate the test report into.
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">libsDirName</code>
+                </td>
+                <td>
+                    <code class="classname">String</code>
+                </td>
+                <td>
+                    <code class="literal">libs</code>
+                </td>
+                <td>
+                    The name of the directory to generate libraries into, relative to the build directory.
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">libsDir</code>
+                </td>
+                <td>
+                    <code class="classname">File</code> (read-only)
+                </td>
+                <td>
+                    <code class="literal"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>libsDirName</code></em></code>
+                </td>
+                <td>
+                    The directory to generate libraries into.
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">distsDirName</code>
+                </td>
+                <td>
+                    <code class="classname">String</code>
+                </td>
+                <td>
+                    <code class="literal">distributions</code>
+                </td>
+                <td>
+                    The name of the directory to generate distributions into, relative to the build directory.
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">distsDir</code>
+                </td>
+                <td>
+                    <code class="classname">File</code> (read-only)
+                </td>
+                <td>
+                    <code class="literal"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>distsDirName</code></em></code>
+                </td>
+                <td>
+                    The directory to generate distributions into.
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">docsDirName</code>
+                </td>
+                <td>
+                    <code class="classname">String</code>
+                </td>
+                <td>
+                    <code class="literal">docs</code>
+                </td>
+                <td>
+                    The name of the directory to generate documentation into, relative to the build directory.
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">docsDir</code>
+                </td>
+                <td>
+                    <code class="classname">File</code> (read-only)
+                </td>
+                <td>
+                    <code class="literal"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>docsDirName</code></em></code>
+                </td>
+                <td>
+                    The directory to generate documentation into.
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">dependencyCacheDirName</code>
+                </td>
+                <td>
+                    <code class="classname">String</code>
+                </td>
+                <td>
+                    <code class="literal">dependency-cache</code>
+                </td>
+                <td>
+                    The name of the directory to use to cache source dependency information, relative to the build directory.
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">dependencyCacheDir</code>
+                </td>
+                <td>
+                    <code class="classname">File</code> (read-only)
+                </td>
+                <td>
+                    <code class="literal"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>dependencyCacheDirName</code></em></code>
+                </td>
+                <td>
+                    The directory to use to cache source dependency information.
+                </td>
+            </tr></table></div></div><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.8.&nbsp;Java plugin - other properties</b></p><div class="table-contents"><table id="javaconventionNonDir"><thead><tr>
+                    <td>Property name</td>
+                    <td>Type</td>
+                    <td>Default value</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">sourceSets</code>
+                </td>
+                <td><a class="ulink" href="../javadoc/org/gradle/api/tasks/SourceSetContainer.html" target="_top"><code class="classname">SourceSetContainer</code></a> (read-only)</td>
+                <td>Not null</td>
+                <td>Contains the project's source sets.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">sourceCompatibility</code>
+                </td>
+                <td><a class="ulink" href="../javadoc/org/gradle/api/JavaVersion.html" target="_top"><code class="classname">JavaVersion</code></a>. Can also set using a String or a Number, e.g.
+                    <code class="literal">'1.5'</code> or <code class="literal">1.5</code>.
+                </td>
+                <td>Value of the current used JVM</td>
+                <td>Java version compatibility to use when compiling Java source.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">targetCompatibility</code>
+                </td>
+                <td><a class="ulink" href="../javadoc/org/gradle/api/JavaVersion.html" target="_top"><code class="classname">JavaVersion</code></a>. Can also set using a String or Number, e.g.
+                    <code class="literal">'1.5'</code> or <code class="literal">1.5</code>.
+                </td>
+                <td>
+                    <code class="literal"><em class="replaceable"><code>sourceCompatibility</code></em></code>
+                </td>
+                <td>Java version to generate classes for.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">archivesBaseName</code>
+                </td>
+                <td>
+                    <code class="classname">String</code>
+                </td>
+                <td><code class="literal"><em class="replaceable"><code>projectName</code></em></code></td>
+                <td>The basename to use for archives, such as JAR or ZIP files.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">manifest</code>
+                </td>
+                <td><a class="ulink" href="../javadoc/org/gradle/api/java/archives/Manifest.html" target="_top"><code class="classname">Manifest</code></a></td>
+                <td>an empty manifest</td>
+                <td>The manifest to include in all JAR files.</td>
+            </tr></table></div></div><p>
+            These properties are provided by convention objects of type <a class="ulink" href="../dsl/org.gradle.api.plugins.JavaPluginConvention.html" target="_top"><code class="classname">JavaPluginConvention</code></a>,
+            <a class="ulink" href="../dsl/org.gradle.api.plugins.BasePluginConvention.html" target="_top"><code class="classname">BasePluginConvention</code></a> and
+            <a class="ulink" href="../dsl/org.gradle.api.plugins.ReportingBasePluginConvention.html" target="_top"><code class="classname">ReportingBasePluginConvention</code></a>.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:source_sets"></a>23.7.&nbsp;Working with source sets</h2></div></div></div><p>You can access the source sets of a project using the <code class="literal">sourceSets</code> property. This
+            is a container for the project's source sets, of type <a class="ulink" href="../javadoc/org/gradle/api/tasks/SourceSetContainer.html" target="_top"><code class="classname">SourceSetContainer</code></a>.
+            There is also a <code class="literal">sourceSets { }</code> script block, which you can pass a closure to configure the
+            source set container. The source set container works pretty much the same way as other containers, such
+            as <code class="literal">tasks</code>.
+        </p><div class="example"><a name="defineSourceSet"></a><p class="title"><b>Example&nbsp;23.3.&nbsp;Accessing a source set</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Various ways to access the main source set</span>
+println sourceSets.main.output.classesDir
+println sourceSets[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'main'</span>].output.classesDir
+sourceSets {
+    println main.output.classesDir
+}
+sourceSets {
+    main {
+        println output.classesDir
+    }
+}
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Iterate over the source sets</span>
+sourceSets.all {
+    println name
+}</pre></div></div><br class="example-break"><p>To configure an existing source set, you simply use one of the above access methods to set the
+            properties of the source set. The properties are described below. Here is an example which configures the
+            main Java and resources directories:</p><div class="example"><a name="configureSourceSet"></a><p class="title"><b>Example&nbsp;23.4.&nbsp;Configuring the source directories of a source set</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">sourceSets {
+    main {
+        java {
+            srcDir <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/java'</span>
+        }
+        resources {
+            srcDir <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/resources'</span>
+        }
+    }
+}</pre></div></div><br class="example-break"><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N12481"></a>23.7.1.&nbsp;Source set properties</h3></div></div></div><p>The following table lists some of the important properties of a source set.
+                You can find more details in the API documentation for <a class="ulink" href="../dsl/org.gradle.api.tasks.SourceSet.html" target="_top"><code class="classname">SourceSet</code></a>.
+            </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.9.&nbsp;Java plugin - source set properties</b></p><div class="table-contents"><table id="N1248B"><thead><tr>
+                        <td>Property name</td>
+                        <td>Type</td>
+                        <td>Default value</td>
+                        <td>Description</td>
+                    </tr></thead><tr>
+                    <td>
+                        <code class="literal">name</code>
+                    </td>
+                    <td>
+                        <code class="classname">String</code> (read-only)
+                    </td>
+                    <td>
+                        Not null
+                    </td>
+                    <td>
+                        The name of the source set, used to identify it.
+                    </td>
+                </tr><tr>
+                    <td>
+                        <code class="literal">output</code>
+                    </td>
+                    <td>
+                        <a class="ulink" href="../dsl/org.gradle.api.tasks.SourceSetOutput.html" target="_top"><code class="classname">SourceSetOutput</code></a> (read-only)
+                    </td>
+                    <td>
+                        Not null
+                    </td>
+                    <td>
+                        The output files of the source set, containing its compiled classes and resources.
+                    </td>
+                </tr><tr>
+                    <td>
+                        <code class="literal">output.classesDir</code>
+                    </td>
+                    <td>
+                        <code class="classname">File</code>
+                    </td>
+                    <td>
+                        <code class="literal"><em class="replaceable"><code>buildDir</code></em>/classes/<em class="replaceable"><code>name</code></em></code>
+                    </td>
+                    <td>
+                        The directory to generate the classes of this source set into.
+                    </td>
+                </tr><tr>
+                    <td>
+                        <code class="literal">output.resourcesDir</code>
+                    </td>
+                    <td>
+                        <code class="classname">File</code>
+                    </td>
+                    <td>
+                        <code class="literal"><em class="replaceable"><code>buildDir</code></em>/resources/<em class="replaceable"><code>name</code></em></code>
+                    </td>
+                    <td>
+                        The directory to generate the resources of this source set into.
+                    </td>
+                </tr><tr>
+                    <td>
+                        <code class="literal">compileClasspath</code>
+                    </td>
+                    <td>
+                        <a class="ulink" href="../javadoc/org/gradle/api/file/FileCollection.html" target="_top"><code class="classname">FileCollection</code></a>
+                    </td>
+                    <td>
+                        <code class="literal">compile<em class="replaceable"><code>SourceSet</code></em></code> configuration.
+                    </td>
+                    <td>
+                        The classpath to use when compiling the source files of this source set.
+                    </td>
+                </tr><tr>
+                    <td>
+                        <code class="literal">runtimeClasspath</code>
+                    </td>
+                    <td>
+                        <a class="ulink" href="../javadoc/org/gradle/api/file/FileCollection.html" target="_top"><code class="classname">FileCollection</code></a>
+                    </td>
+                    <td>
+                        <code class="literal">output</code> + <code class="literal">runtime<em class="replaceable"><code>SourceSet</code></em></code> configuration.
+                    </td>
+                    <td>
+                        The classpath to use when executing the classes of this source set.
+                    </td>
+                </tr><tr>
+                    <td>
+                        <code class="literal">java</code>
+                    </td>
+                    <td>
+                        <a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top"><code class="classname">SourceDirectorySet</code></a> (read-only)
+                    </td>
+                    <td>
+                        Not null
+                    </td>
+                    <td>
+                        The Java source files of this source set. Contains only <code class="filename">.java</code> files
+                        found in the Java source directories, and excludes all other files.
+                    </td>
+                </tr><tr>
+                    <td>
+                        <code class="literal">java.srcDirs</code>
+                    </td>
+                    <td>
+                        <code class="classname">Set&lt;File&gt;</code>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">Section&nbsp;16.5, &ldquo;Specifying a set of input files&rdquo;</a>.
+                    </td>
+                    <td>
+                        <code class="literal">[<em class="replaceable"><code>projectDir</code></em>/src/<em class="replaceable"><code>name</code></em>/java]</code>
+                    </td>
+                    <td>
+                        The source directories containing the Java source files of this source set.
+                    </td>
+                </tr><tr>
+                    <td>
+                        <code class="literal">resources</code>
+                    </td>
+                    <td>
+                        <a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top"><code class="classname">SourceDirectorySet</code></a> (read-only)
+                    </td>
+                    <td>
+                        Not null
+                    </td>
+                    <td>
+                        The resources of this source set. Contains only resources, and excludes any
+                        <code class="filename">.java</code> files found in the resource source directories. Other plugins,
+                        such as the Groovy plugin, exclude additional types of files from this collection.
+                    </td>
+                </tr><tr>
+                    <td>
+                        <code class="literal">resources.srcDirs</code>
+                    </td>
+                    <td>
+                        <code class="classname">Set&lt;File&gt;</code>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">Section&nbsp;16.5, &ldquo;Specifying a set of input files&rdquo;</a>.
+                    </td>
+                    <td>
+                        <code class="literal">[<em class="replaceable"><code>projectDir</code></em>/src/<em class="replaceable"><code>name</code></em>/resources]</code>
+                    </td>
+                    <td>
+                        The source directories containing the resources of this source set.
+                    </td>
+                </tr><tr>
+                    <td>
+                        <code class="literal">allJava</code>
+                    </td>
+                    <td>
+                        <a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top"><code class="classname">SourceDirectorySet</code></a> (read-only)
+                    </td>
+                    <td>
+                        <code class="literal">java</code>
+                    </td>
+                    <td>
+                        All <code class="filename">.java</code> files of this source set. Some plugins, such as the Groovy plugin,
+                        add additional Java source files to this collection.
+                    </td>
+                </tr><tr>
+                    <td>
+                        <code class="literal">allSource</code>
+                    </td>
+                    <td>
+                        <a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top"><code class="classname">SourceDirectorySet</code></a> (read-only)
+                    </td>
+                    <td>
+                        <code class="literal">resources + java</code>
+                    </td>
+                    <td>
+                        All source files of this source set. This include all resource files and all Java source files.
+                        Some plugins, such as the Groovy plugin, add additional source files to this collection.
+                    </td>
+                </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N125DD"></a>23.7.2.&nbsp;Defining new source sets</h3></div></div></div><p>To define a new source set, you simply reference it in the <code class="literal">sourceSets { }</code> block. Here's an example:
+            </p><div class="example"><a name="defineSourceSet"></a><p class="title"><b>Example&nbsp;23.5.&nbsp;Defining a source set</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">sourceSets {
+    intTest
+}</pre></div></div><br class="example-break"><p>
+                When you define a new source set, the Java plugin adds some dependency configurations for the
+                source set, as shown in <a class="xref" href="java_plugin.html#java_source_set_configurations" title="Table&nbsp;23.6.&nbsp;Java plugin - source set dependency configurations">Table&nbsp;23.6, &ldquo;Java plugin - source set dependency configurations&rdquo;</a>. You can use these configurations to
+                define the compile and runtime dependencies of the source set.
+            </p><div class="example"><a name="sourceSetDependencies"></a><p class="title"><b>Example&nbsp;23.6.&nbsp;Defining source set dependencies</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">sourceSets {
+    intTest
+}
+
+dependencies {
+    intTestCompile <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'junit:junit:4.11'</span>
+    intTestRuntime <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.ow2.asm:asm-all:4.0'</span>
+}</pre></div></div><br class="example-break"><p>
+                The Java plugin also adds a number of tasks which assemble the classes for the
+                source set, as shown in <a class="xref" href="java_plugin.html#java_source_set_tasks" title="Table&nbsp;23.2.&nbsp;Java plugin - source set tasks">Table&nbsp;23.2, &ldquo;Java plugin - source set tasks&rdquo;</a>. For example, for a source set called
+                <code class="literal">intTest</code>, you can run <strong class="userinput"><code>gradle intTestClasses</code></strong> to compile the
+                int test classes.
+            </p><div class="example"><a name="compileSourceSet"></a><p class="title"><b>Example&nbsp;23.7.&nbsp;Compiling a source set</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle intTestClasses</code></strong></p><pre class="screen">&gt; gradle intTestClasses
+:compileIntTestJava
+:processIntTestResources
+:intTestClasses
+
+BUILD SUCCESSFUL
+
+Total time: 1 secs</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N12613"></a>23.7.3.&nbsp;Some source set examples</h3></div></div></div><p>Adding a JAR containing the classes of a source set:</p><div class="example"><a name="configureSourceSet"></a><p class="title"><b>Example&nbsp;23.8.&nbsp;Assembling a JAR for a source set</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task intTestJar(type: Jar) {
+    from sourceSets.intTest.output
+}</pre></div></div><br class="example-break"><p>Generating Javadoc for a source set:</p><div class="example"><a name="configureSourceSet"></a><p class="title"><b>Example&nbsp;23.9.&nbsp;Generating the Javadoc for a source set</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task intTestJavadoc(type: Javadoc) {
+    source sourceSets.intTest.allJava
+}</pre></div></div><br class="example-break"><p>Adding a test suite to run the tests in a source set:</p><div class="example"><a name="configureSourceSet"></a><p class="title"><b>Example&nbsp;23.10.&nbsp;Running tests in a source set</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task intTest(type: Test) {
+    testClassesDir = sourceSets.intTest.output.classesDir
+    classpath = sourceSets.intTest.runtimeClasspath
+}</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:javadoc"></a>23.8.&nbsp;Javadoc</h2></div></div></div><p>The <code class="literal">javadoc</code> task is an instance of <a class="ulink" href="../dsl/org.gradle.api.tasks.javadoc.Javadoc.html" target="_top"><code class="classname">Javadoc</code></a>.
+            It supports the core javadoc options and the options of the standard doclet described in the
+            <a class="ulink" href="http://download.oracle.com/javase/1.5.0/docs/tooldocs/windows/javadoc.html#referenceguide" target="_top">reference documentation</a>
+            of the Javadoc executable.
+            For a complete list of supported Javadoc options consult the API documentation of the following classes:
+            <a class="ulink" href="../javadoc/org/gradle/external/javadoc/CoreJavadocOptions.html" target="_top"><code class="classname">CoreJavadocOptions</code></a> and <a class="ulink" href="../javadoc/org/gradle/external/javadoc/StandardJavadocDocletOptions.html" target="_top"><code class="classname">StandardJavadocDocletOptions</code></a>.
+        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.10.&nbsp;Java plugin - Javadoc properties</b></p><div class="table-contents"><table id="N12656"><thead><tr>
+                    <td>Task Property</td>
+                    <td>Type</td>
+                    <td>Default Value</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">classpath</code>
+                </td>
+                <td><a class="ulink" href="../javadoc/org/gradle/api/file/FileCollection.html" target="_top"><code class="classname">FileCollection</code></a></td>
+                <td><code class="literal">sourceSets.main.output + sourceSets.main.compileClasspath</code></td>
+            </tr><tr>
+                <td><code class="literal">source</code></td>
+                <td><a class="ulink" href="../javadoc/org/gradle/api/file/FileTree.html" target="_top"><code class="classname">FileTree</code></a>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">Section&nbsp;16.5, &ldquo;Specifying a set of input files&rdquo;</a>.</td>
+                <td><code class="literal">sourceSets.main.allJava</code></td>
+            </tr><tr>
+                <td>
+                    <code class="literal">destinationDir</code>
+                </td>
+                <td><code class="classname">File</code></td>
+                <td><code class="filename"><em class="replaceable"><code>docsDir</code></em>/javadoc</code></td>
+            </tr><tr>
+                <td>
+                    <code class="literal">title</code>
+                </td>
+                <td><code class="classname">String</code></td>
+                <td>The name and version of the project</td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:clean"></a>23.9.&nbsp;Clean</h2></div></div></div><p>The <code class="literal">clean</code> task is an instance of <a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a>. It
+            simply removes the directory denoted by its <code class="literal">dir</code>
+            property.
+        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.11.&nbsp;Java plugin - Clean properties</b></p><div class="table-contents"><table id="N126BD"><thead><tr>
+                    <td>Task Property</td>
+                    <td>Type</td>
+                    <td>Default Value</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">dir</code>
+                </td>
+                <td><code class="classname">File</code></td>
+                <td><code class="filename"><em class="replaceable"><code>buildDir</code></em></code></td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:resources"></a>23.10.&nbsp;Resources</h2></div></div></div><p>The Java plugin uses the <a class="ulink" href="../dsl/org.gradle.api.tasks.Copy.html" target="_top"><code class="classname">Copy</code></a> task for resource handling. It adds an
+            instance for each source set in the project. You can find out more about the copy task in
+            <a class="xref" href="working_with_files.html#sec:copying_files">Section&nbsp;16.6, &ldquo;Copying files&rdquo;</a>.
+        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.12.&nbsp;Java plugin - ProcessResources properties</b></p><div class="table-contents"><table id="N126EB"><thead><tr>
+                    <td>Task Property</td>
+                    <td>Type</td>
+                    <td>Default Value</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">srcDirs</code>
+                </td>
+                <td><code class="classname">Object</code>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">Section&nbsp;16.5, &ldquo;Specifying a set of input files&rdquo;</a>.</td>
+                <td><code class="literal"><em class="replaceable"><code>sourceSet</code></em>.resources</code></td>
+            </tr><tr>
+                <td>
+                    <code class="literal">destinationDir</code>
+                </td>
+                <td><code class="classname">File</code>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:locating_files">Section&nbsp;16.1, &ldquo;Locating files&rdquo;</a>.</td>
+                <td><code class="literal"><em class="replaceable"><code>sourceSet</code></em>.output.resourcesDir</code></td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:compile"></a>23.11.&nbsp;CompileJava</h2></div></div></div><p>The Java plugin adds a <a class="ulink" href="../dsl/org.gradle.api.tasks.compile.JavaCompile.html" target="_top"><code class="classname">JavaCompile</code></a> instance for each
+            source set in the project. Some of the most common configuration options are shown below.
+        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.13.&nbsp;Java plugin - Compile properties</b></p><div class="table-contents"><table id="N12731"><thead><tr>
+                    <td>Task Property</td>
+                    <td>Type</td>
+                    <td>Default Value</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">classpath</code>
+                </td>
+                <td><a class="ulink" href="../javadoc/org/gradle/api/file/FileCollection.html" target="_top"><code class="classname">FileCollection</code></a></td>
+                <td><code class="literal"><em class="replaceable"><code>sourceSet</code></em>.compileClasspath</code></td>
+            </tr><tr>
+                <td>
+                    <code class="literal">source</code>
+                </td>
+                <td><a class="ulink" href="../javadoc/org/gradle/api/file/FileTree.html" target="_top"><code class="classname">FileTree</code></a>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">Section&nbsp;16.5, &ldquo;Specifying a set of input files&rdquo;</a>.</td>
+                <td><code class="literal"><em class="replaceable"><code>sourceSet</code></em>.java</code></td>
+            </tr><tr>
+                <td>
+                    <code class="literal">destinationDir</code>
+                </td>
+                <td><code class="classname">File</code>.</td>
+                <td><code class="literal"><em class="replaceable"><code>sourceSet</code></em>.output.classesDir</code></td>
+            </tr></table></div></div><p>The compile task delegates to Ant's javac task. Setting <code class="literal">options.useAnt</code> to <code class="literal">false</code>
+            activates Gradle's direct compiler integration, bypassing the Ant task. In a future Gradle release, this will become the default.
+        </p><p>By default, the Java compiler runs in the Gradle process. Setting <code class="literal">options.fork</code> to <code class="literal">true</code>
+            causes compilation to occur in a separate process. In the case of the Ant javac task, this means that a new process will be
+            forked for each compile task, which can slow down compilation. Conversely, Gradle's direct compiler integration (see above) will
+            reuse the same compiler process as much as possible. In both cases, all fork options specified
+            with <code class="literal">options.forkOptions</code> will be honored.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:java_test"></a>23.12.&nbsp;Test</h2></div></div></div><p>The <code class="literal">test</code> task is an instance of <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a>.
+            It automatically detects and executes all unit tests in the <code class="literal">test</code> source set.
+            It also generates a report once test execution is complete. JUnit and TestNG are both supported.
+            Have a look at <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a> for the complete API.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N127A8"></a>23.12.1.&nbsp;Test execution</h3></div></div></div><p>Tests are executed in a separate JVM, isolated from the main build process. The <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a> task's
+                API allows you some control over how this happens.
+            </p><p>There are a number of properties which control how the test process is launched. This includes
+                things such as system properties, JVM arguments, and the Java executable to use.
+            </p><p>You can specify whether or not to execute your tests in parallel. Gradle provides parallel test execution
+                by running multiple test processes concurrently. Each test process executes only a single test at a time, so you
+                generally don't need to do anything special to your tests to take advantage of this.
+                The <code class="literal">maxParallelForks</code> property specifies the maximum number of test processes to run
+                at any given time. The default is 1, that is, do not execute the tests in parallel.
+            </p><p>The test process sets the <code class="literal">org.gradle.test.worker</code> system property to a unique
+                identifier for that test process, which you can use, for example, in files names or other
+                resource identifiers.
+            </p><p>You can specify that test processes should be restarted after it has executed a certain number of
+                test classes. This can be a useful alternative to giving your test process a very large
+                heap.
+                The <code class="literal">forkEvery</code> property specifies the
+                maximum number of test classes to execute in a test process. The default is to execute an unlimited number
+                of tests in each test process.</p><p>The task has an <code class="literal">ignoreFailures</code> property to control the behavior when tests fail.
+                Test always executes every test that it detects. It stops the build afterwards if <code class="literal">ignoreFailures</code>
+                is false and there are failing tests. The default value of <code class="literal">ignoreFailures</code> is false.
+            </p><p>The <code class="literal">testLogging</code> property allows to configure which test events are going to be logged and at
+                which detail level. By default, a concise message will be logged for every failed test. See
+                <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.logging.TestLoggingContainer.html" target="_top"><code class="classname">TestLoggingContainer</code></a> for how to tune test logging to your
+                preferences.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N127D8"></a>23.12.2.&nbsp;Debugging</h3></div></div></div><p>
+                The test task provides a <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html#org.gradle.api.tasks.testing.Test:debug" target="_top"><code class="classname">Test.getDebug()</code></a> property that can be set to launch to make the JVM wait for a
+                debugger to attach to port 5005 before proceeding with test execution.
+            </p><p>
+                This can also be enabled at invocation time via the <strong class="userinput"><code>--debug-jvm</code></strong> task option.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="test_filtering"></a>23.12.3.&nbsp;Test filtering</h3></div></div></div><p>Starting with Gradle 1.10, it is possible to include only specific tests, based on the test name pattern.
+                Filtering is a different mechanism than test class inclusion / exclusion that will be described in the next few paragraphs
+                (<code class="literal">-Dtest.single</code>, <code class="literal">test.include</code> and friends).
+                The latter is based on files, e.g. the physical location of the test implementation class.
+                File-level test selection does not support many interesting scenarios that are possible with test-level filtering.
+                Some of them Gradle handles now and some will be satisfied in the future releases:
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Filtering at the level of specific test methods; executing a single test method</li><li class="listitem">Filtering based on custom annotations (future)</li><li class="listitem">Filtering based on test hierarchy; executing all tests that extend ceratain base class (future)</li><li class="listitem">Filtering based on some custom runtime rule, e.g. particular value of a system property or some static state (future)</li></ul></div><p>
+            </p><p>
+                Test filtering feature has following characteristic:
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Fully qualified class name or fully qualified method name is supported,
+                        e.g. "org.gradle.SomeTest", "org.gradle.SomeTest.someMethod"</li><li class="listitem">Wildcard '*' is supported for matching any characters</li><li class="listitem">Command line option "--tests" is provided to conveniently set the test filter.
+                        Especially useful for the classic 'single test method execution' use case.
+                        When the command line option is used, the inclusion filters declared in the build script are ignored.
+                    </li><li class="listitem">Gradle tries best to filter the tests given limitations of particular test framework API.
+                        Some advanced, synthetic tests may not be fully compatible with filtering.
+                        However, vast majority of tests and use cases should be handled neatly.
+                    </li><li class="listitem">Test filtering supersedes the file-based test selection. The latter may be completely replaced in future.
+                        We will grow the the test filtering api and add more kinds of filters.
+                    </li></ul></div><p>
+            </p><p>
+                </p><div class="example"><a name="testfiltering"></a><p class="title"><b>Example&nbsp;23.11.&nbsp;Filtering tests in the build script</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">test {
+    filter {
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//include specific method in any of the tests</span>
+        includeTestsMatching <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"*UiCheck"</span>
+
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//include all tests from package</span>
+        includeTestsMatching <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.gradle.internal.*"</span>
+
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//include all integration tests</span>
+        includeTestsMatching <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"*IntegTest"</span>
+    }
+}</pre></div></div><p><br class="example-break">
+                For more details and examples please see the <a class="ulink" href="../javadoc/org/gradle/api/tasks/testing/TestFilter.html" target="_top"><code class="classname">TestFilter</code></a> reference.
+            </p><p>
+                Some examples of using the command line option:
+
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><code class="literal">gradle test --tests org.gradle.SomeTest.someSpecificFeature</code></p></li><li class="listitem"><p><code class="literal">gradle test --tests *SomeTest.someSpecificFeature</code></p></li><li class="listitem"><p><code class="literal">gradle test --tests *SomeSpecificTest</code></p></li><li class="listitem"><p><code class="literal">gradle test --tests all.in.specific.package*</code></p></li><li class="listitem"><p><code class="literal">gradle test --tests *IntegTest</code></p></li><li class="listitem"><p><code class="literal">gradle test --tests *IntegTest*ui*</code></p></li><li class="listitem"><p><code class="literal">gradle someTestTask --tests *UiTest someOtherTestTask --tests *WebTest*ui</code></p></li></ul></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1283D"></a>23.12.4.&nbsp;Single test execution via System Properties</h3></div></div></div><div class="note">This mechanism has been superseded by 'Test Filtering', described above.</div><p>Setting a system property of <em class="replaceable"><code>taskName.single</code></em> = <em class="replaceable"><code>testNamePattern</code></em>
+                  will only execute tests that match the specified <em class="replaceable"><code>testNamePattern</code></em>.
+                  The <em class="replaceable"><code>taskName</code></em> can be a full multi-project path like ":sub1:sub2:test"
+                  or just the task name.  The <em class="replaceable"><code>testNamePattern</code></em> will be used to form an include
+                  pattern of "**/testNamePattern*.class".
+                  If no tests with this pattern can be found an exception is thrown. This is to shield you from false security.
+                  If tests of more than one subproject are executed, the pattern is applied to each subproject. An exception
+                  is thrown if no tests can be found for a particular subproject. In such a case you can use the path notation of the
+                  pattern, so that the pattern is applied only to the test task of a specific subproject. Alternatively you can specify the fully
+                  qualified task name to be executed. You can also specify multiple patterns. Examples:
+                  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><code class="literal">gradle -Dtest.single=ThisUniquelyNamedTest test</code></p></li><li class="listitem"><p><code class="literal">gradle -Dtest.single=a/b/ test</code></p></li><li class="listitem"><p><code class="literal">gradle -DintegTest.single=*IntegrationTest integTest</code></p></li><li class="listitem"><p><code class="literal">gradle -Dtest.single=:proj1:test:Customer build</code></p></li><li class="listitem"><p><code class="literal">gradle -DintegTest.single=c/d/ :proj1:integTest</code></p></li></ul></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N12869"></a>23.12.5.&nbsp;Test detection</h3></div></div></div><p>The <code class="literal">Test</code> task detects which classes are test classes by inspecting the compiled test classes.
+                By default it scans all <code class="filename">.class</code> files. You can set custom includes / excludes, only those
+                classes will be scanned. Depending on the test framework used (JUnit / TestNG) the test class detection
+                uses different criteria.
+            </p><p>
+                When using JUnit, we scan for both JUnit 3 and 4 test classes. If any of the following criteria match, the
+                class is considered to be a JUnit test class:
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Class or a super class extends <code class="classname">TestCase</code> or <code class="classname">GroovyTestCase</code></p></li><li class="listitem"><p>Class or a super class is annotated with <code class="classname">@RunWith</code></p></li><li class="listitem"><p>Class or a super class contain a method annotated with <code class="classname">@Test</code></p></li></ul></div><p>
+            </p><p>
+                When using TestNG, we scan for methods annotated with <code class="classname">@Test</code>.
+            </p><p>
+                Note that abstract classes are not executed. Gradle also scan up the inheritance tree into jar files
+                on the test classpath.
+            </p><p>
+                In case you don't want to use the test class detection, you can disable it by setting
+                <code class="literal">scanForTestClasses</code> to false. This will make the test task only use the includes /
+                excludes to find test classes.
+
+                If <code class="literal">scanForTestClasses</code> is disabled and no include or exclude patterns are specified, the
+                respective defaults are used. For include this is <code class="literal">"**/*Tests.class", "**/*Test.class"</code>
+                and the for exclude it is <code class="literal">"**/Abstract*.class"</code>.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="test_grouping"></a>23.12.6.&nbsp;Test grouping</h3></div></div></div><p>JUnit and TestNG allows sophisticated groupings of test methods. </p><p>For grouping JUnit test classes and methods JUnit 4.8 introduces the concept of categories.
+                <sup>[<a href="#ftn.N128A7" name="N128A7" class="footnote">9</a>]</sup>
+                The <code class="literal">test</code> task allows the specification of the JUnit categories you want to include and exclude.
+            </p><div class="example"><a name="junitcategories"></a><p class="title"><b>Example&nbsp;23.12.&nbsp;JUnit Categories</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">test {
+    useJUnit {
+        includeCategories <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle.junit.CategoryA'</span>
+        excludeCategories <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle.junit.CategoryB'</span>
+    }
+}</pre></div></div><br class="example-break"><p>The TestNG framework has a quite similar concept. In TestNG you can specify different test groups.
+                <sup>[<a href="#ftn.N128BD" name="N128BD" class="footnote">10</a>]</sup> The test groups that should be included or excluded from the test execution can be configured in the test task. </p><div class="example"><a name="testnggrouping"></a><p class="title"><b>Example&nbsp;23.13.&nbsp;Grouping TestNG tests</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">test {
+    useTestNG {
+        excludeGroups <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'integrationTests'</span>
+        includeGroups <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'unitTests'</span>
+    }
+}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="test_reporting"></a>23.12.7.&nbsp;Test reporting</h3></div></div></div><p>The <code class="literal">Test</code> task generates the following results by default.</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>An HTML test report.</p></li><li class="listitem"><p>The results in an XML format that is compatible with the Ant JUnit report task. This format is supported by many
+                    other tools, such as CI servers.</p></li><li class="listitem"><p>Results in an efficient binary format. The task generates the other results from these binary results.</p></li></ul></div><p>You can disable the HTML test report using the <a class="ulink" href="../javadoc/org/gradle/api/tasks/testing/Test.html#setTestReport(boolean)" target="_top"><code class="classname">Test.setTestReport()</code></a> method. The other
+                results currently cannot be disabled.
+            </p><p>There is also a stand-alone <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.TestReport.html" target="_top"><code class="classname">TestReport</code></a> task type which can generate the HTML test
+                report from the binary results generated by one or more <code class="classname">Test</code> task instances. To use this task type, you need
+                to define a <code class="literal">destinationDir</code> and the test results to include in the report. Here is a sample which generates a
+                combined report for the unit tests from subprojects:
+            </p><div class="example"><a name="subProjectsTestReport"></a><p class="title"><b>Example&nbsp;23.14.&nbsp;Creating a unit test report for subprojects</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">subprojects {
+    apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Disable the test report for the individual test task</span>
+    test {
+        reports.html.enabled = false
+    }
+}
+
+task testReport(type: TestReport) {
+    destinationDir = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/reports/allTests"</span>)
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Include the results from the `test` task in all subprojects</span>
+    reportOn subprojects*.test
+}</pre></div></div><br class="example-break"><p>You should note that the <code class="literal">TestReport</code> type combines the results from multiple test
+                tasks and needs to aggregate the results of individual test classes. This means that if a given test class is executed by
+                multiple test tasks, then the test report will include executions of that class, but it can be hard to distinguish individual
+                executions of that class and their output.
+            </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="testNgParameterizedReporting"></a>23.12.7.1.&nbsp;TestNG parameterized methods and reporting</h4></div></div></div><p>
+                    TestNG supports <a class="ulink" href="http://testng.org/doc/documentation-main.html#parameters" target="_top">parameterizing test methods</a>,
+                    allowing a particular test method to be executed multiple times with different inputs. Gradle includes the parameter values
+                    in its reporting of the test method execution.
+                </p><p>
+                    Given a parameterized test method named <code class="literal">aParameterizedTestMethod</code> that takes two parameters, it will be reported with the name:
+                    <code class="literal">aParameterizedTestMethod(toStringValueOfParam1, toStringValueOfParam2)</code>. This makes identifying the parameter values for a
+                    particular iteration easy.
+                </p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N12916"></a>23.12.8.&nbsp;Convention values</h3></div></div></div><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.14.&nbsp;Java plugin - test properties</b></p><div class="table-contents"><table id="N12919"><thead><tr>
+                        <td>Task Property</td>
+                        <td>Type</td>
+                        <td>Default Value</td>
+                    </tr></thead><tr>
+                    <td><code class="literal">testClassesDir</code></td>
+                    <td><code class="classname">File</code></td>
+                    <td><code class="literal">sourceSets.test.output.classesDir</code></td>
+                </tr><tr>
+                    <td><code class="literal">classpath</code></td>
+                    <td><a class="ulink" href="../javadoc/org/gradle/api/file/FileCollection.html" target="_top"><code class="classname">FileCollection</code></a></td>
+                    <td><code class="literal">sourceSets.test.runtimeClasspath</code></td>
+                </tr><tr>
+                    <td><code class="literal">testResultsDir</code></td>
+                    <td><code class="classname">File</code></td>
+                    <td><code class="literal">testResultsDir</code></td>
+                </tr><tr>
+                    <td><code class="literal">testReportDir</code></td>
+                    <td><code class="classname">File</code></td>
+                    <td><code class="literal">testReportDir</code></td>
+                </tr><tr>
+                    <td><code class="literal">testSrcDirs</code></td>
+                    <td><code class="classname">List&lt;File&gt;</code></td>
+                    <td><code class="literal">sourceSets.test.java.srcDirs</code></td>
+                </tr></table></div></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12970"></a>23.13.&nbsp;Jar</h2></div></div></div><p>The <code class="literal">jar</code> task creates a JAR file containing the class files and resources of the
+            project. The JAR file is declared as an artifact in the <code class="literal">archives</code> dependency
+            configuration. This means that the JAR is available in the classpath of a dependent project. If you upload
+            your project into a repository, this JAR is declared as part of the dependency descriptor. You can learn
+            more about how to work with archives in <a class="xref" href="working_with_files.html#sec:archives">Section&nbsp;16.8, &ldquo;Creating archives&rdquo;</a> and artifact configurations in
+            <a class="xref" href="artifact_management.html">Chapter&nbsp;51, <i>Publishing artifacts</i></a>.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:manifest"></a>23.13.1.&nbsp;Manifest</h3></div></div></div><p>Each jar or war object has a <code class="literal">manifest</code>
+                property with a separate instance of <a class="ulink" href="../javadoc/org/gradle/api/java/archives/Manifest.html" target="_top"><code class="classname">Manifest</code></a>.
+                When the archive is generated, a corresponding <code class="literal">MANIFEST.MF</code> file is written into the
+                archive.
+            </p><div class="example"><a name="manifest"></a><p class="title"><b>Example&nbsp;23.15.&nbsp;Customization of MANIFEST.MF</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">jar {
+    manifest {
+        attributes(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Implementation-Title"</span>: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Gradle"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Implementation-Version"</span>: version)
+    }
+}</pre></div></div><br class="example-break"><p>You can create stand alone instances of a <code class="classname">Manifest</code>. You can use that for example,
+                to share manifest information between jars.
+            </p><div class="example"><a name="manifest"></a><p class="title"><b>Example&nbsp;23.16.&nbsp;Creating a manifest object.</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">ext.sharedManifest = manifest {
+    attributes(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Implementation-Title"</span>: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Gradle"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Implementation-Version"</span>: version)
+}
+task fooJar(type: Jar) {
+    manifest = project.manifest {
+        from sharedManifest
+    }
+}</pre></div></div><br class="example-break"><p>You can merge other manifests into any <code class="classname">Manifest</code>
+                object. The other manifests might
+                be either described by a file path or, like in the example above, by a reference to another <code class="classname">Manifest</code> object.
+            </p><div class="example"><a name="manifest"></a><p class="title"><b>Example&nbsp;23.17.&nbsp;Separate MANIFEST.MF for a particular archive</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task barJar(type: Jar) {
+    manifest {
+        attributes key1: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'value1'</span>
+        from sharedManifest, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/config/basemanifest.txt'</span>
+        from(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/config/javabasemanifest.txt'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/config/libbasemanifest.txt'</span>) {
+            eachEntry { details -&gt;
+                <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (details.baseValue != details.mergeValue) {
+                    details.value = baseValue
+                }
+                <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (details.key == <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'foo'</span>) {
+                    details.exclude()
+                }
+            }
+        }
+    }
+}</pre></div></div><br class="example-break"><p>Manifest are merged in the order they are declared by the <code class="literal">from</code> statement. If
+            the based manifest and the merged manifest both define values for the same key, the merged manifest wins by default.
+            You can fully customize the merge behavior by adding <code class="literal">eachEntry</code> actions in which
+                you have access to a <a class="ulink" href="../javadoc/org/gradle/api/java/archives/ManifestMergeDetails.html" target="_top"><code class="classname">ManifestMergeDetails</code></a> instance for each entry
+                of the resulting manifest. The merge is not immediately triggered by the from statement. It is done lazily,
+                either when generating the jar, or by calling <code class="literal">writeTo</code> or <code class="literal">effectiveManifest</code></p><p>You can easily write a manifest to disk.
+            </p><div class="example"><a name="manifest"></a><p class="title"><b>Example&nbsp;23.18.&nbsp;Separate MANIFEST.MF for a particular archive</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">jar.manifest.writeTo(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/mymanifest.mf"</span>)</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:upload"></a>23.14.&nbsp;Uploading</h2></div></div></div><p>How to upload your archives is described in <a class="xref" href="artifact_management.html">Chapter&nbsp;51, <i>Publishing artifacts</i></a>.
+        </p></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N128A7" name="ftn.N128A7" class="para">9</a>] </sup>The JUnit wiki contains a detailed description on how to work with JUnit categories:
+                        <a class="ulink" href="https://github.com/junit-team/junit/wiki/Categories" target="_top">https://github.com/junit-team/junit/wiki/Categories</a>.
+                    </p></div><div class="footnote"><p><sup>[<a href="#N128BD" name="ftn.N128BD" class="para">10</a>] </sup>The TestNG documentation contains more details about test groups:
+                        <a class="ulink" href="http://testng.org/doc/documentation-main.html#test-groups" target="_top">http://testng.org/doc/documentation-main.html#test-groups</a>.
+                    </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="standard_plugins.html" title="Chapter&nbsp;22.&nbsp;Standard Gradle plugins">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="groovy_plugin.html" title="Chapter&nbsp;24.&nbsp;The Groovy Plugin">Next</a></div></div></div></body></html>

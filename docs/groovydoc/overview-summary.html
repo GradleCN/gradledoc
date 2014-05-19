@@ -1,0 +1,848 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<title>Overview (Gradle API 1.12)</title>
+<META NAME="keywords" CONTENT="Overview">
+<LINK REL ="stylesheet" TYPE="text/css" HREF="stylesheet.css" TITLE="Style">
+<link href="groovy.ico" type="image/x-icon" rel="shortcut icon">
+<link href="groovy.ico" type="image/x-icon" rel="icon">
+<SCRIPT type="text/javascript">
+function windowTitle()
+{
+    parent.document.title="Overview (Gradle API 1.12)";
+}
+</SCRIPT>
+<NOSCRIPT>
+</NOSCRIPT>
+</head>
+<body BGCOLOR="white" onload="windowTitle();">
+<hr>
+
+<!-- ========= START OF TOP NAVBAR ======= -->
+<a name="navbar_top"><!-- --></a>
+<table summary="" width="100%" border="0" cellpadding="1" cellspacing="0">
+<tbody><tr>
+<td colspan="2" class="NavBarCell1" bgcolor="#eeeeff">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table summary="" border="0" cellpadding="0" cellspacing="3">
+  <tbody><tr valign="top" align="center">
+  <td class="NavBarCell1Rev" bgcolor="#ffffff"> &nbsp;<font class="NavBarFont1Rev"><b>Overview</b></font>&nbsp;</td>
+  <td class="NavBarCell1" bgcolor="#eeeeff">    <font class="NavBarFont1">Package</font>&nbsp;</td>
+  <td class="NavBarCell1" bgcolor="#eeeeff">    <font class="NavBarFont1">Class</font>&nbsp;</td>
+  <!--
+  <td class="NavBarCell1" bgcolor="#eeeeff">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  -->
+  <td class="NavBarCell1" bgcolor="#eeeeff">    <a href="deprecated-list.html"><font class="NavBarFont1"><b>Deprecated</b></font></a>&nbsp;</td>
+  <td class="NavBarCell1" bgcolor="#eeeeff">    <a href="index-all.html"><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td class="NavBarCell1" bgcolor="#eeeeff">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</tbody></table>
+</td>
+<td rowspan="3" valign="top" align="right"><em>
+<b>Groovy Documentation</b>
+</em>
+</td>
+</tr>
+
+<tr>
+<td class="NavBarCell2" bgcolor="white"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td class="NavBarCell2" bgcolor="white"><font size="-2">
+  <a href="index.html?overview-summary.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>  &nbsp;
+&nbsp;<script type="text/javascript">
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-frame.html"><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+  <A HREF="allclasses-frame.html"><B>All Classes</B></A>
+</noscript>
+
+
+</font></td>
+</tr>
+</tbody></table>
+<!-- ========= END OF TOP NAVBAR ========= -->
+
+<HR>
+<center>
+<h1>
+Gradle API 1.12</h1>
+</center>
+<p></p>
+<P>
+
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+<TR BGCOLOR="#90DDF7" CLASS="TableHeadingColor">
+<TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
+<B>Packages</B></FONT></TH>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/package-summary.html">org.gradle</A></B></TD>
+<TD>Classes for embedding Gradle.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/package-summary.html">org.gradle.api</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/artifacts/package-summary.html">org.gradle.api.artifacts</A></B></TD>
+<TD>Classes for declaring and using artifacts and artifact dependencies.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/artifacts/cache/package-summary.html">org.gradle.api.artifacts.cache</A></B></TD>
+<TD>Classes for controlling dependency resolution.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/artifacts/component/package-summary.html">org.gradle.api.artifacts.component</A></B></TD>
+<TD>Classes that provide meta-data about software components.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/artifacts/dsl/package-summary.html">org.gradle.api.artifacts.dsl</A></B></TD>
+<TD>Classes used in the artifact DSL.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/artifacts/maven/package-summary.html">org.gradle.api.artifacts.maven</A></B></TD>
+<TD>Maven specific classes for dependency management.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/artifacts/repositories/package-summary.html">org.gradle.api.artifacts.repositories</A></B></TD>
+<TD>Classes for declaring and using artifact repositories.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/artifacts/resolution/package-summary.html">org.gradle.api.artifacts.resolution</A></B></TD>
+<TD>Classes comprising the artifact resolution API.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/artifacts/result/package-summary.html">org.gradle.api.artifacts.result</A></B></TD>
+<TD>Classes that compose the resolution result</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/component/package-summary.html">org.gradle.api.component</A></B></TD>
+<TD>Types for declaring and using Software Components.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/distribution/package-summary.html">org.gradle.api.distribution</A></B></TD>
+<TD>The main interfaces and classes of the distribution plugin.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/distribution/plugins/package-summary.html">org.gradle.api.distribution.plugins</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/dsl/package-summary.html">org.gradle.api.dsl</A></B></TD>
+<TD>dsl related classes.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/execution/package-summary.html">org.gradle.api.execution</A></B></TD>
+<TD>Classes for managing and monitoring build execution.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/file/package-summary.html">org.gradle.api.file</A></B></TD>
+<TD>Classes for working with files.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/initialization/package-summary.html">org.gradle.api.initialization</A></B></TD>
+<TD>Classes for managing and monitoring build initialization.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/initialization/dsl/package-summary.html">org.gradle.api.initialization.dsl</A></B></TD>
+<TD>Classes used in the initialization DSL.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/invocation/package-summary.html">org.gradle.api.invocation</A></B></TD>
+<TD>Classes for invoking and monitoring gradle builds.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/java/archives/package-summary.html">org.gradle.api.java.archives</A></B></TD>
+<TD>Classes for working with JAR manifests.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/logging/package-summary.html">org.gradle.api.logging</A></B></TD>
+<TD>Classes for managing logging in Gradle.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/plugins/package-summary.html">org.gradle.api.plugins</A></B></TD>
+<TD>The standard <a href='org/gradle/api/Plugin.html' title='Plugin'>Plugin</a> implementations.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/plugins/announce/package-summary.html">org.gradle.api.plugins.announce</A></B></TD>
+<TD>A <a href='org/gradle/api/Plugin.html' title='Plugin'>Plugin</a> for generating announcements from your build.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/plugins/antlr/package-summary.html">org.gradle.api.plugins.antlr</A></B></TD>
+<TD>A <a href='org/gradle/api/Plugin.html' title='Plugin'>Plugin</a> for generating parsers from Antlr grammars.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/plugins/buildcomparison/gradle/package-summary.html">org.gradle.api.plugins.buildcomparison.gradle</A></B></TD>
+<TD>Build comparision classes that are specific to Gradle, including comparing Gradle upgrades.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/plugins/jetty/package-summary.html">org.gradle.api.plugins.jetty</A></B></TD>
+<TD>The Jetty <a href='org/gradle/api/Plugin.html' title='Plugin'>Plugin</a> implementation.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/plugins/osgi/package-summary.html">org.gradle.api.plugins.osgi</A></B></TD>
+<TD>The OSGi <a href='org/gradle/api/Plugin.html' title='Plugin'>Plugin</a> implementation.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/plugins/quality/package-summary.html">org.gradle.api.plugins.quality</A></B></TD>
+<TD>Plugins which measure and enforce code quality.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/plugins/scala/package-summary.html">org.gradle.api.plugins.scala</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/plugins/sonar/package-summary.html">org.gradle.api.plugins.sonar</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/plugins/sonar/model/package-summary.html">org.gradle.api.plugins.sonar.model</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/publish/package-summary.html">org.gradle.api.publish</A></B></TD>
+<TD>Classes that deal with publishing artifacts.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/publish/ivy/package-summary.html">org.gradle.api.publish.ivy</A></B></TD>
+<TD>Types that deal with publishing in the Ivy format.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/publish/ivy/plugins/package-summary.html">org.gradle.api.publish.ivy.plugins</A></B></TD>
+<TD>Plugins for Ivy publishing.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/publish/ivy/tasks/package-summary.html">org.gradle.api.publish.ivy.tasks</A></B></TD>
+<TD>Tasks for Ivy publishing.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/publish/maven/package-summary.html">org.gradle.api.publish.maven</A></B></TD>
+<TD>Types that deal with publishing in the Maven format.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/publish/maven/plugins/package-summary.html">org.gradle.api.publish.maven.plugins</A></B></TD>
+<TD>Plugins for publishing in the Maven format.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/publish/maven/tasks/package-summary.html">org.gradle.api.publish.maven.tasks</A></B></TD>
+<TD>Tasks for publishing in the Maven format.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/publish/plugins/package-summary.html">org.gradle.api.publish.plugins</A></B></TD>
+<TD>Publishing plugins.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/reporting/package-summary.html">org.gradle.api.reporting</A></B></TD>
+<TD>Classes for reporting</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/reporting/dependencies/package-summary.html">org.gradle.api.reporting.dependencies</A></B></TD>
+<TD>Types responsible for generating dependency reports.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/reporting/plugins/package-summary.html">org.gradle.api.reporting.plugins</A></B></TD>
+<TD>Plugins for reporting</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/resources/package-summary.html">org.gradle.api.resources</A></B></TD>
+<TD>Interfaces and API for the 'Resources' concept.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/sonar/runner/package-summary.html">org.gradle.api.sonar.runner</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/specs/package-summary.html">org.gradle.api.specs</A></B></TD>
+<TD>Classes for defining general purpose criteria.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/tasks/package-summary.html">org.gradle.api.tasks</A></B></TD>
+<TD>The standard <a href='org/gradle/api/Task.html' title='Task'>Task</a> implementations.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/tasks/ant/package-summary.html">org.gradle.api.tasks.ant</A></B></TD>
+<TD>The Ant integration <a href='org/gradle/api/Task.html' title='Task'>Task</a> implementations.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/tasks/application/package-summary.html">org.gradle.api.tasks.application</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/tasks/bundling/package-summary.html">org.gradle.api.tasks.bundling</A></B></TD>
+<TD>The archive bundling <a href='org/gradle/api/Task.html' title='Task'>Task</a> implementations.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/tasks/compile/package-summary.html">org.gradle.api.tasks.compile</A></B></TD>
+<TD>The compilation <a href='org/gradle/api/Task.html' title='Task'>Task</a> implementations.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/tasks/diagnostics/package-summary.html">org.gradle.api.tasks.diagnostics</A></B></TD>
+<TD>The diagnostic <a href='org/gradle/api/Task.html' title='Task'>Task</a> implementations.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/tasks/incremental/package-summary.html">org.gradle.api.tasks.incremental</A></B></TD>
+<TD>API classes for implementing incremental tasks.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/tasks/javadoc/package-summary.html">org.gradle.api.tasks.javadoc</A></B></TD>
+<TD>The documentation generation <a href='org/gradle/api/Task.html' title='Task'>Task</a> implementations.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/tasks/scala/package-summary.html">org.gradle.api.tasks.scala</A></B></TD>
+<TD>Scala <a href='org/gradle/api/Task.html' title='Task'>Task</a> implementations.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/tasks/testing/package-summary.html">org.gradle.api.tasks.testing</A></B></TD>
+<TD>The unit testing <a href='org/gradle/api/Task.html' title='Task'>Task</a> implementations.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/tasks/testing/junit/package-summary.html">org.gradle.api.tasks.testing.junit</A></B></TD>
+<TD>JUnit specific testing classes.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/tasks/testing/logging/package-summary.html">org.gradle.api.tasks.testing.logging</A></B></TD>
+<TD>Types related to logging of test related information to the console.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/tasks/testing/testng/package-summary.html">org.gradle.api.tasks.testing.testng</A></B></TD>
+<TD>TestNG specific testing classes.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/tasks/util/package-summary.html">org.gradle.api.tasks.util</A></B></TD>
+<TD>Utility classes used by the standard task implementations.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/api/tasks/wrapper/package-summary.html">org.gradle.api.tasks.wrapper</A></B></TD>
+<TD>The Gradle wrapper <a href='org/gradle/api/Task.html' title='Task'>Task</a>.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/buildinit/plugins/package-summary.html">org.gradle.buildinit.plugins</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/buildinit/tasks/package-summary.html">org.gradle.buildinit.tasks</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/external/javadoc/package-summary.html">org.gradle.external.javadoc</A></B></TD>
+<TD>Classes to run Javadoc.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/ide/cdt/package-summary.html">org.gradle.ide.cdt</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/ide/cdt/model/package-summary.html">org.gradle.ide.cdt.model</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/ide/cdt/tasks/package-summary.html">org.gradle.ide.cdt.tasks</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/ide/visualstudio/package-summary.html">org.gradle.ide.visualstudio</A></B></TD>
+<TD>Model classes for visual studio.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/ide/visualstudio/plugins/package-summary.html">org.gradle.ide.visualstudio.plugins</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/ide/visualstudio/tasks/package-summary.html">org.gradle.ide.visualstudio.tasks</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/language/package-summary.html">org.gradle.language</A></B></TD>
+<TD>Model classes for managing language sources.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/language/assembler/package-summary.html">org.gradle.language.assembler</A></B></TD>
+<TD>Model classes for building from Assembler language sources.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/language/assembler/plugins/package-summary.html">org.gradle.language.assembler.plugins</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/language/base/package-summary.html">org.gradle.language.base</A></B></TD>
+<TD>General purpose types for language support.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/language/base/plugins/package-summary.html">org.gradle.language.base.plugins</A></B></TD>
+<TD>Base plugins for language support.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/language/c/package-summary.html">org.gradle.language.c</A></B></TD>
+<TD>Model classes for building from C language sources.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/language/c/plugins/package-summary.html">org.gradle.language.c.plugins</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/language/cpp/package-summary.html">org.gradle.language.cpp</A></B></TD>
+<TD>Model classes for building from C++ language sources.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/language/cpp/plugins/package-summary.html">org.gradle.language.cpp.plugins</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/language/java/package-summary.html">org.gradle.language.java</A></B></TD>
+<TD>Types for Java language support.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/language/jvm/package-summary.html">org.gradle.language.jvm</A></B></TD>
+<TD>Types for support for JVM languages.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/language/jvm/plugins/package-summary.html">org.gradle.language.jvm.plugins</A></B></TD>
+<TD>Base plugins that add support for JVM languages.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/language/jvm/tasks/package-summary.html">org.gradle.language.jvm.tasks</A></B></TD>
+<TD>Tasks for support for JVM languages.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/language/objectivec/package-summary.html">org.gradle.language.objectivec</A></B></TD>
+<TD>Model classes for building from Objective-C language sources.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/language/objectivec/plugins/package-summary.html">org.gradle.language.objectivec.plugins</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/language/objectivecpp/package-summary.html">org.gradle.language.objectivecpp</A></B></TD>
+<TD>Model classes for building from Objective-C++ language sources.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/language/objectivecpp/plugins/package-summary.html">org.gradle.language.objectivecpp.plugins</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/language/rc/package-summary.html">org.gradle.language.rc</A></B></TD>
+<TD>Model classes for building from Windows Resource scripts.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/language/rc/plugins/package-summary.html">org.gradle.language.rc.plugins</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/package-summary.html">org.gradle.nativebinaries</A></B></TD>
+<TD>Classes that model aspects of native component projects.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/language/package-summary.html">org.gradle.nativebinaries.language</A></B></TD>
+<TD>Classes for building sources for a native runtime.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/language/assembler/package-summary.html">org.gradle.nativebinaries.language.assembler</A></B></TD>
+<TD>Classes for building Assembler sources for a native runtime.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/language/assembler/plugins/package-summary.html">org.gradle.nativebinaries.language.assembler.plugins</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/language/assembler/tasks/package-summary.html">org.gradle.nativebinaries.language.assembler.tasks</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/language/c/package-summary.html">org.gradle.nativebinaries.language.c</A></B></TD>
+<TD>Classes for compiling and linking C sources for a native runtime.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/language/c/plugins/package-summary.html">org.gradle.nativebinaries.language.c.plugins</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/language/c/tasks/package-summary.html">org.gradle.nativebinaries.language.c.tasks</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/language/cpp/package-summary.html">org.gradle.nativebinaries.language.cpp</A></B></TD>
+<TD>Classes for compiling and linking C++ sources for a native runtime.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/language/cpp/plugins/package-summary.html">org.gradle.nativebinaries.language.cpp.plugins</A></B></TD>
+<TD>Plugins for buildings C++ projects.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/language/cpp/tasks/package-summary.html">org.gradle.nativebinaries.language.cpp.tasks</A></B></TD>
+<TD>Tasks for building C++ projects.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/language/objectivec/package-summary.html">org.gradle.nativebinaries.language.objectivec</A></B></TD>
+<TD>Classes for compiling and linking Objective-C sources for a native runtime.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/language/objectivec/plugins/package-summary.html">org.gradle.nativebinaries.language.objectivec.plugins</A></B></TD>
+<TD>Plugins for building Objective-C projects.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/language/objectivec/tasks/package-summary.html">org.gradle.nativebinaries.language.objectivec.tasks</A></B></TD>
+<TD>Tasks for building Objective-C projects.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/language/objectivecpp/package-summary.html">org.gradle.nativebinaries.language.objectivecpp</A></B></TD>
+<TD>Classes for compiling and linking Objective-C++ sources for a native runtime.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/language/objectivecpp/plugins/package-summary.html">org.gradle.nativebinaries.language.objectivecpp.plugins</A></B></TD>
+<TD>Plugins for building Objective-C++ projects.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/language/objectivecpp/tasks/package-summary.html">org.gradle.nativebinaries.language.objectivecpp.tasks</A></B></TD>
+<TD>Tasks for building Objective-C++ projects.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/language/rc/plugins/package-summary.html">org.gradle.nativebinaries.language.rc.plugins</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/language/rc/tasks/package-summary.html">org.gradle.nativebinaries.language.rc.tasks</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/platform/package-summary.html">org.gradle.nativebinaries.platform</A></B></TD>
+<TD>Classes that allow defining a native binary platform.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/plugins/package-summary.html">org.gradle.nativebinaries.plugins</A></B></TD>
+<TD>Plugins for building native component projects.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/tasks/package-summary.html">org.gradle.nativebinaries.tasks</A></B></TD>
+<TD>Tasks for building native component projects.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/test/package-summary.html">org.gradle.nativebinaries.test</A></B></TD>
+<TD>API classes for testing native binaries.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/test/cunit/package-summary.html">org.gradle.nativebinaries.test.cunit</A></B></TD>
+<TD>API classes for cunit integration.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/test/cunit/plugins/package-summary.html">org.gradle.nativebinaries.test.cunit.plugins</A></B></TD>
+<TD>Plugins for cunit testing.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/test/cunit/tasks/package-summary.html">org.gradle.nativebinaries.test.cunit.tasks</A></B></TD>
+<TD>Tasks for cunit integration.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/test/plugins/package-summary.html">org.gradle.nativebinaries.test.plugins</A></B></TD>
+<TD>Plugin classes for generic support for testing native binaries.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/test/tasks/package-summary.html">org.gradle.nativebinaries.test.tasks</A></B></TD>
+<TD>Tasks for test execution.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/toolchain/package-summary.html">org.gradle.nativebinaries.toolchain</A></B></TD>
+<TD>Classes that allow C++ tool chains to be configured.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/nativebinaries/toolchain/plugins/package-summary.html">org.gradle.nativebinaries.toolchain.plugins</A></B></TD>
+<TD>Built-in tool chain support.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/ear/package-summary.html">org.gradle.plugins.ear</A></B></TD>
+<TD>Support for generating EAR archives in a Gradle build</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/ear/descriptor/package-summary.html">org.gradle.plugins.ear.descriptor</A></B></TD>
+<TD>Classes for working with EAR deployment descriptors.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/ide/api/package-summary.html">org.gradle.plugins.ide.api</A></B></TD>
+<TD>General ide plugin api.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/ide/eclipse/package-summary.html">org.gradle.plugins.ide.eclipse</A></B></TD>
+<TD>A <a href='org/gradle/api/Plugin.html' title='Plugin'>Plugin</a> for generating Eclipse files.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/ide/eclipse/model/package-summary.html">org.gradle.plugins.ide.eclipse.model</A></B></TD>
+<TD>Classes for the model used by the <a href='org/gradle/plugins/ide/eclipse/EclipsePlugin.html' title='EclipsePlugin'>EclipsePlugin</a>.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/ide/idea/package-summary.html">org.gradle.plugins.ide.idea</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/ide/idea/model/package-summary.html">org.gradle.plugins.ide.idea.model</A></B></TD>
+<TD>Classes for the model used by the <a href='org/gradle/plugins/ide/idea/IdeaPlugin.html' title='IdeaPlugin'>IdeaPlugin</a>.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/javascript/base/package-summary.html">org.gradle.plugins.javascript.base</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/javascript/coffeescript/package-summary.html">org.gradle.plugins.javascript.coffeescript</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/javascript/envjs/package-summary.html">org.gradle.plugins.javascript.envjs</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/javascript/envjs/browser/package-summary.html">org.gradle.plugins.javascript.envjs.browser</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/javascript/envjs/http/package-summary.html">org.gradle.plugins.javascript.envjs.http</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/javascript/envjs/http/simple/package-summary.html">org.gradle.plugins.javascript.envjs.http.simple</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/javascript/jshint/package-summary.html">org.gradle.plugins.javascript.jshint</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/javascript/rhino/package-summary.html">org.gradle.plugins.javascript.rhino</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/javascript/rhino/worker/package-summary.html">org.gradle.plugins.javascript.rhino.worker</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/signing/package-summary.html">org.gradle.plugins.signing</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/signing/signatory/package-summary.html">org.gradle.plugins.signing.signatory</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/signing/signatory/pgp/package-summary.html">org.gradle.plugins.signing.signatory.pgp</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/signing/type/package-summary.html">org.gradle.plugins.signing.type</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/plugins/signing/type/pgp/package-summary.html">org.gradle.plugins.signing.type.pgp</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/process/package-summary.html">org.gradle.process</A></B></TD>
+<TD>Classes for executing system and Java processes.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/testfixtures/package-summary.html">org.gradle.testfixtures</A></B></TD>
+<TD>Classes and interfaces for testing custom task and plugin implementations.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/testing/jacoco/plugins/package-summary.html">org.gradle.testing.jacoco.plugins</A></B></TD>
+<TD></TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/testing/jacoco/tasks/package-summary.html">org.gradle.testing.jacoco.tasks</A></B></TD>
+<TD>Tasks to work with the JaCoCo code coverage library.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/tooling/package-summary.html">org.gradle.tooling</A></B></TD>
+<TD>The main interfaces and classes of the Gradle tooling API.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/tooling/exceptions/package-summary.html">org.gradle.tooling.exceptions</A></B></TD>
+<TD>Exceptions thrown when using the tooling API.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/tooling/model/package-summary.html">org.gradle.tooling.model</A></B></TD>
+<TD>The general-purpose tooling model types, provided by the tooling API.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/tooling/model/build/package-summary.html">org.gradle.tooling.model.build</A></B></TD>
+<TD>Tooling models for the build environment, which includes information such as Gradle or Java versions.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/tooling/model/eclipse/package-summary.html">org.gradle.tooling.model.eclipse</A></B></TD>
+<TD>Eclipse-centric tooling models.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/tooling/model/gradle/package-summary.html">org.gradle.tooling.model.gradle</A></B></TD>
+<TD>The tooling models for Gradle builds and projects.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/tooling/model/idea/package-summary.html">org.gradle.tooling.model.idea</A></B></TD>
+<TD>IntelliJ IDEA centric tooling models.</TD>
+</TR>
+
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD WIDTH="20%"><B><A HREF="org/gradle/tooling/provider/model/package-summary.html">org.gradle.tooling.provider.model</A></B></TD>
+<TD>Interfaces and classes that allow tooling models to be made available to the tooling API client.</TD>
+</TR>
+
+</TABLE>
+
+<P>
+
+<P>Gradle API 1.12</P>
+<hr>
+</body>
+</html>

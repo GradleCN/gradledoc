@@ -1,0 +1,62 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;19.&nbsp;The Gradle Daemon</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="logging.html" title="Chapter&nbsp;18.&nbsp;Logging"><link rel="next" href="build_environment.html" title="Chapter&nbsp;20.&nbsp;The Build Environment"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="logging.html" title="Chapter&nbsp;18.&nbsp;Logging">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="build_environment.html" title="Chapter&nbsp;20.&nbsp;The Build Environment">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="gradle_daemon"></a>Chapter&nbsp;19.&nbsp;The Gradle Daemon</h1></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="enter_the_daemon"></a>19.1.&nbsp;Enter the daemon</h2></div></div></div><p><span class="emphasis"><em>The Gradle daemon</em></span> (sometimes referred as <span class="emphasis"><em>the build daemon</em></span>)
+            aims to improve the startup and execution time of Gradle.
+        </p><p>
+            We came up with several use cases where the daemon is very useful.
+            For some workflows, the user invokes Gradle many times to execute a small number of relatively quick tasks.
+            For example:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">When using test driven development, where the unit tests are executed many times.</li><li class="listitem">When developing a web application, where the application is assembled many times.</li><li class="listitem">When discovering what a build can do, where <strong class="userinput"><code>gradle tasks</code></strong> is executed a number of times.</li></ul></div><p>
+            For above sorts of workflows, it is important that the startup cost of invoking Gradle is as small as possible.
+        </p><p>
+            In addition, user interfaces can provide some interesting features if the Gradle model can be built relatively quickly.
+            For example, the daemon might be useful for following scenarios:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Content assistance in the IDE</li><li class="listitem">Live visualisation of the build in a GUI</li><li class="listitem">Tab completion in a CLI</li></ul></div><p>
+        </p><p>
+            In general, snappy behavior of the build tool is always handy.
+            If you try using the daemon for your local builds it's going to be hard
+            for you to go back to regular use of Gradle.
+        </p><p>
+            The Tooling API (see <a class="xref" href="embedding.html">Chapter&nbsp;62, <i>Embedding Gradle</i></a>)
+            uses the daemon all the time, e.g. you cannot officially use the Tooling API without the daemon.
+            This means that whenever you are using the STS Gradle plugin for Eclipse or the Gradle support in Intellij IDEA,
+            you're already using the Gradle Daemon.
+        </p><p>In future the daemon will offer more features:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Snappy up-to-date checks: use native file system change notifications (e.g. via jdk7 nio.2)
+                    to preemptively perform up-to-date analysis.</li><li class="listitem">Even faster builds: preemptively evaluate projects, so that the model is ready
+                    when the user next invokes Gradle.</li><li class="listitem">Did we mention faster builds? The daemon can potentially preemptively download dependencies
+                    or check for new versions of snapshot dependencies.</li><li class="listitem">Utilize a pool of reusable processes available for compilation and testing.
+                    For example, both the Groovy and Scala compilers have a large startup cost.
+                    The build daemon could maintain a process with Groovy and/or Scala already loaded.</li><li class="listitem">Preemptive execution of certain tasks, for example compilation. Quicker feedback.</li><li class="listitem">Fast and accurate bash tab completion.</li><li class="listitem">Periodically garbage collect the Gradle caches.</li></ul></div><p>
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="reusing_daemons"></a>19.2.&nbsp;Reusing and expiration of daemons</h2></div></div></div><p>The basic idea is that the gradle command forks a daemon process, which performs the actual build.
+            Subsequent invocations of the gradle command will reuse the daemon, avoiding the startup costs.
+            Sometimes we cannot use an existing daemon because it is busy or its java version or jvm arguments are different.
+            For exact details on when exactly new daemon process is forked read the dedicated section below.
+            The daemon process automatically expire after 3 hours of idle time.
+        </p><p>
+            Here're all situations in which we fork a new daemon process:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">If the daemon process is currently busy running some job, a brand new daemon process will be started.</li><li class="listitem">We fork a separate daemon process per java home. So even if there is some idle daemon waiting
+                    for build requests but you happen to run build with a different java home then a brand new daemon will be forked.</li><li class="listitem">We fork a separate daemon process if the jvm arguments for the build are sufficiently different.
+                    For example we will not fork a new daemon if a some system property has changed.
+                    However if -Xmx memory setting change or some fundamental immutable system property changes (e.g. file.encoding)
+                    then new daemon will be forked.
+                </li><li class="listitem">At the moment daemon is coupled with particular version of Gradle.
+                    This means that even if some daemon is idle but you are running the build
+                    with a different version of Gradle, a new daemon will be started.
+                    This also has a consequence for the <code class="literal">--stop</code> command line instruction:
+                    You can only stop daemons that were started with the Gradle version you use when running <code class="literal">--stop</code>.
+                </li></ul></div><p>
+            We plan to improve the ways of managing / pooling the daemons in future.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="daemon_usage_and_troubleshooting"></a>19.3.&nbsp;Usage and troubleshooting</h2></div></div></div><p>For command line usage take a look dedicated section in <a class="xref" href="gradle_command_line.html">Appendix&nbsp;D, <i>Gradle Command Line</i></a>.
+            If you are tired of using the same command line options again and again, take a look at
+            <a class="xref" href="build_environment.html#sec:gradle_configuration_properties">Section&nbsp;20.1, &ldquo;Configuring the build environment via gradle.properties&rdquo;</a>.
+            The section contains information on how to configure certain behavior of the daemon
+            (including turning on the daemon by default) in a more 'persistent' way.
+        </p><p>
+            Some ways of troubleshooting the Gradle daemon:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">If you have a problem with your build, try temporarily disabling the daemon
+                    (you can pass the command line switch <code class="literal">--no-daemon</code>).</li><li class="listitem">Occasionally, you may want to stop the daemons either via the <code class="literal">--stop</code>
+                    command line option or in a more forceful way.</li><li class="listitem">There is a daemon log file, which by default is located in the
+                    Gradle user home directory.</li><li class="listitem">You may want to start the daemon in <code class="literal">--foreground</code>
+                    mode to observe how the build is executed.</li></ul></div><p>
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:daemon_properties"></a>19.4.&nbsp;Configuring the daemon</h2></div></div></div><p>Some daemon settings, such as JVM arguments, memory settings or the Java home, can be configured.
+            Please find more information in <a class="xref" href="build_environment.html#sec:gradle_configuration_properties">Section&nbsp;20.1, &ldquo;Configuring the build environment via gradle.properties&rdquo;</a>
+        </p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="logging.html" title="Chapter&nbsp;18.&nbsp;Logging">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="build_environment.html" title="Chapter&nbsp;20.&nbsp;The Build Environment">Next</a></div></div></div></body></html>

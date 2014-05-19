@@ -1,0 +1,55 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Appendix&nbsp;B.&nbsp;Potential Traps</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="sample_list.html" title="Appendix&nbsp;A.&nbsp;Gradle Samples"><link rel="next" href="feature_lifecycle.html" title="Appendix&nbsp;C.&nbsp;The Feature Lifecycle"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="sample_list.html" title="Appendix&nbsp;A.&nbsp;Gradle Samples">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="feature_lifecycle.html" title="Appendix&nbsp;C.&nbsp;The Feature Lifecycle">Next</a></div></div></div><div class="appendix"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="potential_traps"></a>Appendix&nbsp;B.&nbsp;Potential Traps</h1></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:groovy_script_variables"></a>B.1.&nbsp;Groovy script variables</h2></div></div></div><p>For Gradle users it is important to understand how Groovy deals with script variables. Groovy has two types
+            of script variables. One with a local scope and one with a script wide scope.
+        </p><div class="example"><a name="scope"></a><p class="title"><b>Example&nbsp;B.1.&nbsp;Variables scope: local and script wide</b></p><div class="example-contents"><p><code class="filename">scope.groovy</code></p><pre class="programlisting">String localScope1 = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'localScope1'</span>
+def localScope2 = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'localScope2'</span>
+scriptScope = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'scriptScope'</span>
+
+println localScope1
+println localScope2
+println scriptScope
+
+closure = {
+    println localScope1
+    println localScope2
+    println scriptScope
+}
+
+def method() {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">try</span> {localScope1} <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">catch</span>(MissingPropertyException e) {println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'localScope1NotAvailable'</span> }
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">try</span> {localScope2} <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">catch</span>(MissingPropertyException e) {println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'localScope2NotAvailable'</span> }
+    println scriptScope
+}
+
+closure.call()
+method()</pre><p>Output of <strong class="userinput"><code>gradle </code></strong></p><pre class="screen">&gt; gradle 
+localScope1
+localScope2
+scriptScope
+localScope1
+localScope2
+scriptScope
+localScope1NotAvailable
+localScope2NotAvailable
+scriptScope</pre></div></div><br class="example-break"><p>Variables which are declared with a type modifier are visible within closures but not visible within
+            methods. This is a heavily discussed behavior in the Groovy community.
+            <sup>[<a href="#ftn.N17392" name="N17392" class="footnote">27</a>]</sup>
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:configuration_and_execution_phase"></a>B.2.&nbsp;Configuration and execution phase</h2></div></div></div><p>It is important to keep in mind that Gradle has a distinct configuration and execution phase (see 
+            <a class="xref" href="build_lifecycle.html">Chapter&nbsp;55, <i>The Build Lifecycle</i></a>).
+        </p><div class="example"><a name="mkdirTrap"></a><p class="title"><b>Example&nbsp;B.2.&nbsp;Distinct configuration and execution phase</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">classesDir = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build/classes'</span>)
+classesDir.mkdirs()
+task clean(type: Delete) {
+    delete <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build'</span>
+}
+task compile(dependsOn: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'clean'</span>) &lt;&lt; {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (!classesDir.isDirectory()) {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'The class directory does not exist. I can not operate'</span>
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// do something</span>
+    }
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// do something</span>
+}</pre><p>Output of <strong class="userinput"><code>gradle -q compile</code></strong></p><pre class="screen">&gt; gradle -q compile
+The class directory does not exist. I can not operate</pre></div></div><br class="example-break"><p>As the creation of the directory happens during the configuration phase, the
+            <code class="literal">clean</code>
+            task removes the directory during the execution phase.
+        </p></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N17392" name="ftn.N17392" class="para">27</a>] </sup>One of those discussions can be found here:
+                    <a class="ulink" href="http://groovy.329449.n5.nabble.com/script-scoping-question-td355887.html" target="_top">http://groovy.329449.n5.nabble.com/script-scoping-question-td355887.html</a>
+                </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="sample_list.html" title="Appendix&nbsp;A.&nbsp;Gradle Samples">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="feature_lifecycle.html" title="Appendix&nbsp;C.&nbsp;The Feature Lifecycle">Next</a></div></div></div></body></html>

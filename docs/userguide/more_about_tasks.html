@@ -1,0 +1,390 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;15.&nbsp;More about Tasks</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="tutorial_this_and_that.html" title="Chapter&nbsp;14.&nbsp;Tutorial - 'This and That'"><link rel="next" href="working_with_files.html" title="Chapter&nbsp;16.&nbsp;Working With Files"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_this_and_that.html" title="Chapter&nbsp;14.&nbsp;Tutorial - 'This and That'">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="working_with_files.html" title="Chapter&nbsp;16.&nbsp;Working With Files">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="more_about_tasks"></a>Chapter&nbsp;15.&nbsp;More about Tasks</h1></div></div></div><p>In the introductory tutorial (<a class="xref" href="tutorial_using_tasks.html">Chapter&nbsp;6, <i>Build Script Basics</i></a>) you have learned how to
+        create simple tasks. You have also learned how to add additional behavior to these tasks later on. And you have
+        learned how to create dependencies between tasks. This was all about simple tasks. But Gradle takes the concept
+        of tasks further. Gradle supports <em class="firstterm">enhanced tasks</em>, that is, tasks which have their own
+        properties and methods. This is really different to what you are used to with Ant targets. Such enhanced tasks are
+        either provided by you or are provided by Gradle.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10CBF"></a>15.1.&nbsp;Defining tasks</h2></div></div></div><p>We have already seen how to define tasks using a keyword style in <a class="xref" href="tutorial_using_tasks.html">Chapter&nbsp;6, <i>Build Script Basics</i></a>.
+            There are a few variations on this style, which you may need to use in certain situations. For example,
+            the keyword style does not work in expressions.
+        </p><div class="example"><a name="defineAsExpression"></a><p class="title"><b>Example&nbsp;15.1.&nbsp;Defining tasks</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task(hello) &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"hello"</span>
+}
+
+task(copy, type: Copy) {
+    from(file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'srcDir'</span>))
+    into(buildDir)
+}</pre></div></div><br class="example-break"><p>You can also use strings for the task names:</p><div class="example"><a name="defineUsingStringTaskNames"></a><p class="title"><b>Example&nbsp;15.2.&nbsp;Defining tasks - using strings for task names</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello'</span>) &lt;&lt;
+{
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"hello"</span>
+}
+
+task(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'copy'</span>, type: Copy) {
+    from(file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'srcDir'</span>))
+    into(buildDir)
+}</pre></div></div><br class="example-break"><p>There is an alternative syntax for defining tasks, which you may prefer to use:</p><div class="example"><a name="addToTaskContainer"></a><p class="title"><b>Example&nbsp;15.3.&nbsp;Defining tasks with alternative syntax</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">tasks.create(name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello'</span>) &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"hello"</span>
+}
+
+tasks.create(name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'copy'</span>, type: Copy) {
+    from(file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'srcDir'</span>))
+    into(buildDir)
+}</pre></div></div><br class="example-break"><p>Here we add tasks to the <code class="literal">tasks</code> collection. Have a look at
+            <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskContainer.html" target="_top"><code class="classname">TaskContainer</code></a> for more variations of the <code class="literal">create()</code>
+            method.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10CF6"></a>15.2.&nbsp;Locating tasks</h2></div></div></div><p>You often need to locate the tasks that you have defined in the build file, for example, to configure them
+            or use them for dependencies. There are a number of ways of doing this. Firstly, each task is available as
+            a property of the project, using the task name as the property name:
+        </p><div class="example"><a name="accessAsProperty"></a><p class="title"><b>Example&nbsp;15.4.&nbsp;Accessing tasks as properties</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task hello
+
+println hello.name
+println project.hello.name</pre></div></div><br class="example-break"><p>Tasks are also available through the <code class="literal">tasks</code> collection.</p><div class="example"><a name="accessFromTaskContainer"></a><p class="title"><b>Example&nbsp;15.5.&nbsp;Accessing tasks via tasks collection</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task hello
+
+println tasks.hello.name
+println tasks[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello'</span>].name</pre></div></div><br class="example-break"><p>You can access tasks from any project using the task's path using the <code class="literal">tasks.getByPath()</code>
+            method. You can call the <code class="literal">getByPath()</code> method with a task name, or a relative path, or an
+            absolute path.</p><div class="example"><a name="accessUsingPath"></a><p class="title"><b>Example&nbsp;15.6.&nbsp;Accessing tasks by path</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':projectA'</span>) {
+    task hello
+}
+
+task hello
+
+println tasks.getByPath(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello'</span>).path
+println tasks.getByPath(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':hello'</span>).path
+println tasks.getByPath(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'projectA:hello'</span>).path
+println tasks.getByPath(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':projectA:hello'</span>).path</pre><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
+:hello
+:hello
+:projectA:hello
+:projectA:hello</pre></div></div><br class="example-break"><p>Have a look at <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskContainer.html" target="_top"><code class="classname">TaskContainer</code></a> for more options for locating tasks.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:configuring_tasks"></a>15.3.&nbsp;Configuring tasks</h2></div></div></div><p>As an example, let's look at the <code class="classname">Copy</code> task provided by Gradle. To create a
+            <code class="classname">Copy</code> task for your build, you can declare in your build script:
+        </p><div class="example"><a name="declareTask"></a><p class="title"><b>Example&nbsp;15.7.&nbsp;Creating a copy task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task myCopy(type: Copy)</pre></div></div><br class="example-break"><p>This creates a copy task with no default behavior.
+            The task can be configured using its API (see <a class="ulink" href="../dsl/org.gradle.api.tasks.Copy.html" target="_top"><code class="classname">Copy</code></a>).
+			The following examples show several different ways to achieve the same configuration.
+        </p><div class="example"><a name="configureUsingVar"></a><p class="title"><b>Example&nbsp;15.8.&nbsp;Configuring a task - various ways</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">Copy myCopy = task(myCopy, type: Copy)
+myCopy.from <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'resources'</span>
+myCopy.into <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'target'</span>
+myCopy.include(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.txt'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.xml'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.properties'</span>)</pre></div></div><br class="example-break"><p>This is similar to the way we would normally configure objects in Java. You have to repeat the context
+            (<code class="literal">myCopy</code>) in the configuration statement every time. This is a redundancy and not very
+            nice to read.
+        </p><p>There is another way of configuring a task. It also preserves the context and it is arguably the
+            most readable. It is usually our favorite.
+        </p><div class="example"><a name="configureUsingClosure"></a><p class="title"><b>Example&nbsp;15.9.&nbsp;Configuring a task - with closure</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task myCopy(type: Copy)
+
+myCopy {
+   from <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'resources'</span>
+   into <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'target'</span>
+   include(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.txt'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.xml'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.properties'</span>)
+}</pre></div></div><br class="example-break"><p>This works for <span class="emphasis"><em>any</em></span> task. Line 3 of the example is just a shortcut for the
+            <code class="literal">tasks.getByName()</code> method. It is important to note that if you pass a closure to the
+            <code class="literal">getByName()</code> method, this closure is applied to <span class="emphasis"><em>configure</em></span> the task, not when
+            the task executes.
+        </p><p>You can also use a configuration closure when you define a task.</p><div class="example"><a name="defineAndConfigure"></a><p class="title"><b>Example&nbsp;15.10.&nbsp;Defining a task with closure</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task copy(type: Copy) {
+   from <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'resources'</span>
+   into <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'target'</span>
+   include(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.txt'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.xml'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.properties'</span>)
+}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:adding_dependencies_to_tasks"></a>15.4.&nbsp;Adding dependencies to a task</h2></div></div></div><p>There are several ways you can define the dependencies of a task. In
+            <a class="xref" href="tutorial_using_tasks.html#sec:task_dependencies">Section&nbsp;6.5, &ldquo;Task dependencies&rdquo;</a>
+            you were introduced to defining dependencies using task names. Task names can refer to tasks in the same
+            project as the task, or to tasks in other projects. To refer to a task in another project, you prefix the
+            name of the task with the path of the project it belongs to. Below is an example which adds a dependency
+            from
+            <code class="literal">projectA:taskX</code>
+            to
+            <code class="literal">projectB:taskY</code>:
+        </p><div class="example"><a name="addDependencyUsingPath"></a><p class="title"><b>Example&nbsp;15.11.&nbsp;Adding dependency on task from another project</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'projectA'</span>) {
+    task taskX(dependsOn: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':projectB:taskY'</span>) &lt;&lt; {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskX'</span>
+    }
+}
+
+project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'projectB'</span>) {
+    task taskY &lt;&lt; {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskY'</span>
+    }
+}</pre><p>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p><pre class="screen">&gt; gradle -q taskX
+taskY
+taskX</pre></div></div><br class="example-break"><p>Instead of using a task name, you can define a dependency using a
+            <code class="classname">Task</code> object, as shown in this example:
+        </p><div class="example"><a name="addDependencyUsingTask"></a><p class="title"><b>Example&nbsp;15.12.&nbsp;Adding dependency using task object</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task taskX &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskX'</span>
+}
+
+task taskY &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskY'</span>
+}
+
+taskX.dependsOn taskY</pre><p>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p><pre class="screen">&gt; gradle -q taskX
+taskY
+taskX</pre></div></div><br class="example-break"><p>For more advanced uses, you can define a task dependency using a closure. When evaluated, the closure is
+            passed the task whose dependencies are being calculated. The closure should return a single
+            <code class="classname">Task</code> or collection of <code class="classname">Task</code> objects, which are then treated
+            as dependencies of the task. The following example adds a dependency from <code class="literal">taskX</code>
+            to all the tasks in the project whose name starts with <code class="literal">lib</code>:
+        </p><div class="example"><a name="addDependencyUsingClosure"></a><p class="title"><b>Example&nbsp;15.13.&nbsp;Adding dependency using closure</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task taskX &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskX'</span>
+}
+
+taskX.dependsOn {
+    tasks.findAll { task -&gt; task.name.startsWith(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'lib'</span>) }
+}
+
+task lib1 &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'lib1'</span>
+}
+
+task lib2 &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'lib2'</span>
+}
+
+task notALib &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'notALib'</span>
+}</pre><p>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p><pre class="screen">&gt; gradle -q taskX
+lib1
+lib2
+taskX</pre></div></div><br class="example-break"><p>For more information about task dependencies, see the <a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a> API.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:ordering_tasks"></a>15.5.&nbsp;Ordering tasks</h2></div></div></div><div class="note"><p>
+                Task ordering is an <a class="link" href="feature_lifecycle.html">incubating</a> feature. Please be aware that this feature may change in later Gradle versions.
+            </p></div><p>
+            In some cases it is useful to control the <span class="emphasis"><em>order</em></span> in which 2 tasks will execute, without introducing an explicit dependency between those tasks.
+            The primary difference between a task <span class="emphasis"><em>ordering</em></span> and a task <span class="emphasis"><em>dependency</em></span> is that an ordering rule does not influence which tasks
+            will be executed, only the order in which they will be executed.
+        </p><p>
+            Task ordering can be useful in a number of scenarios:
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Enforce sequential ordering of tasks: eg. 'build' never runs before 'clean'.</li><li class="listitem">Run build validations early in the build: eg. validate I have the correct credentials before starting the work for a release build.</li><li class="listitem">Get feedback faster by running quick verification tasks before long verification tasks: eg. unit tests should run before integration tests.</li><li class="listitem">A task that aggregates the results of all tasks of a particular type: eg. test report task combines the outputs of all executed test tasks.</li></ul></div><p>
+            There are two ordering rules available: "<span class="emphasis"><em>must run after</em></span>" and "<span class="emphasis"><em>should run after</em></span>".
+        </p><p>By using 'must run after" ordering rule you can specify that <code class="literal">taskB</code> must always run after <code class="literal">taskA</code>,
+            whenever both <code class="literal">taskA</code> and <code class="literal">taskB</code> are scheduled for execution. This is expressed as <code class="literal">taskB.mustRunAfter(taskA)</code>. The 'should run after' ordering rule is similar but less strict as it will be ignored in two situations. Firstly if using that rule introduces an ordering cycle. Secondly when using parallel execution and all dependencies of a task have been satisfied apart from should run after then this task will be run regardless of weather its 'should run after' dependencies have been run or not. You would use 'should run after' rule when ordering preference for faster feedback, where the ordering is helpful but not strictly required.
+        </p><p>
+            With these rules present it is still possible to execute <code class="literal">taskA</code> without <code class="literal">taskB</code> and vice-versa.
+        </p><div class="example"><a name="mustRunAfter"></a><p class="title"><b>Example&nbsp;15.14.&nbsp;Adding a 'must run after' task ordering</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task taskX &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskX'</span>
+}
+task taskY &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskY'</span>
+}
+taskY.mustRunAfter taskX</pre><p>Output of <strong class="userinput"><code>gradle -q taskY taskX</code></strong></p><pre class="screen">&gt; gradle -q taskY taskX
+taskX
+taskY</pre></div></div><br class="example-break"><div class="example"><a name="shouldRunAfter"></a><p class="title"><b>Example&nbsp;15.15.&nbsp;Adding a 'should run after' task ordering</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task taskX &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskX'</span>
+}
+task taskY &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskY'</span>
+}
+taskY.shouldRunAfter taskX</pre><p>Output of <strong class="userinput"><code>gradle -q taskY taskX</code></strong></p><pre class="screen">&gt; gradle -q taskY taskX
+taskX
+taskY</pre></div></div><br class="example-break"><p>In the examples above, it is still possible to execute <code class="literal">taskY</code> without causing <code class="literal">taskX</code> to run:</p><div class="example"><a name="mustRunAfterSingleTask"></a><p class="title"><b>Example&nbsp;15.16.&nbsp;Task ordering does not imply task execution</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q taskY</code></strong></p><pre class="screen">&gt; gradle -q taskY
+taskY</pre></div></div><br class="example-break"><p>To specify a "must run after" or "should run after" ordering between 2 tasks, you use the <a class="ulink" href="../dsl/org.gradle.api.Task.html#org.gradle.api.Task:mustRunAfter(java.lang.Object...)" target="_top"><code class="classname">Task.mustRunAfter()</code></a> and <a class="ulink" href="../javadoc/org/gradle/api/Task.html#shouldRunAfter(java.lang.Object...)" target="_top"><code class="classname">Task.shouldRunAfter()</code></a> methods.
+            These method accept a task instance, a task name or any other input accepted by <a class="ulink" href="../dsl/org.gradle.api.Task.html#org.gradle.api.Task:dependsOn(java.lang.Object...)" target="_top"><code class="classname">Task.dependsOn()</code></a>.
+        </p><p>
+            Note that "<code class="literal">B.mustRunAfter(A)</code>" or "<code class="literal">B.shouldRunAfter(A)</code>" does not imply any execution dependency between the tasks:
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">It is possible to execute tasks <code class="literal">A</code> and <code class="literal">B</code> independently. The ordering rule only has an effect when both tasks are scheduled for execution.</li><li class="listitem">When run with <code class="literal">--continue</code>, it is possible for <code class="literal">B</code> to execute in the event that <code class="literal">A</code> fails.</li></ul></div><p>As mentioned before 'should run after' ordering rule will be ignored if it introduces an ordering cycle:</p><div class="example"><a name="shouldRunAfterWithCycle"></a><p class="title"><b>Example&nbsp;15.17.&nbsp;A 'should run after' task ordering is ignored if it introduces an ordering cycle</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task taskX &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskX'</span>
+}
+task taskY &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskY'</span>
+}
+task taskZ &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskZ'</span>
+}
+taskX.dependsOn taskY
+taskY.dependsOn taskZ
+taskZ.shouldRunAfter taskX</pre><p>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p><pre class="screen">&gt; gradle -q taskX
+taskZ
+taskY
+taskX</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10E91"></a>15.6.&nbsp;Adding a description to a task</h2></div></div></div><p>You can add a description to your task. This description is for example displayed when executing
+            <strong class="userinput"><code>gradle tasks</code></strong>.
+        </p><div class="example"><a name="describeTask"></a><p class="title"><b>Example&nbsp;15.18.&nbsp;Adding a description to a task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task copy(type: Copy) {
+   description <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Copies the resource directory to the target directory.'</span>
+   from <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'resources'</span>
+   into <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'target'</span>
+   include(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.txt'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.xml'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.properties'</span>)
+}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10EA3"></a>15.7.&nbsp;Replacing tasks</h2></div></div></div><p>Sometimes you want to replace a task. For example if you want to exchange a task added by the Java plugin
+            with a custom task of a different type. You can achieve this with:
+        </p><div class="example"><a name="replaceTask"></a><p class="title"><b>Example&nbsp;15.19.&nbsp;Overwriting a task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task copy(type: Copy)
+
+task copy(overwrite: true) &lt;&lt; {
+    println(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'I am the new one.'</span>)
+}</pre><p>Output of <strong class="userinput"><code>gradle -q copy</code></strong></p><pre class="screen">&gt; gradle -q copy
+I am the new one.</pre></div></div><br class="example-break"><p>Here we replace a task of type <code class="literal">Copy</code> with a simple task. When creating the simple
+            task, you have to set the <code class="literal">overwrite</code> property to true. Otherwise Gradle throws an
+            exception, saying that a task with such a name already exists.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10EC0"></a>15.8.&nbsp;Skipping tasks</h2></div></div></div><p>Gradle offers multiple ways to skip the execution of a task.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10EC5"></a>15.8.1.&nbsp;Using a predicate</h3></div></div></div><p>You can use the <code class="literal">onlyIf()</code> method to attach a predicate to a task. The task's
+                actions are only executed if the predicate evaluates to true. You implement the predicate as a closure.
+                The closure is passed the task as a parameter, and should return true if the task should execute
+                and false if the task should be skipped. The predicate is evaluated just before the task is due
+                to be executed.
+                </p><div class="example"><a name="taskOnlyIf"></a><p class="title"><b>Example&nbsp;15.20.&nbsp;Skipping a task using a predicate</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task hello &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello world'</span>
+}
+
+hello.onlyIf { !project.hasProperty(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'skipHello'</span>) }</pre><p>Output of <strong class="userinput"><code>gradle hello -PskipHello</code></strong></p><pre class="screen">&gt; gradle hello -PskipHello
+:hello SKIPPED
+
+BUILD SUCCESSFUL
+
+Total time: 1 secs</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10EDD"></a>15.8.2.&nbsp;Using StopExecutionException</h3></div></div></div><p>If the rules for skipping a task can't be expressed with predicate, you can use the
+            <a class="ulink" href="../javadoc/org/gradle/api/tasks/StopExecutionException.html" target="_top"><code class="classname">StopExecutionException</code></a>. If this exception is thrown by an action,
+            the further execution of this action as well as the execution of
+            any following action of this task is skipped. The build continues with executing the next task.
+        </p><div class="example"><a name="stopExecutionException"></a><p class="title"><b>Example&nbsp;15.21.&nbsp;Skipping tasks with StopExecutionException</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task compile &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'We are doing the compile.'</span>
+}
+
+compile.doFirst {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Here you would put arbitrary conditions in real life. But we use this as an integration test, so we want defined behavior.</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (true) { <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">throw</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> StopExecutionException() }
+}
+task myTask(dependsOn: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'compile'</span>) &lt;&lt; {
+   println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'I am not affected'</span>
+}</pre><p>Output of <strong class="userinput"><code>gradle -q myTask</code></strong></p><pre class="screen">&gt; gradle -q myTask
+I am not affected</pre></div></div><br class="example-break"><p>This feature is helpful if you work with tasks provided by Gradle. It allows you to add
+            <span class="emphasis"><em>conditional</em></span> execution of the built-in actions of such a task.
+            <sup>[<a href="#ftn.N10EFC" name="N10EFC" class="footnote">7</a>]</sup>
+        </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10F06"></a>15.8.3.&nbsp;Enabling and disabling tasks</h3></div></div></div><p>Every task has also an <code class="literal">enabled</code>
+            flag which defaults to <code class="literal">true</code>. Setting it to <code class="literal">false</code> prevents the
+            execution of any of the task's actions.
+        </p><div class="example"><a name="disableTask"></a><p class="title"><b>Example&nbsp;15.22.&nbsp;Enabling and disabling tasks</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task disableMe &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'This should not be printed if the task is disabled.'</span>
+}
+disableMe.enabled = false</pre><p>Output of <strong class="userinput"><code>gradle disableMe</code></strong></p><pre class="screen">&gt; gradle disableMe
+:disableMe SKIPPED
+
+BUILD SUCCESSFUL
+
+Total time: 1 secs</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:up_to_date_checks"></a>15.9.&nbsp;Skipping tasks that are up-to-date</h2></div></div></div><p>If you are using one of the tasks that come with Gradle, such as a task added by the Java plugin,
+            you might have noticed that Gradle will skip tasks that are up-to-date. This behaviour is also available
+            for your tasks, not just for built-in tasks.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:task_inputs_outputs"></a>15.9.1.&nbsp;Declaring a task's inputs and outputs</h3></div></div></div><p>
+                Let's have a look at an example. Here our task generates several output files from a source XML file. Let's
+                run it a couple of times.
+            </p><div class="example"><a name="generatorTask"></a><p class="title"><b>Example&nbsp;15.23.&nbsp;A generator task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task transform {
+    ext.srcFile = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'mountains.xml'</span>)
+    ext.destDir = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(buildDir, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'generated'</span>)
+    doLast {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Transforming source file."</span>
+        destDir.mkdirs()
+        def mountains = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> XmlParser().parse(srcFile)
+        mountains.mountain.each { mountain -&gt;
+            def name = mountain.name[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">0</span>].text()
+            def height = mountain.height[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">0</span>].text()
+            def destFile = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(destDir, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"${name}.txt"</span>)
+            destFile.text = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$name -&gt; ${height}\n"</span>
+        }
+    }
+}</pre><p>Output of <strong class="userinput"><code>gradle transform</code></strong></p><pre class="screen">&gt; gradle transform
+:transform
+Transforming source file.</pre><p>Output of <strong class="userinput"><code>gradle transform</code></strong></p><pre class="screen">&gt; gradle transform
+:transform
+Transforming source file.</pre></div></div><br class="example-break"><p>Notice that Gradle executes this task a second time, and does not skip the task even though nothing has
+                changed. Our example task was defined using an action closure. Gradle has no idea what the closure does and
+                cannot automatically figure out whether the task is up-to-date or not. To use Gradle's up-to-date checking,
+                you need to declare the inputs and outputs of the task.
+            </p><p>Each task has an <code class="literal">inputs</code> and <code class="literal">outputs</code> property, which you use to
+                declare the inputs and outputs of the task. Below, we have changed our example to declare that it takes
+                the source XML file as an input and produces output to a destination directory. Let's run it a couple
+                of times.
+            </p><div class="example"><a name="incrementalTask"></a><p class="title"><b>Example&nbsp;15.24.&nbsp;Declaring the inputs and outputs of a task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task transform {
+    ext.srcFile = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'mountains.xml'</span>)
+    ext.destDir = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(buildDir, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'generated'</span>)
+    inputs.file srcFile
+    outputs.dir destDir
+    doLast {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Transforming source file."</span>
+        destDir.mkdirs()
+        def mountains = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> XmlParser().parse(srcFile)
+        mountains.mountain.each { mountain -&gt;
+            def name = mountain.name[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">0</span>].text()
+            def height = mountain.height[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">0</span>].text()
+            def destFile = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(destDir, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"${name}.txt"</span>)
+            destFile.text = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$name -&gt; ${height}\n"</span>
+        }
+    }
+}</pre><p>Output of <strong class="userinput"><code>gradle transform</code></strong></p><pre class="screen">&gt; gradle transform
+:transform
+Transforming source file.</pre><p>Output of <strong class="userinput"><code>gradle transform</code></strong></p><pre class="screen">&gt; gradle transform
+:transform UP-TO-DATE</pre></div></div><br class="example-break"><p>Now, Gradle knows which files to check to determine whether the task is up-to-date or not.</p><p>
+                The task's <code class="literal">inputs</code> property is of type <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskInputs.html" target="_top"><code class="classname">TaskInputs</code></a>.
+                The task's <code class="literal">outputs</code> property is of type <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskOutputs.html" target="_top"><code class="classname">TaskOutputs</code></a>.
+            </p><p>
+                A task with no defined outputs will <span class="emphasis"><em>never</em></span> be considered up-to-date.
+                For scenarios where the outputs of a task are not files, or for more complex scenarios, the
+                <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskOutputs.html#upToDateWhen(groovy.lang.Closure)" target="_top"><code class="classname">TaskOutputs.upToDateWhen()</code></a> method allows you to calculate programmatically if
+                the tasks outputs should be considered up to date.
+            </p><p>
+                A task with only outputs defined will be considered up-to-date if those outputs are unchanged since the previous build.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10F86"></a>15.9.2.&nbsp;How does it work?</h3></div></div></div><p>
+                Before a task is executed for the first time, Gradle takes a snapshot of the inputs. This snapshot contains
+                the set of input files and a hash of the contents of each file. Gradle then executes the task. If the
+                task completes successfully, Gradle takes a snapshot of the outputs. This snapshot contains the set of
+                output files and a hash of the contents of each file. Gradle persists both snapshots for next time the task
+                is executed.
+            </p><p>
+                Each time after that, before the task is executed, Gradle takes a new snapshot of the inputs and outputs.
+                If the new snapshots are the same as the previous snapshots, Gradle assumes that the outputs are up to
+                date and skips the task. If they are not the same, Gradle executes the task. Gradle persists both snapshots
+                for next time the task is executed.
+            </p><p>
+                Note that if a task has an output directory specified, any files added to that directory since the last time it was executed
+                are ignored and will NOT cause the task to be out of date. This is so unrelated tasks may share an output directory without interfering with each other.
+                If this is not the behaviour you want for some reason, consider using <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskOutputs.html#upToDateWhen(groovy.lang.Closure)" target="_top"><code class="classname">TaskOutputs.upToDateWhen()</code></a>
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10F94"></a>15.10.&nbsp;Task rules</h2></div></div></div><p>Sometimes you want to have a task whose behavior depends on a large or infinite number value range
+            of parameters. A very nice and expressive way to provide such tasks are task rules:
+        </p><div class="example"><a name="taskRule"></a><p class="title"><b>Example&nbsp;15.25.&nbsp;Task rule</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">tasks.addRule(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Pattern: ping&lt;ID&gt;"</span>) { String taskName -&gt;
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (taskName.startsWith(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"ping"</span>)) {
+        task(taskName) &lt;&lt; {
+            println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Pinging: "</span> + (taskName - <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'ping'</span>)
+        }
+    }
+}</pre><p>Output of <strong class="userinput"><code>gradle -q pingServer1</code></strong></p><pre class="screen">&gt; gradle -q pingServer1
+Pinging: Server1</pre></div></div><br class="example-break"><p>The String parameter is used as a description for the rule. This description is shown when running
+            for example <strong class="userinput"><code>gradle tasks</code></strong>.
+        </p><p>Rules not just work when calling tasks from the command line. You can also create dependsOn relations
+            on rule based tasks:
+        </p><div class="example"><a name="taskRuleDependsOn"></a><p class="title"><b>Example&nbsp;15.26.&nbsp;Dependency on rule based tasks</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">tasks.addRule(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Pattern: ping&lt;ID&gt;"</span>) { String taskName -&gt;
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (taskName.startsWith(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"ping"</span>)) {
+        task(taskName) &lt;&lt; {
+            println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Pinging: "</span> + (taskName - <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'ping'</span>)
+        }
+    }
+}
+
+task groupPing {
+    dependsOn pingServer1, pingServer2
+}</pre><p>Output of <strong class="userinput"><code>gradle -q groupPing</code></strong></p><pre class="screen">&gt; gradle -q groupPing
+Pinging: Server1
+Pinging: Server2</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10FC0"></a>15.11.&nbsp;Finalizer tasks</h2></div></div></div><div class="note"><p>
+                Finalizers tasks are an <em class="firstterm">incubating</em> feature (see <a class="xref" href="feature_lifecycle.html#sec:incubating_state">Section&nbsp;C.1.2, &ldquo;Incubating&rdquo;</a>).
+            </p></div><p>Finalizer tasks are automatically added to the task graph when the finalized task is scheduled to run.</p><div class="example"><a name="taskFinalizers"></a><p class="title"><b>Example&nbsp;15.27.&nbsp;Adding a task finalizer</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task taskX &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskX'</span>
+}
+task taskY &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskY'</span>
+}
+
+taskX.finalizedBy taskY</pre><p>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p><pre class="screen">&gt; gradle -q taskX
+taskX
+taskY</pre></div></div><br class="example-break"><p>Finalizer task will be executed even if the finalized task fails.</p><div class="example"><a name="taskFinalizersWithFailure"></a><p class="title"><b>Example&nbsp;15.28.&nbsp;Task finalizer for a failing task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task taskX &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskX'</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">throw</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> RuntimeException()
+}
+task taskY &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskY'</span>
+}
+
+taskX.finalizedBy taskY</pre><p>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p><pre class="screen">&gt; gradle -q taskX
+taskX
+taskY</pre></div></div><br class="example-break"><p>On the other hand, finalizer tasks are not executed if the finalized task didn't do any work, for example due to failed
+            task dependency or if it's considered up to date.</p><p>Finalizer tasks are useful in situations where build creates a resource that has to be cleaned up regardless
+            of the build failing or succeeding. An example of such resource is a web container started before an integration test task
+            and which should be always shut down, even if some of the tests fail.</p><p>To specify a finalizer task you use the <a class="ulink" href="../dsl/org.gradle.api.Task.html#org.gradle.api.Task:finalizedBy(java.lang.Object...)" target="_top"><code class="classname">Task.finalizedBy()</code></a> method.
+            This method accepts a task instance, a task name or any other input accepted by <a class="ulink" href="../dsl/org.gradle.api.Task.html#org.gradle.api.Task:dependsOn(java.lang.Object...)" target="_top"><code class="classname">Task.dependsOn()</code></a>.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:the_idea_behind_gradle_tasks"></a>15.12.&nbsp;Summary</h2></div></div></div><p>If you are coming from Ant, such an enhanced Gradle task as <span class="emphasis"><em>Copy</em></span> looks like a mixture
+            between an Ant target and an Ant task. And this is actually the case. The separation that Ant does between
+            tasks and targets is not done by Gradle. The simple Gradle tasks are like Ant's targets and the enhanced
+            Gradle tasks also include the Ant task aspects. All of Gradle's tasks share a common API and you can create
+            dependencies between them. Such a task might be nicer to configure than an Ant task.
+            It makes full use of the type system, is more expressive and easier to maintain.
+        </p></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N10EFC" name="ftn.N10EFC" class="para">7</a>] </sup>You might be wondering why there is neither an import for the
+                    <code class="literal">StopExecutionException</code>
+                    nor do we access it via its fully qualified name. The reason is, that Gradle adds a set of default imports
+                    to your script. These imports are customizable (see <a class="xref" href="ide_support.html">Appendix&nbsp;E, <i>Existing IDE Support and how to cope without it</i></a>).
+                </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_this_and_that.html" title="Chapter&nbsp;14.&nbsp;Tutorial - 'This and That'">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="working_with_files.html" title="Chapter&nbsp;16.&nbsp;Working With Files">Next</a></div></div></div></body></html>

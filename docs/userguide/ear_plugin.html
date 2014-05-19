@@ -1,0 +1,125 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;27.&nbsp;The Ear Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="war_plugin.html" title="Chapter&nbsp;26.&nbsp;The War Plugin"><link rel="next" href="jetty_plugin.html" title="Chapter&nbsp;28.&nbsp;The Jetty Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="war_plugin.html" title="Chapter&nbsp;26.&nbsp;The War Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="jetty_plugin.html" title="Chapter&nbsp;28.&nbsp;The Jetty Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="ear_plugin"></a>Chapter&nbsp;27.&nbsp;The Ear Plugin</h1></div></div></div><p>The Ear plugin adds support for assembling web application EAR files. It adds a default EAR archive task.
+        It doesn't require the Java plugin, but for projects that also use the Java plugin it disables the default
+        JAR archive generation.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1310D"></a>27.1.&nbsp;Usage</h2></div></div></div><p>To use the Ear plugin, include in your build script:</p><div class="example"><a name="earWithWar"></a><p class="title"><b>Example&nbsp;27.1.&nbsp;Using the Ear plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'ear'</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1311C"></a>27.2.&nbsp;Tasks</h2></div></div></div><p>The Ear plugin adds the following tasks to the project.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;27.1.&nbsp;Ear plugin - tasks</b></p><div class="table-contents"><table id="N13121"><thead><tr>
+                    <td>Task name</td>
+                    <td>Depends on</td>
+                    <td>Type</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">ear</code>
+                </td>
+                <td>
+                    <code class="literal">compile</code> (only if the Java plugin is also applied)
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.plugins.ear.Ear.html" target="_top"><code class="classname">Ear</code></a></td>
+                <td>Assembles the application EAR file.</td>
+            </tr></table></div></div><p>The Ear plugin adds the following dependencies to tasks added by the base plugin.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;27.2.&nbsp;Ear plugin - additional task dependencies</b></p><div class="table-contents"><table id="N1314C"><thead><td>Task name</td><td>Depends on</td></thead><tr>
+                <td>assemble</td>
+                <td>ear</td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1315C"></a>27.3.&nbsp;Project layout</h2></div></div></div><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;27.3.&nbsp;Ear plugin - project layout</b></p><div class="table-contents"><table id="N1315F"><thead><tr>
+                    <td>Directory</td>
+                    <td>Meaning</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="filename">src/main/application</code>
+                </td>
+                <td>Ear resources, such as a META-INF directory</td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13176"></a>27.4.&nbsp;Dependency management</h2></div></div></div><p>The Ear plugin adds two dependency configurations: <code class="literal">deploy</code> and
+            <code class="literal">earlib</code>. All dependencies in the <code class="literal">deploy</code> configuration are
+            placed in the root of the EAR archive, and are <span class="emphasis"><em>not</em></span> transitive. All dependencies in the
+            <code class="literal">earlib</code> configuration are placed in the 'lib' directory in the EAR archive and
+            <span class="emphasis"><em>are</em></span> transitive.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1318D"></a>27.5.&nbsp;Convention properties</h2></div></div></div><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;27.4.&nbsp;Ear plugin - directory properties</b></p><div class="table-contents"><table id="N13190"><thead><tr>
+                    <td>Property name</td>
+                    <td>Type</td>
+                    <td>Default value</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">appDirName</code>
+                </td>
+                <td>
+                    <code class="classname">String</code>
+                </td>
+                <td>
+                    <code class="filename">src/main/application</code>
+                </td>
+                <td>
+                    The name of the application source directory, relative to the project directory.
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">libDirName</code>
+                </td>
+                <td>
+                    <code class="classname">String</code>
+                </td>
+                <td>
+                    <code class="filename">lib</code>
+                </td>
+                <td>
+                    The name of the lib directory inside the generated EAR.
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">deploymentDescriptor</code>
+                </td>
+                <td>
+                    <code class="classname">org.gradle.plugins.ear.descriptor.DeploymentDescriptor</code>
+                </td>
+                <td>
+                    A deployment descriptor with sensible defaults named <code class="literal">application.xml</code>
+                </td>
+                <td>
+                    Metadata to generate a deployment descriptor file, e.g. <code class="literal">application.xml</code>.
+                    If this file already exists in the <code class="literal">appDirName/META-INF</code> then the existing file contents will be used and
+                    the explicit configuration in the <code class="literal">ear.deploymentDescriptor</code> will be ignored.
+                </td>
+            </tr></table></div></div><p>These properties are provided by a <a class="ulink" href="../dsl/org.gradle.plugins.ear.EarPluginConvention.html" target="_top"><code class="classname">EarPluginConvention</code></a>
+            convention object.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:default_settings"></a>27.6.&nbsp;Ear</h2></div></div></div><p>The default behavior of the Ear task is to copy the content of <code class="literal">src/main/application</code>
+            to the root of the archive. If your <code class="literal">application</code> directory doesn't contain a
+            <code class="literal">META-INF/application.xml</code> deployment descriptor then one will be generated for you.
+		</p><p>Also have a look at <a class="ulink" href="../dsl/org.gradle.plugins.ear.Ear.html" target="_top"><code class="classname">Ear</code></a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:customizing"></a>27.7.&nbsp;Customizing</h2></div></div></div><p>Here is an example with the most important customization options:
+        </p><div class="example"><a name="earCustomized"></a><p class="title"><b>Example&nbsp;27.2.&nbsp;Customization of ear plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'ear'</span>
+apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
+
+repositories { mavenCentral() }
+
+dependencies {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//following dependencies will become the ear modules and placed in the ear root</span>
+    deploy project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':war'</span>)
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//following dependencies will become ear libs and placed in a dir configured via libDirName property</span>
+    earlib group: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'log4j'</span>, name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'log4j'</span>, version: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.2.15'</span>, ext: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'jar'</span>
+}
+
+ear {
+    appDirName <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/main/app'</span>  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// use application metadata found in this folder</span>
+    libDirName <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'APP-INF/lib'</span>  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// put dependency libraries into APP-INF/lib inside the generated EAR;</span>
+                                <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// also modify the generated deployment descriptor accordingly</span>
+    deploymentDescriptor {  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// custom entries for application.xml:</span>
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//      fileName = "application.xml"  // same as the default value</span>
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//      version = "6"  // same as the default value</span>
+        applicationName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"customear"</span>
+        initializeInOrder = true
+        displayName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Custom Ear"</span>  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// defaults to project.name</span>
+        description = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"My customized EAR for the Gradle documentation"</span>  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// defaults to project.description</span>
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//      libraryDirectory = "APP-INF/lib"  // not needed, because setting libDirName above did this for us</span>
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//      module("my.jar", "java")  // wouldn't deploy since my.jar isn't a deploy dependency</span>
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//      webModule("my.war", "/")  // wouldn't deploy since my.war isn't a deploy dependency</span>
+        securityRole <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"admin"</span>
+        securityRole <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"superadmin"</span>
+        withXml { provider -&gt; <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// add a custom node to the XML</span>
+            provider.asNode().appendNode(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"data-source"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"my/data/source"</span>)
+        }
+    }
+}</pre></div></div><br class="example-break"><p>You can also use customization options that the <a class="ulink" href="../dsl/org.gradle.plugins.ear.Ear.html" target="_top"><code class="classname">Ear</code></a>
+        	task provides, such as <code class="literal">from</code> and <code class="literal">metaInf</code>.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:using_custom_app_xml"></a>27.8.&nbsp;Using custom descriptor file</h2></div></div></div><p>
+            Let's say you already have the <code class="literal">application.xml</code> and want to use it instead of configuring the <code class="literal">ear.deploymentDescriptor</code> section.
+            To accommodate that place the <code class="literal">META-INF/application.xml</code> in the right place inside your source folders (see the <code class="literal">appDirName</code> property).
+            The existing file contents will be used and the explicit configuration in the <code class="literal">ear.deploymentDescriptor</code> will be ignored.
+        </p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="war_plugin.html" title="Chapter&nbsp;26.&nbsp;The War Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="jetty_plugin.html" title="Chapter&nbsp;28.&nbsp;The Jetty Plugin">Next</a></div></div></div></body></html>

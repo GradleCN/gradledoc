@@ -1,0 +1,491 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML>
+<HEAD>
+<TITLE>
+Overview (Gradle API 1.12)
+</TITLE>
+
+<META NAME="keywords" CONTENT="Overview">
+
+<LINK REL ="stylesheet" TYPE="text/css" HREF="stylesheet.css" TITLE="Style">
+
+</HEAD>
+
+<BODY BGCOLOR="white">
+
+<TABLE BORDER="0" WIDTH="100%" SUMMARY="">
+<TR>
+<TH ALIGN="left" NOWRAP><FONT size="+1" CLASS="FrameTitleFont">
+<B>Gradle API 1.12</B></FONT></TH>
+</TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" SUMMARY="">
+<TR>
+<TD NOWRAP><FONT CLASS="FrameItemFont"><A HREF="allclasses-frame.html" target="packageFrame">All Classes</A></FONT>
+<P>
+<FONT size="+1" CLASS="FrameHeadingFont">
+Packages</FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/package-frame.html" target="packageFrame">org.gradle</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/package-frame.html" target="packageFrame">org.gradle.api</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/artifacts/package-frame.html" target="packageFrame">org.gradle.api.artifacts</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/artifacts/cache/package-frame.html" target="packageFrame">org.gradle.api.artifacts.cache</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/artifacts/component/package-frame.html" target="packageFrame">org.gradle.api.artifacts.component</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/artifacts/dsl/package-frame.html" target="packageFrame">org.gradle.api.artifacts.dsl</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/artifacts/maven/package-frame.html" target="packageFrame">org.gradle.api.artifacts.maven</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/artifacts/repositories/package-frame.html" target="packageFrame">org.gradle.api.artifacts.repositories</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/artifacts/resolution/package-frame.html" target="packageFrame">org.gradle.api.artifacts.resolution</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/artifacts/result/package-frame.html" target="packageFrame">org.gradle.api.artifacts.result</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/component/package-frame.html" target="packageFrame">org.gradle.api.component</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/distribution/package-frame.html" target="packageFrame">org.gradle.api.distribution</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/distribution/plugins/package-frame.html" target="packageFrame">org.gradle.api.distribution.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/dsl/package-frame.html" target="packageFrame">org.gradle.api.dsl</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/execution/package-frame.html" target="packageFrame">org.gradle.api.execution</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/file/package-frame.html" target="packageFrame">org.gradle.api.file</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/initialization/package-frame.html" target="packageFrame">org.gradle.api.initialization</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/initialization/dsl/package-frame.html" target="packageFrame">org.gradle.api.initialization.dsl</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/invocation/package-frame.html" target="packageFrame">org.gradle.api.invocation</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/java/archives/package-frame.html" target="packageFrame">org.gradle.api.java.archives</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/logging/package-frame.html" target="packageFrame">org.gradle.api.logging</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/plugins/package-frame.html" target="packageFrame">org.gradle.api.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/plugins/announce/package-frame.html" target="packageFrame">org.gradle.api.plugins.announce</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/plugins/antlr/package-frame.html" target="packageFrame">org.gradle.api.plugins.antlr</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/plugins/buildcomparison/gradle/package-frame.html" target="packageFrame">org.gradle.api.plugins.buildcomparison.gradle</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/plugins/jetty/package-frame.html" target="packageFrame">org.gradle.api.plugins.jetty</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/plugins/osgi/package-frame.html" target="packageFrame">org.gradle.api.plugins.osgi</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/plugins/quality/package-frame.html" target="packageFrame">org.gradle.api.plugins.quality</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/plugins/scala/package-frame.html" target="packageFrame">org.gradle.api.plugins.scala</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/plugins/sonar/package-frame.html" target="packageFrame">org.gradle.api.plugins.sonar</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/plugins/sonar/model/package-frame.html" target="packageFrame">org.gradle.api.plugins.sonar.model</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/publish/package-frame.html" target="packageFrame">org.gradle.api.publish</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/publish/ivy/package-frame.html" target="packageFrame">org.gradle.api.publish.ivy</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/publish/ivy/plugins/package-frame.html" target="packageFrame">org.gradle.api.publish.ivy.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/publish/ivy/tasks/package-frame.html" target="packageFrame">org.gradle.api.publish.ivy.tasks</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/publish/maven/package-frame.html" target="packageFrame">org.gradle.api.publish.maven</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/publish/maven/plugins/package-frame.html" target="packageFrame">org.gradle.api.publish.maven.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/publish/maven/tasks/package-frame.html" target="packageFrame">org.gradle.api.publish.maven.tasks</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/publish/plugins/package-frame.html" target="packageFrame">org.gradle.api.publish.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/reporting/package-frame.html" target="packageFrame">org.gradle.api.reporting</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/reporting/dependencies/package-frame.html" target="packageFrame">org.gradle.api.reporting.dependencies</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/reporting/plugins/package-frame.html" target="packageFrame">org.gradle.api.reporting.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/resources/package-frame.html" target="packageFrame">org.gradle.api.resources</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/sonar/runner/package-frame.html" target="packageFrame">org.gradle.api.sonar.runner</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/specs/package-frame.html" target="packageFrame">org.gradle.api.specs</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/tasks/package-frame.html" target="packageFrame">org.gradle.api.tasks</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/tasks/ant/package-frame.html" target="packageFrame">org.gradle.api.tasks.ant</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/tasks/application/package-frame.html" target="packageFrame">org.gradle.api.tasks.application</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/tasks/bundling/package-frame.html" target="packageFrame">org.gradle.api.tasks.bundling</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/tasks/compile/package-frame.html" target="packageFrame">org.gradle.api.tasks.compile</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/tasks/diagnostics/package-frame.html" target="packageFrame">org.gradle.api.tasks.diagnostics</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/tasks/incremental/package-frame.html" target="packageFrame">org.gradle.api.tasks.incremental</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/tasks/javadoc/package-frame.html" target="packageFrame">org.gradle.api.tasks.javadoc</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/tasks/scala/package-frame.html" target="packageFrame">org.gradle.api.tasks.scala</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/tasks/testing/package-frame.html" target="packageFrame">org.gradle.api.tasks.testing</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/tasks/testing/junit/package-frame.html" target="packageFrame">org.gradle.api.tasks.testing.junit</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/tasks/testing/logging/package-frame.html" target="packageFrame">org.gradle.api.tasks.testing.logging</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/tasks/testing/testng/package-frame.html" target="packageFrame">org.gradle.api.tasks.testing.testng</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/tasks/util/package-frame.html" target="packageFrame">org.gradle.api.tasks.util</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/api/tasks/wrapper/package-frame.html" target="packageFrame">org.gradle.api.tasks.wrapper</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/buildinit/plugins/package-frame.html" target="packageFrame">org.gradle.buildinit.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/buildinit/tasks/package-frame.html" target="packageFrame">org.gradle.buildinit.tasks</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/external/javadoc/package-frame.html" target="packageFrame">org.gradle.external.javadoc</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/ide/cdt/package-frame.html" target="packageFrame">org.gradle.ide.cdt</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/ide/cdt/model/package-frame.html" target="packageFrame">org.gradle.ide.cdt.model</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/ide/cdt/tasks/package-frame.html" target="packageFrame">org.gradle.ide.cdt.tasks</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/ide/visualstudio/package-frame.html" target="packageFrame">org.gradle.ide.visualstudio</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/ide/visualstudio/plugins/package-frame.html" target="packageFrame">org.gradle.ide.visualstudio.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/ide/visualstudio/tasks/package-frame.html" target="packageFrame">org.gradle.ide.visualstudio.tasks</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/language/package-frame.html" target="packageFrame">org.gradle.language</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/language/assembler/package-frame.html" target="packageFrame">org.gradle.language.assembler</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/language/assembler/plugins/package-frame.html" target="packageFrame">org.gradle.language.assembler.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/language/base/package-frame.html" target="packageFrame">org.gradle.language.base</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/language/base/plugins/package-frame.html" target="packageFrame">org.gradle.language.base.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/language/c/package-frame.html" target="packageFrame">org.gradle.language.c</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/language/c/plugins/package-frame.html" target="packageFrame">org.gradle.language.c.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/language/cpp/package-frame.html" target="packageFrame">org.gradle.language.cpp</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/language/cpp/plugins/package-frame.html" target="packageFrame">org.gradle.language.cpp.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/language/java/package-frame.html" target="packageFrame">org.gradle.language.java</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/language/jvm/package-frame.html" target="packageFrame">org.gradle.language.jvm</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/language/jvm/plugins/package-frame.html" target="packageFrame">org.gradle.language.jvm.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/language/jvm/tasks/package-frame.html" target="packageFrame">org.gradle.language.jvm.tasks</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/language/objectivec/package-frame.html" target="packageFrame">org.gradle.language.objectivec</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/language/objectivec/plugins/package-frame.html" target="packageFrame">org.gradle.language.objectivec.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/language/objectivecpp/package-frame.html" target="packageFrame">org.gradle.language.objectivecpp</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/language/objectivecpp/plugins/package-frame.html" target="packageFrame">org.gradle.language.objectivecpp.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/language/rc/package-frame.html" target="packageFrame">org.gradle.language.rc</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/language/rc/plugins/package-frame.html" target="packageFrame">org.gradle.language.rc.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/package-frame.html" target="packageFrame">org.gradle.nativebinaries</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/language/package-frame.html" target="packageFrame">org.gradle.nativebinaries.language</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/language/assembler/package-frame.html" target="packageFrame">org.gradle.nativebinaries.language.assembler</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/language/assembler/plugins/package-frame.html" target="packageFrame">org.gradle.nativebinaries.language.assembler.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/language/assembler/tasks/package-frame.html" target="packageFrame">org.gradle.nativebinaries.language.assembler.tasks</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/language/c/package-frame.html" target="packageFrame">org.gradle.nativebinaries.language.c</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/language/c/plugins/package-frame.html" target="packageFrame">org.gradle.nativebinaries.language.c.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/language/c/tasks/package-frame.html" target="packageFrame">org.gradle.nativebinaries.language.c.tasks</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/language/cpp/package-frame.html" target="packageFrame">org.gradle.nativebinaries.language.cpp</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/language/cpp/plugins/package-frame.html" target="packageFrame">org.gradle.nativebinaries.language.cpp.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/language/cpp/tasks/package-frame.html" target="packageFrame">org.gradle.nativebinaries.language.cpp.tasks</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/language/objectivec/package-frame.html" target="packageFrame">org.gradle.nativebinaries.language.objectivec</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/language/objectivec/plugins/package-frame.html" target="packageFrame">org.gradle.nativebinaries.language.objectivec.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/language/objectivec/tasks/package-frame.html" target="packageFrame">org.gradle.nativebinaries.language.objectivec.tasks</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/language/objectivecpp/package-frame.html" target="packageFrame">org.gradle.nativebinaries.language.objectivecpp</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/language/objectivecpp/plugins/package-frame.html" target="packageFrame">org.gradle.nativebinaries.language.objectivecpp.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/language/objectivecpp/tasks/package-frame.html" target="packageFrame">org.gradle.nativebinaries.language.objectivecpp.tasks</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/language/rc/plugins/package-frame.html" target="packageFrame">org.gradle.nativebinaries.language.rc.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/language/rc/tasks/package-frame.html" target="packageFrame">org.gradle.nativebinaries.language.rc.tasks</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/platform/package-frame.html" target="packageFrame">org.gradle.nativebinaries.platform</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/plugins/package-frame.html" target="packageFrame">org.gradle.nativebinaries.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/tasks/package-frame.html" target="packageFrame">org.gradle.nativebinaries.tasks</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/test/package-frame.html" target="packageFrame">org.gradle.nativebinaries.test</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/test/cunit/package-frame.html" target="packageFrame">org.gradle.nativebinaries.test.cunit</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/test/cunit/plugins/package-frame.html" target="packageFrame">org.gradle.nativebinaries.test.cunit.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/test/cunit/tasks/package-frame.html" target="packageFrame">org.gradle.nativebinaries.test.cunit.tasks</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/test/plugins/package-frame.html" target="packageFrame">org.gradle.nativebinaries.test.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/test/tasks/package-frame.html" target="packageFrame">org.gradle.nativebinaries.test.tasks</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/toolchain/package-frame.html" target="packageFrame">org.gradle.nativebinaries.toolchain</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/nativebinaries/toolchain/plugins/package-frame.html" target="packageFrame">org.gradle.nativebinaries.toolchain.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/ear/package-frame.html" target="packageFrame">org.gradle.plugins.ear</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/ear/descriptor/package-frame.html" target="packageFrame">org.gradle.plugins.ear.descriptor</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/ide/api/package-frame.html" target="packageFrame">org.gradle.plugins.ide.api</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/ide/eclipse/package-frame.html" target="packageFrame">org.gradle.plugins.ide.eclipse</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/ide/eclipse/model/package-frame.html" target="packageFrame">org.gradle.plugins.ide.eclipse.model</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/ide/idea/package-frame.html" target="packageFrame">org.gradle.plugins.ide.idea</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/ide/idea/model/package-frame.html" target="packageFrame">org.gradle.plugins.ide.idea.model</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/javascript/base/package-frame.html" target="packageFrame">org.gradle.plugins.javascript.base</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/javascript/coffeescript/package-frame.html" target="packageFrame">org.gradle.plugins.javascript.coffeescript</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/javascript/envjs/package-frame.html" target="packageFrame">org.gradle.plugins.javascript.envjs</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/javascript/envjs/browser/package-frame.html" target="packageFrame">org.gradle.plugins.javascript.envjs.browser</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/javascript/envjs/http/package-frame.html" target="packageFrame">org.gradle.plugins.javascript.envjs.http</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/javascript/envjs/http/simple/package-frame.html" target="packageFrame">org.gradle.plugins.javascript.envjs.http.simple</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/javascript/jshint/package-frame.html" target="packageFrame">org.gradle.plugins.javascript.jshint</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/javascript/rhino/package-frame.html" target="packageFrame">org.gradle.plugins.javascript.rhino</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/javascript/rhino/worker/package-frame.html" target="packageFrame">org.gradle.plugins.javascript.rhino.worker</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/signing/package-frame.html" target="packageFrame">org.gradle.plugins.signing</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/signing/signatory/package-frame.html" target="packageFrame">org.gradle.plugins.signing.signatory</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/signing/signatory/pgp/package-frame.html" target="packageFrame">org.gradle.plugins.signing.signatory.pgp</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/signing/type/package-frame.html" target="packageFrame">org.gradle.plugins.signing.type</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/plugins/signing/type/pgp/package-frame.html" target="packageFrame">org.gradle.plugins.signing.type.pgp</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/process/package-frame.html" target="packageFrame">org.gradle.process</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/testfixtures/package-frame.html" target="packageFrame">org.gradle.testfixtures</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/testing/jacoco/plugins/package-frame.html" target="packageFrame">org.gradle.testing.jacoco.plugins</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/testing/jacoco/tasks/package-frame.html" target="packageFrame">org.gradle.testing.jacoco.tasks</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/tooling/package-frame.html" target="packageFrame">org.gradle.tooling</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/tooling/exceptions/package-frame.html" target="packageFrame">org.gradle.tooling.exceptions</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/tooling/model/package-frame.html" target="packageFrame">org.gradle.tooling.model</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/tooling/model/build/package-frame.html" target="packageFrame">org.gradle.tooling.model.build</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/tooling/model/eclipse/package-frame.html" target="packageFrame">org.gradle.tooling.model.eclipse</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/tooling/model/gradle/package-frame.html" target="packageFrame">org.gradle.tooling.model.gradle</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/tooling/model/idea/package-frame.html" target="packageFrame">org.gradle.tooling.model.idea</A></FONT>
+<BR>
+
+<FONT CLASS="FrameItemFont"><A HREF="org/gradle/tooling/provider/model/package-frame.html" target="packageFrame">org.gradle.tooling.provider.model</A></FONT>
+<BR>
+
+</TD>
+</TR>
+</TABLE>
+
+<P>
+&nbsp;
+</BODY>
+</HTML>

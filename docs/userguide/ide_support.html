@@ -1,0 +1,155 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Appendix&nbsp;E.&nbsp;Existing IDE Support and how to cope without it</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="gradle_command_line.html" title="Appendix&nbsp;D.&nbsp;Gradle Command Line"><link rel="next" href="go01.html" title="Glossary"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="gradle_command_line.html" title="Appendix&nbsp;D.&nbsp;Gradle Command Line">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="go01.html" title="Glossary">Next</a></div></div></div><div class="appendix"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="ide_support"></a>Appendix&nbsp;E.&nbsp;Existing IDE Support and how to cope without it</h1></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:intellij"></a>E.1.&nbsp;IntelliJ</h2></div></div></div><p>Gradle has been mainly developed with Idea IntelliJ and its very good Groovy plugin. Gradle's build script
+            <sup>[<a href="#ftn.N1768D" name="N1768D" class="footnote">28</a>]</sup>
+            has also been developed with the support of this IDE. IntelliJ allows you to define any filepattern to be
+            interpreted as a Groovy script. In the case of Gradle you can define such a pattern for
+            <code class="filename">build.gradle</code>
+            and <code class="filename">settings.gradle</code>. This will already help very much. What is missing is the classpath
+            to the Gradle binaries to offer content assistance for the Gradle classes. You might add the Gradle jar
+            (which you can find in your distribution) to your project's classpath. It does not really belong there, but
+            if you do this you have a fantastic IDE support for developing Gradle scripts. Of course if you use
+            additional libraries for your build scripts they would further pollute your project classpath.
+        </p><p>We hope that in the future <code class="filename">*.gradle</code> files
+            get special treatment by IntelliJ and you will be able to define a specific classpath for them.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1769C"></a>E.2.&nbsp;Eclipse</h2></div></div></div><p>There is a Groovy plugin for eclipse. We don't know in what state it is and how it would support Gradle.
+            In the next edition of this user guide we can hopefully write more about this.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:using_gradle_without_ide_support"></a>E.3.&nbsp;Using Gradle without IDE support</h2></div></div></div><p>What we can do for you is to spare you typing things like
+            <code class="literal">throw new org.gradle.api.tasks.StopExecutionException()</code>
+            and just type
+            <code class="literal">throw new StopExecutionException()</code>
+            instead. We do this by automatically adding a set of import statements to the Gradle scripts before Gradle
+            executes them. Listed below are the imports added to each script.
+        </p><div class="figure"><a name="N176AD"></a><p class="title"><b>Figure&nbsp;E.1.&nbsp;gradle-imports</b></p><div class="figure-contents"><pre class="programlisting">import org.gradle.*
+import org.gradle.api.*
+import org.gradle.api.artifacts.*
+import org.gradle.api.artifacts.cache.*
+import org.gradle.api.artifacts.component.*
+import org.gradle.api.artifacts.dsl.*
+import org.gradle.api.artifacts.maven.*
+import org.gradle.api.artifacts.repositories.*
+import org.gradle.api.artifacts.resolution.*
+import org.gradle.api.artifacts.result.*
+import org.gradle.api.component.*
+import org.gradle.api.distribution.*
+import org.gradle.api.distribution.plugins.*
+import org.gradle.api.dsl.*
+import org.gradle.api.execution.*
+import org.gradle.api.file.*
+import org.gradle.api.initialization.*
+import org.gradle.api.initialization.dsl.*
+import org.gradle.api.invocation.*
+import org.gradle.api.java.archives.*
+import org.gradle.api.logging.*
+import org.gradle.api.plugins.*
+import org.gradle.api.plugins.announce.*
+import org.gradle.api.plugins.antlr.*
+import org.gradle.api.plugins.buildcomparison.gradle.*
+import org.gradle.api.plugins.jetty.*
+import org.gradle.api.plugins.osgi.*
+import org.gradle.api.plugins.quality.*
+import org.gradle.api.plugins.scala.*
+import org.gradle.api.plugins.sonar.*
+import org.gradle.api.plugins.sonar.model.*
+import org.gradle.api.publish.*
+import org.gradle.api.publish.ivy.*
+import org.gradle.api.publish.ivy.plugins.*
+import org.gradle.api.publish.ivy.tasks.*
+import org.gradle.api.publish.maven.*
+import org.gradle.api.publish.maven.plugins.*
+import org.gradle.api.publish.maven.tasks.*
+import org.gradle.api.publish.plugins.*
+import org.gradle.api.reporting.*
+import org.gradle.api.reporting.dependencies.*
+import org.gradle.api.reporting.plugins.*
+import org.gradle.api.resources.*
+import org.gradle.api.sonar.runner.*
+import org.gradle.api.specs.*
+import org.gradle.api.tasks.*
+import org.gradle.api.tasks.ant.*
+import org.gradle.api.tasks.application.*
+import org.gradle.api.tasks.bundling.*
+import org.gradle.api.tasks.compile.*
+import org.gradle.api.tasks.diagnostics.*
+import org.gradle.api.tasks.incremental.*
+import org.gradle.api.tasks.javadoc.*
+import org.gradle.api.tasks.scala.*
+import org.gradle.api.tasks.testing.*
+import org.gradle.api.tasks.testing.junit.*
+import org.gradle.api.tasks.testing.testng.*
+import org.gradle.api.tasks.util.*
+import org.gradle.api.tasks.wrapper.*
+import org.gradle.buildinit.plugins.*
+import org.gradle.buildinit.tasks.*
+import org.gradle.external.javadoc.*
+import org.gradle.ide.cdt.*
+import org.gradle.ide.cdt.tasks.*
+import org.gradle.ide.visualstudio.*
+import org.gradle.ide.visualstudio.plugins.*
+import org.gradle.ide.visualstudio.tasks.*
+import org.gradle.language.*
+import org.gradle.language.assembler.*
+import org.gradle.language.assembler.plugins.*
+import org.gradle.language.base.*
+import org.gradle.language.base.plugins.*
+import org.gradle.language.c.*
+import org.gradle.language.c.plugins.*
+import org.gradle.language.cpp.*
+import org.gradle.language.cpp.plugins.*
+import org.gradle.language.java.*
+import org.gradle.language.jvm.*
+import org.gradle.language.jvm.plugins.*
+import org.gradle.language.jvm.tasks.*
+import org.gradle.language.objectivec.*
+import org.gradle.language.objectivec.plugins.*
+import org.gradle.language.objectivecpp.*
+import org.gradle.language.objectivecpp.plugins.*
+import org.gradle.language.rc.*
+import org.gradle.language.rc.plugins.*
+import org.gradle.nativebinaries.*
+import org.gradle.nativebinaries.language.*
+import org.gradle.nativebinaries.language.assembler.plugins.*
+import org.gradle.nativebinaries.language.assembler.tasks.*
+import org.gradle.nativebinaries.language.c.plugins.*
+import org.gradle.nativebinaries.language.c.tasks.*
+import org.gradle.nativebinaries.language.cpp.plugins.*
+import org.gradle.nativebinaries.language.cpp.tasks.*
+import org.gradle.nativebinaries.language.objectivec.plugins.*
+import org.gradle.nativebinaries.language.objectivec.tasks.*
+import org.gradle.nativebinaries.language.objectivecpp.plugins.*
+import org.gradle.nativebinaries.language.objectivecpp.tasks.*
+import org.gradle.nativebinaries.language.rc.plugins.*
+import org.gradle.nativebinaries.language.rc.tasks.*
+import org.gradle.nativebinaries.platform.*
+import org.gradle.nativebinaries.plugins.*
+import org.gradle.nativebinaries.tasks.*
+import org.gradle.nativebinaries.test.*
+import org.gradle.nativebinaries.test.cunit.*
+import org.gradle.nativebinaries.test.cunit.plugins.*
+import org.gradle.nativebinaries.test.cunit.tasks.*
+import org.gradle.nativebinaries.test.plugins.*
+import org.gradle.nativebinaries.test.tasks.*
+import org.gradle.nativebinaries.toolchain.*
+import org.gradle.nativebinaries.toolchain.plugins.*
+import org.gradle.plugins.ear.*
+import org.gradle.plugins.ear.descriptor.*
+import org.gradle.plugins.ide.api.*
+import org.gradle.plugins.ide.eclipse.*
+import org.gradle.plugins.ide.idea.*
+import org.gradle.plugins.javascript.base.*
+import org.gradle.plugins.javascript.coffeescript.*
+import org.gradle.plugins.javascript.envjs.*
+import org.gradle.plugins.javascript.envjs.browser.*
+import org.gradle.plugins.javascript.envjs.http.*
+import org.gradle.plugins.javascript.envjs.http.simple.*
+import org.gradle.plugins.javascript.jshint.*
+import org.gradle.plugins.javascript.rhino.*
+import org.gradle.plugins.javascript.rhino.worker.*
+import org.gradle.plugins.signing.*
+import org.gradle.plugins.signing.signatory.*
+import org.gradle.plugins.signing.signatory.pgp.*
+import org.gradle.plugins.signing.type.*
+import org.gradle.plugins.signing.type.pgp.*
+import org.gradle.process.*
+import org.gradle.testing.jacoco.plugins.*
+import org.gradle.testing.jacoco.tasks.*
+import org.gradle.util.*</pre></div></div><br class="figure-break"></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N1768D" name="ftn.N1768D" class="para">28</a>] </sup>Gradle is built with Gradle
+                </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="gradle_command_line.html" title="Appendix&nbsp;D.&nbsp;Gradle Command Line">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="go01.html" title="Glossary">Next</a></div></div></div></body></html>

@@ -1,0 +1,95 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;40.&nbsp;The ANTLR Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="idea_plugin.html" title="Chapter&nbsp;39.&nbsp;The IDEA Plugin"><link rel="next" href="project_reports_plugin.html" title="Chapter&nbsp;41.&nbsp;The Project Report Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="idea_plugin.html" title="Chapter&nbsp;39.&nbsp;The IDEA Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="project_reports_plugin.html" title="Chapter&nbsp;41.&nbsp;The Project Report Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="antlr_plugin"></a>Chapter&nbsp;40.&nbsp;The ANTLR Plugin</h1></div></div></div><p>The ANTLR plugin extends the Java plugin to add support for generating parsers using <a class="ulink" href="http://www.antlr.org/" target="_top">ANTLR</a>.</p><div class="note"><p>
+            The ANTLR plugin only supports ANTLR version 2.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N14312"></a>40.1.&nbsp;Usage</h2></div></div></div><p>To use the ANTLR plugin, include in your build script:</p><div class="example"><a name="useAntlrPlugin"></a><p class="title"><b>Example&nbsp;40.1.&nbsp;Using the ANTLR plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'antlr'</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N14321"></a>40.2.&nbsp;Tasks</h2></div></div></div><p>The ANTLR plugin adds a number of tasks to your project, as shown below.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;40.1.&nbsp;ANTLR plugin - tasks</b></p><div class="table-contents"><table id="N14326"><thead><tr>
+                    <td>Task name</td>
+                    <td>Depends on</td>
+                    <td>Type</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">generateGrammarSource</code>
+                </td>
+                <td>-</td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.plugins.antlr.AntlrTask.html" target="_top"><code class="classname">AntlrTask</code></a></td>
+                <td>Generates the source files for all production ANTLR grammars.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">generateTestGrammarSource</code>
+                </td>
+                <td>-</td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.plugins.antlr.AntlrTask.html" target="_top"><code class="classname">AntlrTask</code></a></td>
+                <td>Generates the source files for all test ANTLR grammars.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">generate<em class="replaceable"><code>SourceSet</code></em>GrammarSource</code>
+                </td>
+                <td>-</td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.plugins.antlr.AntlrTask.html" target="_top"><code class="classname">AntlrTask</code></a></td>
+                <td>Generates the source files for all ANTLR grammars for the given source set.</td>
+            </tr></table></div></div><p>The ANTLR plugin adds the following dependencies to tasks added by the Java plugin.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;40.2.&nbsp;ANTLR plugin - additional task dependencies</b></p><div class="table-contents"><table id="N14379"><thead><td>Task name</td><td>Depends on</td></thead><tr>
+                <td>compileJava</td>
+                <td>generateGrammarSource</td>
+            </tr><tr>
+                <td>compileTestJava</td>
+                <td>generateTestGrammarSource</td>
+            </tr><tr>
+                <td>compile<em class="replaceable"><code>SourceSet</code></em>Java</td>
+                <td>generate<em class="replaceable"><code>SourceSet</code></em>GrammarSource</td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1439F"></a>40.3.&nbsp;Project layout</h2></div></div></div><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;40.3.&nbsp;ANTLR plugin - project layout</b></p><div class="table-contents"><table id="N143A2"><thead><tr>
+                    <td>Directory</td>
+                    <td>Meaning</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="filename">src/main/antlr</code>
+                </td>
+                <td>Production ANTLR grammar files.</td>
+            </tr><tr>
+                <td>
+                    <code class="filename">src/test/antlr</code>
+                </td>
+                <td>Test ANTLR grammar files.</td>
+            </tr><tr>
+                <td>
+                    <code class="filename">src/<em class="replaceable"><code>sourceSet</code></em>/antlr</code>
+                </td>
+                <td>ANTLR grammar files for the given source set.</td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N143D2"></a>40.4.&nbsp;Dependency management</h2></div></div></div><p>The ANTLR plugin adds an <code class="literal">antlr</code> dependency configuration. You use this to declare the
+            ANTLR dependency that you wish to use.</p><div class="example"><a name="declareAntlrVersion"></a><p class="title"><b>Example&nbsp;40.2.&nbsp;Declare ANTLR version</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+    mavenCentral()
+}
+
+dependencies {
+    antlr <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'antlr:antlr:2.7.7'</span>
+}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N143E4"></a>40.5.&nbsp;Convention properties</h2></div></div></div><p>The ANTLR plugin does not add any convention properties.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N143E9"></a>40.6.&nbsp;Source set properties</h2></div></div></div><p>The ANTLR plugin adds the following properties to each source set in the project.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;40.4.&nbsp;ANTLR plugin - source set properties</b></p><div class="table-contents"><table id="N143EE"><thead><tr>
+                    <td>Property name</td>
+                    <td>Type</td>
+                    <td>Default value</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">antlr</code>
+                </td>
+                <td>
+                    <a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top"><code class="classname">SourceDirectorySet</code></a> (read-only)
+                </td>
+                <td>
+                    Not null
+                </td>
+                <td>
+                    The ANTLR grammar files of this source set. Contains all <code class="filename">.g</code> found in the ANTLR
+                    source directories, and excludes all other types of files.
+                </td>
+            </tr><tr>
+                <td>
+                    <code class="literal">antlr.srcDirs</code>
+                </td>
+                <td>
+                    <code class="classname">Set&lt;File&gt;</code>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">Section&nbsp;16.5, &ldquo;Specifying a set of input files&rdquo;</a>.
+                </td>
+                <td>
+                    <code class="literal">[<em class="replaceable"><code>projectDir</code></em>/src/<em class="replaceable"><code>name</code></em>/antlr]</code>
+                </td>
+                <td>
+                    The source directories containing the ANTLR grammar files of this source set.
+                </td>
+            </tr></table></div></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="idea_plugin.html" title="Chapter&nbsp;39.&nbsp;The IDEA Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="project_reports_plugin.html" title="Chapter&nbsp;41.&nbsp;The Project Report Plugin">Next</a></div></div></div></body></html>

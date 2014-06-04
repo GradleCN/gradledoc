@@ -621,12 +621,16 @@ Hello Jupiter</pre>
 				<div>
 					<div>
 						<h2 class="title">
-							<a name="sec:shortcut_notations"></a>6.8.&nbsp;Shortcut notations
+							<a name="sec:shortcut_notations"></a>6.8.&nbsp;短标记法
 						</h2>
+						<h4 class="title">
+                            <a name="sec:shortcut_notations"></a>6.8.&nbsp;Shortcut notations
+                        </h4>
 					</div>
 				</div>
 			</div>
 			<p>
+			         你早就注意到了吧，没错，每个任务都是一个脚本的属性，你可以访问它:<br>
 				As you might have noticed in the previous examples, there is a
 				convenient notation for accessing an <span class="emphasis"><em>existing</em></span>
 				task. Each task is available as a property of the build script:
@@ -634,7 +638,9 @@ Hello Jupiter</pre>
 			<div class="example">
 				<a name="helloWithShortCut"></a>
 				<p class="title">
-					<b>Example&nbsp;6.11.&nbsp;Accessing task as a property of the
+					<b>
+					例 6.11. 以属性的方式访问任务<br>
+					Example&nbsp;6.11.&nbsp;Accessing task as a property of the
 						build script</b>
 				</p>
 				<div class="example-contents">
@@ -647,7 +653,8 @@ Hello Jupiter</pre>
 hello.doLast {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Greetings from the $hello.name task."</span>
 }</pre>
-					<p>
+					<p> <strong class="userinput"><code>gradle
+                                -q hello</code></strong>的输出结果<br>
 						Output of <strong class="userinput"><code>gradle
 								-q hello</code></strong>
 					</p>
@@ -658,6 +665,7 @@ Greetings from the hello task.</pre>
 			</div>
 			<br class="example-break">
 			<p>
+			         对于插件提供的内置任务。这尤其方便(例如:complie)<br>
 				This enables very readable code, especially when using the out of
 				the box tasks provided by the plugins (e.g.
 				<code class="literal">compile</code>
@@ -672,10 +680,15 @@ Greetings from the hello task.</pre>
 							<a name="sec:extra_task_properties"></a>6.9.&nbsp;Extra task
 							properties
 						</h2>
+						<h4 class="title">
+                            <a name="sec:extra_task_properties"></a>6.9.&nbsp;增加自定义属性
+                        </h4>
 					</div>
 				</div>
 			</div>
 			<p>
+			    你可以为一个任务添加额外的属性.例如,新增一个叫做<code class="literal">myProperty</code>的属性,用<code class="literal">ext.myProperty</code>
+			    的方式给他一个初始值.这样便增加了一个自定义属性.<br>
 				You can add your own properties to a task. To add a property named
 				<code class="literal">myProperty</code>
 				, set
@@ -686,7 +699,9 @@ Greetings from the hello task.</pre>
 			<div class="example">
 				<a name="extraTaskProperties"></a>
 				<p class="title">
-					<b>Example&nbsp;6.12.&nbsp;Adding extra properties to a task</b>
+					<b>
+				           例 6.12. 为任务增加自定义属性<br>
+					Example&nbsp;6.12.&nbsp;Adding extra properties to a task</b>
 				</p>
 				<div class="example-contents">
 					<p>
@@ -701,6 +716,8 @@ task printTaskProperties &lt;&lt; {
     println myTask.myProperty
 }</pre>
 					<p>
+					<strong class="userinput"><code>gradle
+                                -q printTaskProperties</code></strong>的输出结果<br>
 						Output of <strong class="userinput"><code>gradle
 								-q printTaskProperties</code></strong>
 					</p>
@@ -708,7 +725,11 @@ task printTaskProperties &lt;&lt; {
 myValue</pre>
 				</div>
 			</div>
-			<br class="example-break"> Extra properties aren't limited to
+			<br class="example-break"> 
+			自定义属性不仅仅局限于任务上,还可以做更多事情.你可以阅读<a class="xref"
+                href="../writing_build_scripts.html#sec:extra_properties">章节&nbsp;13.4.2,
+                &ldquo;自定义属性&rdquo;</a>来了解更多内容.<br>
+			Extra properties aren't limited to
 			tasks. You can read more about them in <a class="xref"
 				href="../writing_build_scripts.html#sec:extra_properties">Section&nbsp;13.4.2,
 				&ldquo;Extra properties&rdquo;</a>.

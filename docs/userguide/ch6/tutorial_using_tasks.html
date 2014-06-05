@@ -245,12 +245,12 @@ Hello world!</pre>
 				<div>
 					<div>
 						<h2 class="title">
-                            <a name="N10222"></a>6.3.&nbsp;快速定义任务
-                        </h2>
+							<a name="N10222"></a>6.3.&nbsp;快速定义任务
+						</h2>
 						<h4 class="title">
 							<a name="N10222"></a>6.3.&nbsp;A shortcut task definition
 						</h4>
-						
+
 					</div>
 				</div>
 			</div>
@@ -402,14 +402,14 @@ I'm Gradle</pre>
 			</div>
 			<br class="example-break">
 			<p>
-			添加依赖task也可以不必首先声明被依赖的task.<br>
-			To add a dependency, the corresponding task does not need to
-				exist.</p>
+				添加依赖task也可以不必首先声明被依赖的task.<br> To add a dependency, the
+				corresponding task does not need to exist.
+			</p>
 			<div class="example">
 				<a name="lazyDependsOn"></a>
 				<p class="title">
-					<b>Example&nbsp;6.7.&nbsp;延迟依赖 .Lazy dependsOn - the other task does
-						not exist (yet)</b>
+					<b>Example&nbsp;6.7.&nbsp;延迟依赖 .Lazy dependsOn - the other task
+						does not exist (yet)</b>
 				</p>
 				<div class="example-contents">
 					<p>
@@ -433,12 +433,13 @@ taskX</pre>
 			</div>
 			<br class="example-break">
 			<p>
-			     可以看到,<code class="literal">taskX</code>是
-			     在<code class="literal">taskY</code>之前定义的,这在多项目构建中非常有用
-			     关于任务依赖的更多信息可以查看<a class="xref"
-                    href="../more_about_tasks.html#sec:adding_dependencies_to_tasks">章节&nbsp;15.4,
-                    &ldquo;给任务添加依赖&rdquo;</a>..<br>
-				The dependency of
+				可以看到,
+				<code class="literal">taskX</code>
+				是 在
+				<code class="literal">taskY</code>
+				之前定义的,这在多项目构建中非常有用 关于任务依赖的更多信息可以查看<a class="xref"
+					href="../more_about_tasks.html#sec:adding_dependencies_to_tasks">章节&nbsp;15.4,
+					&ldquo;给任务添加依赖&rdquo;</a>..<br> The dependency of
 				<code class="literal">taskX</code>
 				to
 				<code class="literal">taskY</code>
@@ -450,12 +451,10 @@ taskX</pre>
 					&ldquo;Adding dependencies to a task&rdquo;</a>.
 			</p>
 			<p>
-			    注意:当引用的任务尚未定义的时候不可使用短标记法(see <a
-                    class="xref"
-                    href="../tutorial_using_tasks.html#sec:shortcut_notations">章节&nbsp;6.8,
-                    &ldquo;短标记法&rdquo;</a>) 来运行任务.<br>
-				Please notice that you can't use shortcut notation (see <a
-					class="xref"
+				注意:当引用的任务尚未定义的时候不可使用短标记法(see <a class="xref"
+					href="../tutorial_using_tasks.html#sec:shortcut_notations">章节&nbsp;6.8,
+					&ldquo;短标记法&rdquo;</a>) 来运行任务.<br> Please notice that you can't
+				use shortcut notation (see <a class="xref"
 					href="../tutorial_using_tasks.html#sec:shortcut_notations">Section&nbsp;6.8,
 					&ldquo;Shortcut notations&rdquo;</a>) when referring to a task that is
 				not yet defined.
@@ -465,26 +464,26 @@ taskX</pre>
 			<div class="titlepage">
 				<div>
 					<div>
-				        <h2 class="title">
-                            <a name="N1029B"></a>6.6.&nbsp;动态任务
-                        </h2>
+						<h2 class="title">
+							<a name="N1029B"></a>6.6.&nbsp;动态任务
+						</h2>
 						<h4 class="title">
 							<a name="N1029B"></a>6.6.&nbsp;Dynamic tasks
-					   </h4>
+						</h4>
 					</div>
 				</div>
 			</div>
 			<p>
-			借助Groovy的强大不仅可以定义简单任务还能做更多的事.例如,可以动态定义任务.<br>
-			The power of Groovy can be used for more than defining what a
-				task does. For example, you can also use it to dynamically create
-				tasks.</p>
+				借助Groovy的强大不仅可以定义简单任务还能做更多的事.例如,可以动态定义任务.<br> The power of
+				Groovy can be used for more than defining what a task does. For
+				example, you can also use it to dynamically create tasks.
+			</p>
 			<div class="example">
 				<a name="dynamic"></a>
 				<p class="title">
-					<b>
-					例 6.8. 创建动态任务<br>
-					Example&nbsp;6.8.&nbsp;Dynamic creation of a task</b>
+					<b> 例 6.8. 创建动态任务<br> Example&nbsp;6.8.&nbsp;Dynamic
+						creation of a task
+					</b>
 				</p>
 				<div class="example-contents">
 					<p>
@@ -497,9 +496,8 @@ taskX</pre>
     }
 }</pre>
 					<p>
-					
-					<strong class="userinput"><code>gradle
-                                -q task1</code></strong>的输出结果.<br>
+
+						<strong class="userinput"><code>gradle -q task1</code></strong>的输出结果.<br>
 						Output of <strong class="userinput"><code>gradle
 								-q task1</code></strong>
 					</p>
@@ -517,24 +515,24 @@ I'm task number 1</pre>
 							<a name="N102B0"></a>6.7.&nbsp;任务操纵
 						</h2>
 						<h4 class="title">
-                            <a name="N102B0"></a>6.7.&nbsp;Manipulating existing tasks
-                        </h4>
+							<a name="N102B0"></a>6.7.&nbsp;Manipulating existing tasks
+						</h4>
 					</div>
 				</div>
 			</div>
 			<p>
-			    一旦任务被创建后,任务之间可以通过API进行相互访问.这也是与Ant的不同之处.比如可以增加一些依赖.<br>
-				Once tasks are created they can be accessed via an <span
-					class="emphasis"><em>API</em></span>. This is different to Ant. For
-				example you can create additional dependencies.
+				一旦任务被创建后,任务之间可以通过API进行相互访问.这也是与Ant的不同之处.比如可以增加一些依赖.<br> Once
+				tasks are created they can be accessed via an <span class="emphasis"><em>API</em></span>.
+				This is different to Ant. For example you can create additional
+				dependencies.
 			</p>
 			<div class="example">
 				<a name="dynamicDepends"></a>
 				<p class="title">
-					<b>
-					例 6.9. 通过API进行任务之间的通信 - 增加依赖<br>
-					Example&nbsp;6.9.&nbsp;Accessing a task via API - adding a
-						dependency</b>
+					<b> 例 6.9. 通过API进行任务之间的通信 - 增加依赖<br>
+						Example&nbsp;6.9.&nbsp;Accessing a task via API - adding a
+						dependency
+					</b>
 				</p>
 				<div class="example-contents">
 					<p>
@@ -548,8 +546,7 @@ I'm task number 1</pre>
 }
 task0.dependsOn task2, task3</pre>
 					<p>
-					<strong class="userinput"><code>gradle
-                                -q task0</code></strong>的输出结果.<br>
+						<strong class="userinput"><code>gradle -q task0</code></strong>的输出结果.<br>
 						Output of <strong class="userinput"><code>gradle
 								-q task0</code></strong>
 					</p>
@@ -561,15 +558,15 @@ I'm task number 0</pre>
 			</div>
 			<br class="example-break">
 			<p>
-			为已存在的任务增加行为.<br>
-			Or you can add behavior to an existing task.</p>
+				为已存在的任务增加行为.<br> Or you can add behavior to an existing task.
+			</p>
 			<div class="example">
 				<a name="helloEnhanced"></a>
 				<p class="title">
-					<b>
-					例 6.10. 通过API进行任务之间的通信 - 增加任务行为<br>
-					Example&nbsp;6.10.&nbsp;Accessing a task via API - adding
-						behaviour</b>
+					<b> 例 6.10. 通过API进行任务之间的通信 - 增加任务行为<br>
+						Example&nbsp;6.10.&nbsp;Accessing a task via API - adding
+						behaviour
+					</b>
 				</p>
 				<div class="example-contents">
 					<p>
@@ -600,10 +597,14 @@ Hello Jupiter</pre>
 			</div>
 			<br class="example-break">
 			<p>
-			    <code class="literal">doFirst</code>和<code class="literal">doLast</code>可以进行多次调用.
-			    他们分别被添加在任务的开头和结尾.当任务开始执行时这些动作会按照既定顺序进行.其中<code class="literal">&lt;&lt;</code>操作符
-			    是<code class="literal">doLast</code>的简写方式.<br>
-				The calls
+				<code class="literal">doFirst</code>
+				和
+				<code class="literal">doLast</code>
+				可以进行多次调用. 他们分别被添加在任务的开头和结尾.当任务开始执行时这些动作会按照既定顺序进行.其中
+				<code class="literal">&lt;&lt;</code>
+				操作符 是
+				<code class="literal">doLast</code>
+				的简写方式.<br> The calls
 				<code class="literal">doFirst</code>
 				and
 				<code class="literal">doLast</code>
@@ -624,24 +625,24 @@ Hello Jupiter</pre>
 							<a name="sec:shortcut_notations"></a>6.8.&nbsp;短标记法
 						</h2>
 						<h4 class="title">
-                            <a name="sec:shortcut_notations"></a>6.8.&nbsp;Shortcut notations
-                        </h4>
+							<a name="sec:shortcut_notations"></a>6.8.&nbsp;Shortcut notations
+						</h4>
 					</div>
 				</div>
 			</div>
 			<p>
-			         你早就注意到了吧，没错，每个任务都是一个脚本的属性，你可以访问它:<br>
-				As you might have noticed in the previous examples, there is a
-				convenient notation for accessing an <span class="emphasis"><em>existing</em></span>
-				task. Each task is available as a property of the build script:
+				你早就注意到了吧，没错，每个任务都是一个脚本的属性，你可以访问它:<br> As you might have noticed
+				in the previous examples, there is a convenient notation for
+				accessing an <span class="emphasis"><em>existing</em></span> task.
+				Each task is available as a property of the build script:
 			</p>
 			<div class="example">
 				<a name="helloWithShortCut"></a>
 				<p class="title">
-					<b>
-					例 6.11. 以属性的方式访问任务<br>
-					Example&nbsp;6.11.&nbsp;Accessing task as a property of the
-						build script</b>
+					<b> 例 6.11. 以属性的方式访问任务<br>
+						Example&nbsp;6.11.&nbsp;Accessing task as a property of the build
+						script
+					</b>
 				</p>
 				<div class="example-contents">
 					<p>
@@ -653,8 +654,8 @@ Hello Jupiter</pre>
 hello.doLast {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Greetings from the $hello.name task."</span>
 }</pre>
-					<p> <strong class="userinput"><code>gradle
-                                -q hello</code></strong>的输出结果<br>
+					<p>
+						<strong class="userinput"><code>gradle -q hello</code></strong>的输出结果<br>
 						Output of <strong class="userinput"><code>gradle
 								-q hello</code></strong>
 					</p>
@@ -665,9 +666,9 @@ Greetings from the hello task.</pre>
 			</div>
 			<br class="example-break">
 			<p>
-			         对于插件提供的内置任务。这尤其方便(例如:complie)<br>
-				This enables very readable code, especially when using the out of
-				the box tasks provided by the plugins (e.g.
+				对于插件提供的内置任务。这尤其方便(例如:complie)<br> This enables very readable
+				code, especially when using the out of the box tasks provided by the
+				plugins (e.g.
 				<code class="literal">compile</code>
 				).
 			</p>
@@ -677,19 +678,21 @@ Greetings from the hello task.</pre>
 				<div>
 					<div>
 						<h2 class="title">
-							<a name="sec:extra_task_properties"></a>6.9.&nbsp;Extra task
-							properties
+							<a name="sec:extra_task_properties"></a>6.9.&nbsp;增加自定义属性
 						</h2>
 						<h4 class="title">
-                            <a name="sec:extra_task_properties"></a>6.9.&nbsp;增加自定义属性
-                        </h4>
+							<a name="sec:extra_task_properties"></a>6.9.&nbsp;Extra task properties
+						</h4>
 					</div>
 				</div>
 			</div>
 			<p>
-			    你可以为一个任务添加额外的属性.例如,新增一个叫做<code class="literal">myProperty</code>的属性,用<code class="literal">ext.myProperty</code>
-			    的方式给他一个初始值.这样便增加了一个自定义属性.<br>
-				You can add your own properties to a task. To add a property named
+				你可以为一个任务添加额外的属性.例如,新增一个叫做
+				<code class="literal">myProperty</code>
+				的属性,用
+				<code class="literal">ext.myProperty</code>
+				的方式给他一个初始值.这样便增加了一个自定义属性.<br> You can add your own properties
+				to a task. To add a property named
 				<code class="literal">myProperty</code>
 				, set
 				<code class="literal">ext.myProperty</code>
@@ -699,9 +702,9 @@ Greetings from the hello task.</pre>
 			<div class="example">
 				<a name="extraTaskProperties"></a>
 				<p class="title">
-					<b>
-				           例 6.12. 为任务增加自定义属性<br>
-					Example&nbsp;6.12.&nbsp;Adding extra properties to a task</b>
+					<b> 例 6.12. 为任务增加自定义属性<br> Example&nbsp;6.12.&nbsp;Adding
+						extra properties to a task
+					</b>
 				</p>
 				<div class="example-contents">
 					<p>
@@ -716,21 +719,20 @@ task printTaskProperties &lt;&lt; {
     println myTask.myProperty
 }</pre>
 					<p>
-					<strong class="userinput"><code>gradle
-                                -q printTaskProperties</code></strong>的输出结果<br>
-						Output of <strong class="userinput"><code>gradle
-								-q printTaskProperties</code></strong>
+						<strong class="userinput"><code>gradle -q
+								printTaskProperties</code></strong>的输出结果<br> Output of <strong
+							class="userinput"><code>gradle -q
+								printTaskProperties</code></strong>
 					</p>
 					<pre class="screen">&gt; gradle -q printTaskProperties
 myValue</pre>
 				</div>
 			</div>
-			<br class="example-break"> 
-			自定义属性不仅仅局限于任务上,还可以做更多事情.你可以阅读<a class="xref"
-                href="../writing_build_scripts.html#sec:extra_properties">章节&nbsp;13.4.2,
-                &ldquo;自定义属性&rdquo;</a>来了解更多内容.<br>
-			Extra properties aren't limited to
-			tasks. You can read more about them in <a class="xref"
+			<br class="example-break"> 自定义属性不仅仅局限于任务上,还可以做更多事情.你可以阅读<a
+				class="xref"
+				href="../writing_build_scripts.html#sec:extra_properties">章节&nbsp;13.4.2,
+				&ldquo;自定义属性&rdquo;</a>来了解更多内容.<br> Extra properties aren't limited
+			to tasks. You can read more about them in <a class="xref"
 				href="../writing_build_scripts.html#sec:extra_properties">Section&nbsp;13.4.2,
 				&ldquo;Extra properties&rdquo;</a>.
 		</div>
@@ -739,12 +741,19 @@ myValue</pre>
 				<div>
 					<div>
 						<h2 class="title">
-							<a name="N10326"></a>6.10.&nbsp;Using Ant Tasks
+							<a name="N10326"></a>6.10.&nbsp;调用Ant任务
 						</h2>
+						<h4 class="title">
+                            <a name="N10326"></a>6.10.&nbsp;Using Ant Tasks
+                        </h4>
 					</div>
 				</div>
 			</div>
 			<p>
+			    Ant任务是Gradle中的一等公民.Gradle借助Groovy对Ant任务进行了优秀的整合.
+			    Gradle自带了一个<code class="literal">AntBuilder</code>,在Gradle中调用Ant任务比在
+			    <code class="filename">build.xml</code>中调用更加的方便和强大.
+			         通过下面的例子你可以学到如何调用一个Ant任务以及如何与Ant中的属性进行通信.<br>
 				Ant tasks are first-class citizens in Gradle. Gradle provides
 				excellent integration for Ant tasks by simply relying on Groovy.
 				Groovy is shipped with the fantastic
@@ -758,7 +767,10 @@ myValue</pre>
 			<div class="example">
 				<a name="antLoadfile"></a>
 				<p class="title">
-					<b>Example&nbsp;6.13.&nbsp;Using AntBuilder to execute
+					<b>
+					例 6.13. 利用AntBuilder执行 ant.loadfile
+					<br>
+					Example&nbsp;6.13.&nbsp;Using AntBuilder to execute
 						ant.loadfile target</b>
 				</p>
 				<div class="example-contents">
@@ -779,6 +791,9 @@ myValue</pre>
     }
 }</pre>
 					<p>
+					    <strong class="userinput"><code>gradle
+                                -q loadfile</code></strong>的输出结果
+                        <br>
 						Output of <strong class="userinput"><code>gradle
 								-q loadfile</code></strong>
 					</p>
@@ -795,6 +810,9 @@ Make the impossible possible, make the possible easy and make the easy elegant.
 			</div>
 			<br class="example-break">
 			<p>
+			         在你脚本里还可以利用Ant做更多的事情.想了解更多请参阅 
+			         <a class="xref" href="../ant.html">章节&nbsp;17,
+                    <i>在Gradle中调用Ant</i></a><br>
 				There is lots more you can do with Ant in your build scripts. You
 				can find out more in <a class="xref" href="../ant.html">Chapter&nbsp;17,
 					<i>Using Ant from Gradle</i>
@@ -806,18 +824,26 @@ Make the impossible possible, make the possible easy and make the easy elegant.
 				<div>
 					<div>
 						<h2 class="title">
-							<a name="N10346"></a>6.11.&nbsp;Using methods
+							<a name="N10346"></a>6.11.&nbsp;方法抽取
 						</h2>
+						<h4 class="title">
+                            <a name="N10346"></a>6.11.&nbsp;Using methods
+                        </h4>
 					</div>
 				</div>
 			</div>
-			<p>Gradle scales in how you can organize your build logic. The
+			<p>
+			Gradle的强大要看你如何编写脚本逻辑.针对上面的例子,首先要做的就是要抽取方法.
+			<br>
+			Gradle scales in how you can organize your build logic. The
 				first level of organizing your build logic for the example above, is
 				extracting a method.</p>
 			<div class="example">
 				<a name="antLoadfileWithMethod"></a>
 				<p class="title">
-					<b>Example&nbsp;6.14.&nbsp;Using methods to organize your build
+					<b>
+					例 6.14 利用方法组织脚本逻辑<br>
+					Example&nbsp;6.14.&nbsp;Using methods to organize your build
 						logic</b>
 				</p>
 				<div class="example-contents">
@@ -846,6 +872,8 @@ File[] fileList(String dir) {
     file(dir).listFiles({file -&gt; file.isFile() } as FileFilter).sort()
 }</pre>
 					<p>
+					<strong class="userinput"><code>gradle
+                                -q loadfile</code></strong>的输出结果<br>
 						Output of <strong class="userinput"><code>gradle
 								-q loadfile</code></strong>
 					</p>
@@ -856,6 +884,11 @@ I'm fond of gradle.manifesto.txt</pre>
 			</div>
 			<br class="example-break">
 			<p>
+			    在后面的章节你会看到类似出去出来的方法可以在多项目构建中的子项目中调用.
+			    无论构建逻辑多复杂,Gradle都可以提供给你一种简便的方式来组织它们.想了解更多请参阅
+			     <a class="xref"
+                    href="../organizing_build_logic.html">章节&nbsp;59, <i>组织构建逻辑</i></a>.
+               <br>
 				Later you will see that such methods can be shared among subprojects
 				in multi-project builds. If your build logic becomes more complex,
 				Gradle offers you other very convenient ways to organize it. We have
@@ -869,17 +902,25 @@ I'm fond of gradle.manifesto.txt</pre>
 				<div>
 					<div>
 						<h2 class="title">
-							<a name="sec:default_tasks"></a>6.12.&nbsp;Default tasks
+							<a name="sec:default_tasks"></a>6.12.&nbsp;定义默认任务
 						</h2>
+						<h4 class="title">
+                            <a name="sec:default_tasks"></a>6.12.&nbsp;Default tasks
+                        </h4>
 					</div>
 				</div>
 			</div>
-			<p>Gradle allows you to define one or more default tasks for your
+			<p>
+			Gradle允许在脚本中定义多个默认任务.
+			<br>
+			Gradle allows you to define one or more default tasks for your
 				build.</p>
 			<div class="example">
 				<a name="defaultTasks"></a>
 				<p class="title">
-					<b>Example&nbsp;6.15.&nbsp;Defining a default tasks</b>
+					<b>
+					例 6.15. 定义默认任务<br>
+					Example&nbsp;6.15.&nbsp;Defining a default tasks</b>
 				</p>
 				<div class="example-contents">
 					<p>
@@ -901,6 +942,8 @@ task other &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"I'm not a default task!"</span>
 }</pre>
 					<p>
+					 <strong class="userinput"><code>gradle
+                                -q</code></strong>的输出结果.<br>
 						Output of <strong class="userinput"><code>gradle
 								-q</code></strong>
 					</p>
@@ -911,6 +954,10 @@ Default Running!</pre>
 			</div>
 			<br class="example-break">
 			<p>
+			
+			    这与直接调用<strong class="userinput"><code>gradle clean run</code></strong>效果是一样的.
+			    在多项目构建中,每个子项目都可以指定单独的默认任务.如果子项目未进行指定将会调用父项目指定的的默认任务.
+			  <br> 
 				This is equivalent to running <strong class="userinput"><code>gradle
 						clean run</code></strong>. In a multi-project build every subproject can have its
 				own specific default tasks. If a subproject does not specify default

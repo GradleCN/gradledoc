@@ -969,13 +969,17 @@ Default Running!</pre>
 			<div class="titlepage">
 				<div>
 					<div>
-						<h2 class="title">
-							<a name="configure-by-dag"></a>6.13.&nbsp;Configure by DAG
-						</h2>
+					    <h2 class="title">
+                            <a name="configure-by-dag"></a>6.13.&nbsp; Configure by DAG
+                        </h2>
 					</div>
 				</div>
 			</div>
 			<p>
+			   稍后会对Gradle的配置阶段和运行阶段进行详细说明 (详见 <a class="xref"
+                    href="../build_lifecycle.html">章节&nbsp;55, <i>构建的生命周期</i></a> )配置阶段后,Gradle会了解所有要执行的任务
+                    Gradle提供了一个钩子来捕获这些信息.一个例子就是可以检查已经执行的任务中有没有被释放.借由此,你可以为一些变量赋予不同的值.
+                    <br>
 				As we later describe in full detail (see <a class="xref"
 					href="../build_lifecycle.html">Chapter&nbsp;55, <i>The
 						Build Lifecycle</i></a>), Gradle has a configuration phase and an
@@ -986,6 +990,8 @@ Default Running!</pre>
 				you can assign different values to some variables.
 			</p>
 			<p>
+			    在下面的例子中,为<code class="literal">distribution</code>和<code class="literal">release</code>任务赋予了不同的
+			  <code class="literal">version</code>值.<br>
 				In the following example, execution of the
 				<code class="literal">distribution</code>
 				and
@@ -997,7 +1003,9 @@ Default Running!</pre>
 			<div class="example">
 				<a name="configByDagNoRelease"></a>
 				<p class="title">
-					<b>Example&nbsp;6.16.&nbsp;Different outcomes of build
+					<b>
+					例 6.16. 依赖任务的不同输出<br>
+					Example&nbsp;6.16.&nbsp;Different outcomes of build
 						depending on chosen tasks</b>
 				</p>
 				<div class="example-contents">
@@ -1023,12 +1031,16 @@ gradle.taskGraph.whenReady {taskGraph -&gt;
     }
 }</pre>
 					<p>
+					 <strong class="userinput"><code>gradle
+                                -q distribution</code></strong>的输出结果<br>
 						Output of <strong class="userinput"><code>gradle
 								-q distribution</code></strong>
 					</p>
 					<pre class="screen">&gt; gradle -q distribution
 We build the zip with version=1.0-SNAPSHOT</pre>
 					<p>
+					<strong class="userinput"><code>gradle
+                                -q release</code></strong>的输出结果<br>
 						Output of <strong class="userinput"><code>gradle
 								-q release</code></strong>
 					</p>
@@ -1039,6 +1051,8 @@ We release now</pre>
 			</div>
 			<br class="example-break">
 			<p>
+			<code class="literal">whenReady</code>会在已发布的任务<span class="emphasis"><em>之前</em></span>影响到已发布任务的执行.
+			    即使已发布的任务不是 <span class="emphasis"><em>主要</em></span>任务(也就是说,即使这个任务不是通过命令行直接调用)<br>
 				The important thing is that
 				<code class="literal">whenReady</code>
 				affects the release task <span class="emphasis"><em>before</em></span>
@@ -1053,12 +1067,17 @@ We release now</pre>
 				<div>
 					<div>
 						<h2 class="title">
-							<a name="N103B3"></a>6.14.&nbsp;Where to next?
+							<a name="N103B3"></a>6.14.&nbsp;下一步目标
 						</h2>
+						<h4 class="title">
+                            <a name="N103B3"></a>6.14.&nbsp;Where to next?
+                        </h4>
 					</div>
 				</div>
 			</div>
 			<p>
+                                           在本章中,我们了解了什么是task,但这还不够详细.欲知更多请参阅
+                <a class="xref" href="../more_about_tasks.html">章节&nbsp;15, <i>任务</i></a><br>
 				In this chapter, we have had a first look at tasks. But this is not
 				the end of the story for tasks. If you want to jump into more of the
 				details, have a look at <a class="xref"
@@ -1067,6 +1086,10 @@ We release now</pre>
 				</a>.
 			</p>
 			<p>
+			    另外,可以目录继续学习
+			  <a class="xref" href="../tutorial_java_projects.html">第七章&nbsp;, <i>Java
+                                        快速入门</i></a> 和 <a class="xref"
+                    href="../artifact_dependencies_tutorial.html">第八章&nbsp;, <i>依赖管理基础</i></a>.<br>
 				Otherwise, continue on to the tutorials in <a class="xref"
 					href="../tutorial_java_projects.html">Chapter&nbsp;7, <i>Java
 						Quickstart</i></a> and <a class="xref"
@@ -1080,6 +1103,10 @@ We release now</pre>
 			<div class="footnote">
 				<p>
 					<sup>[<a href="#N101CA" name="ftn.N101CA" class="para">2</a>]
+					附录中有命令可以更改这种默认行为. 请参阅 <a
+                        class="xref" href="../gradle_command_line.html">附录&nbsp;D,
+                        <i>Gradle 命令行</i>
+                        <br>
 					</sup>There are command line switches to change this behavior. See <a
 						class="xref" href="../gradle_command_line.html">Appendix&nbsp;D,
 						<i>Gradle Command Line</i>
@@ -1093,12 +1120,12 @@ We release now</pre>
 			<div class="navbar">
 				<a xmlns:xslthl="http://xslthl.sf.net"
 					href="../troubleshooting.html"
-					title="Chapter&nbsp;5.&nbsp;Troubleshooting">Previous</a><span>|</span><a
+					title="章节&nbsp;5.&nbsp;问题反馈">上一页</a><span>|</span><a
 					xmlns:xslthl="http://xslthl.sf.net" href="../userguide.html"
-					title="Gradle User Guide">Contents</a><span>|</span><a
+					title="Gradle User Guide">返回目录</a><span>|</span><a
 					xmlns:xslthl="http://xslthl.sf.net"
 					href="../tutorial_java_projects.html"
-					title="Chapter&nbsp;7.&nbsp;Java Quickstart">Next</a>
+					title="章节&nbsp;7.&nbsp;Java Quickstart">下一页</a>
 			</div>
 		</div>
 	</div>

@@ -290,12 +290,17 @@ dependencies {
                 <div>
                     <div>
                         <h2 class="title">
-                            <a name="N105C6"></a>8.4.&nbsp;External dependencies
+                            <a name="N105C6"></a>8.4.&nbsp;外部依赖
                         </h2>
+                         <h4 class="title">
+                            <a name="N105C6"></a>8.4.&nbsp;External dependencies
+                        </h4>
                     </div>
                 </div>
             </div>
             <p>
+                                          依赖的类型有很多种,其中有一种类型称之为<em class="firstterm">外部依赖</em>.
+                                          这种依赖由外部构建或者在不同的仓库中,例如Maven中央仓库或Ivy仓库中抑或是本地文件系统的某个目录中.<br>
                 There are various types of dependencies that you can declare. One
                 such type is an <em class="firstterm">external dependency</em>. This
                 a dependency on some files built outside the current build, and
@@ -303,12 +308,16 @@ dependencies {
                 corporate Maven or Ivy repository, or a directory in the local file
                 system.
             </p>
-            <p>To define an external dependency, you add it to a dependency
+            <p>
+                                定义外部依赖需要像下面这样进行依赖配置<br>
+            To define an external dependency, you add it to a dependency
                 configuration:</p>
             <div class="example">
                 <a name="externalDependencies"></a>
                 <p class="title">
-                    <b>Example&nbsp;8.2.&nbsp;Definition of an external dependency</b>
+                    <b>
+                                                    例 &nbsp;8.2.&nbsp;定义外部依赖.<br>
+                    Example&nbsp;8.2.&nbsp;Definition of an external dependency</b>
                 </p>
                 <div class="example-contents">
                     <p>
@@ -324,6 +333,8 @@ dependencies {
             </div>
             <br class="example-break">
             <p>
+                                           外部依赖包含 <code class="literal">group</code>,<code class="literal">name</code>和<code class="literal">version</code>几个属性.
+                                           根据选取仓库的不同,   <code class="literal">group</code>和<code class="literal">version</code>也可能是可选的.<br>
                 An external dependency is identified using
                 <code class="literal">group</code>
                 ,
@@ -337,6 +348,10 @@ dependencies {
                 may be optional.
             </p>
             <p>
+                当然,也有一种更加简洁的方式来声明外部依赖. 采用 : 将三个属性拼接在一起即可.<code class="literal">
+                    "<em class="replaceable"><code>group</code></em>:<em
+                        class="replaceable"><code>name</code></em>:<em class="replaceable"><code>version</code></em>"
+                </code><br>
                 There is a shortcut form for declaring external dependencies, which
                 uses a string of the form
                 <code class="literal">
@@ -348,7 +363,9 @@ dependencies {
             <div class="example">
                 <a name="externalDependencies"></a>
                 <p class="title">
-                    <b>Example&nbsp;8.3.&nbsp;Shortcut definition of an external
+                    <b>
+                                                    例&nbsp;8.3.&nbsp;快速定义外部依赖<br>
+                    Example&nbsp;8.3.&nbsp;Shortcut definition of an external
                         dependency</b>
                 </p>
                 <div class="example-contents">
@@ -362,6 +379,10 @@ dependencies {
             </div>
             <br class="example-break">
             <p>
+                                           更多定义依赖的方式可以参阅
+                <a class="xref" href="dependency_management.html#sec:how_to_declare_your_dependencies">章节&nbsp;50.4,
+                    &ldquo;如何声明依赖&rdquo;</a>.
+                <br>
                 To find out more about defining and working with dependencies, have
                 a look at <a class="xref"
                     href="dependency_management.html#sec:how_to_declare_your_dependencies">Section&nbsp;50.4,

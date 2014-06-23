@@ -394,12 +394,19 @@ dependencies {
                 <div>
                     <div>
                         <h2 class="title">
-                            <a name="N10608"></a>8.5.&nbsp;Repositories
+                            <a name="N10608"></a>8.5.&nbsp;仓库
                         </h2>
+                         <h4 class="title">
+                            <a name="N10608"></a>8.5.&nbsp;Repositories
+                        </h4>
                     </div>
                 </div>
             </div>
             <p>
+                Gradle是在一个被称之为<em class="firstterm">仓库</em>的地方找寻所需的外部依赖.
+                                            仓库即是一个按   <code class="literal">group</code>,<code class="literal">name</code>和<code class="literal">version</code>
+                                            规则进行存储的一些文件.Gradle可以支持不同的仓库存储格式,如Maven和Ivy,并且还提供多种与仓库进行通信的方式,如通过本地文件系统或HTTP.
+                 <br>
                 How does Gradle find the files for external dependencies? Gradle
                 looks for them in a <em class="firstterm">repository</em>. A
                 repository is really just a collection of files, organized by
@@ -412,13 +419,17 @@ dependencies {
                 Maven and Ivy, and several different ways of accessing the
                 repository, such as using the local file system or HTTP.
             </p>
-            <p>By default, Gradle does not define any repositories. You need
+            <p>
+            默认情况下,Gradle没有定义任何仓库,你需要在使用外部依赖之前至少定义一个仓库,例如Maven中央仓库. <br>
+            By default, Gradle does not define any repositories. You need
                 to define at least one before you can use external dependencies. One
                 option is use the Maven central repository:</p>
             <div class="example">
                 <a name="defineMavenCentral"></a>
                 <p class="title">
-                    <b>Example&nbsp;8.4.&nbsp;Usage of Maven central repository</b>
+                    <b>
+                    例&nbsp;8.4.&nbsp;使用Maven中央仓库<br>
+                    Example&nbsp;8.4.&nbsp;Usage of Maven central repository</b>
                 </p>
                 <div class="example-contents">
                     <p>
@@ -430,11 +441,15 @@ dependencies {
                 </div>
             </div>
             <br class="example-break">
-            <p>Or a remote Maven repository:</p>
+            <p>
+            或者其它远程Maven仓库:<br>
+            Or a remote Maven repository:</p>
             <div class="example">
                 <a name="defineRemoteMavenRepo"></a>
                 <p class="title">
-                    <b>Example&nbsp;8.5.&nbsp;Usage of a remote Maven repository</b>
+                    <b>
+                    例&nbsp;8.5.&nbsp;使用Maven远程仓库<br>
+                    Example&nbsp;8.5.&nbsp;Usage of a remote Maven repository</b>
                 </p>
                 <div class="example-contents">
                     <p>
@@ -448,11 +463,15 @@ dependencies {
                 </div>
             </div>
             <br class="example-break">
-            <p>Or a remote Ivy repository:</p>
+            <p>
+            或者采用Ivy远程仓库<br>
+            Or a remote Ivy repository:</p>
             <div class="example">
                 <a name="defineRemoteIvyRepo"></a>
                 <p class="title">
-                    <b>Example&nbsp;8.6.&nbsp;Usage of a remote Ivy directory</b>
+                    <b>
+                                                    例&nbsp;8.6.&nbsp;采用Ivy远程仓库<br>
+                    Example&nbsp;8.6.&nbsp;Usage of a remote Ivy directory</b>
                 </p>
                 <div class="example-contents">
                     <p>
@@ -466,12 +485,16 @@ dependencies {
                 </div>
             </div>
             <br class="example-break">
-            <p>You can also have repositories on the local file system. This
+            <p>
+                                或者在指定本地文件系统构建的库<br>
+            You can also have repositories on the local file system. This
                 works for both Maven and Ivy repositories.</p>
             <div class="example">
                 <a name="defineRemoteIvyRepo"></a>
                 <p class="title">
-                    <b>Example&nbsp;8.7.&nbsp;Usage of a local Ivy directory</b>
+                    <b>
+                                                    例&nbsp;8.7.&nbsp;采用本地Ivy目录<br>
+                    Example&nbsp;8.7.&nbsp;Usage of a local Ivy directory</b>
                 </p>
                 <div class="example-contents">
                     <p>
@@ -486,11 +509,16 @@ dependencies {
                 </div>
             </div>
             <br class="example-break">
-            <p>A project can have multiple repositories. Gradle will look for
+            <p>
+                                  一个项目可以采用多个库.Gradle会按照顺序从各个库里寻找所需的依赖文件,并且一旦找到第一个便停止搜索.<br>
+            A project can have multiple repositories. Gradle will look for
                 a dependency in each repository in the order they are specified,
                 stopping at the first repository that contains the requested module.
             </p>
             <p>
+                了解更多库相关的信息请参阅<a class="xref"
+                    href="dependency_management.html#sec:repositories">章节&nbsp;50.6,
+                    &ldquo;仓库&rdquo;</a>.<br>
                 To find out more about defining and working with repositories, have
                 a look at <a class="xref"
                     href="dependency_management.html#sec:repositories">Section&nbsp;50.6,

@@ -530,18 +530,26 @@ dependencies {
                 <div>
                     <div>
                         <h2 class="title">
-                            <a name="N10650"></a>8.6.&nbsp;Publishing artifacts
+                            <a name="N10650"></a>8.6.&nbsp;打包发布
                         </h2>
+                         <h4 class="title">
+                            <a name="N10650"></a>8.6.&nbsp;Publishing artifacts
+                        </h4>
                     </div>
                 </div>
             </div>
             <p>
+                依赖配置也被用于发布文件<sup>[<a
+                    href="#ftn.N10655" name="N10655" class="footnote">3</a>]</sup>
+                    我们称之为<em class="firstterm">打包发布</em>,或<em class="firstterm">发布</em><br>
                 Dependency configurations are also used to publish files.<sup>[<a
                     href="#ftn.N10655" name="N10655" class="footnote">3</a>]
                 </sup> We call these files <em class="firstterm">publication
                     artifacts</em>, or usually just <em class="firstterm">artifacts</em>.
             </p>
             <p>
+            插件对于打包提供了完美的支持,所以通常而言无需特别告诉Gradle需要做什么.但是你需要告诉Gradle发布到哪里.
+            这就需要在   <code class="literal">uploadArchives</code> 任务中添加一个仓库.下面的例子是如何发布到远程Ivy仓库的:<br>
                 The plugins do a pretty good job of defining the artifacts of a
                 project, so you usually don't need to do anything special to tell
                 Gradle what needs to be published. However, you do need to tell
@@ -553,7 +561,9 @@ dependencies {
             <div class="example">
                 <a name="publishIvyRepository"></a>
                 <p class="title">
-                    <b>Example&nbsp;8.8.&nbsp;Publishing to an Ivy repository</b>
+                    <b>
+                                                    例&nbsp;8.8.&nbsp;发布到Ivy仓库.<br>
+                    Example&nbsp;8.8.&nbsp;Publishing to an Ivy repository</b>
                 </p>
                 <div class="example-contents">
                     <p>
@@ -577,6 +587,8 @@ dependencies {
             </div>
             <br class="example-break">
             <p>
+                                执行<strong class="userinput"><code>gradleuploadArchives</code></strong>,
+                                Gradle便会构建并上传你的jar包,同时会生成一个 <code class="filename">ivy.xml</code>一起上传到目标仓库.<br> 
                 Now, when you run <strong class="userinput"><code>gradle
                         uploadArchives</code></strong>, Gradle will build and upload your Jar. Gradle will
                 also generate and upload an
@@ -584,6 +596,9 @@ dependencies {
                 as well.
             </p>
             <p>
+                当然你也可以发布到Maven仓库中.语法只需稍微一换就可以了.<sup>[<a href="#ftn.N10678" name="N10678"
+                    class="footnote">4</a>]</sup><br>
+                    p.s:发布到Maven仓库你需要Maven插件的支持,当然,Gradle也会同时产生 <code class="filename">pom.xml</code>一起上传到目标仓库.<br>
                 You can also publish to Maven repositories. The syntax is slightly
                 different.<sup>[<a href="#ftn.N10678" name="N10678"
                     class="footnote">4</a>]
@@ -596,7 +611,9 @@ dependencies {
             <div class="example">
                 <a name="publishMavenRepository"></a>
                 <p class="title">
-                    <b>Example&nbsp;8.9.&nbsp;Publishing to a Maven repository</b>
+                    <b>
+                                                    例&nbsp;8.9.&nbsp;发布到Maven仓库<br>
+                    Example&nbsp;8.9.&nbsp;Publishing to a Maven repository</b>
                 </p>
                 <div class="example-contents">
                     <p>
@@ -617,6 +634,9 @@ uploadArchives {
             </div>
             <br class="example-break">
             <p>
+                了解更多有关发布的内容,请参阅<a class="xref"
+                    href="artifact_management.html">第&nbsp;51&nbsp;章, <i>内容发布
+                        artifacts</i></a>.<br>
                 To find out more about publication, have a look at <a class="xref"
                     href="artifact_management.html">Chapter&nbsp;51, <i>Publishing
                         artifacts</i></a>.
@@ -627,12 +647,20 @@ uploadArchives {
                 <div>
                     <div>
                         <h2 class="title">
-                            <a name="N1068E"></a>8.7.&nbsp;Where to next?
+                            <a name="N1068E"></a>8.7.&nbsp;下一步目标
                         </h2>
+                         <h4 class="title">
+                            <a name="N1068E"></a>8.7.&nbsp;Where to next?
+                        </h4>
                     </div>
                 </div>
             </div>
             <p>
+                了解更多有关依赖的问题,请参阅<a class="xref"
+                    href="dependency_management.html">第&nbsp;50&nbsp;章, <i>依赖管理</i></a>,
+                     了解更多有关发布的内容,请参阅<a class="xref"
+                    href="artifact_management.html">第&nbsp;51&nbsp;章, <i>内容发布
+                        artifacts</i></a>.<br>
                 For all the details of dependency resolution, see <a class="xref"
                     href="dependency_management.html">Chapter&nbsp;50, <i>Dependency
                         Management</i></a>, and for artifact publication see <a class="xref"
@@ -640,6 +668,15 @@ uploadArchives {
                         artifacts</i></a>.
             </p>
             <p>
+            若对DSL感兴趣 ,请看<a class="ulink"
+                    href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:configurations(groovy.lang.Closure)"
+                    target="_top"><code class="classname">Project.configurations{}</code></a>,
+                <a class="ulink"
+                    href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:repositories(groovy.lang.Closure)"
+                    target="_top"><code class="classname">Project.repositories{}</code></a>
+                and <a class="ulink"
+                    href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:dependencies(groovy.lang.Closure)"
+                    target="_top"><code class="classname">Project.dependencies{}</code></a>.<br>
                 If you are interested in the DSL elements mentioned here, have a
                 look at <a class="ulink"
                     href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:configurations(groovy.lang.Closure)"
@@ -652,6 +689,7 @@ uploadArchives {
                     target="_top"><code class="classname">Project.dependencies{}</code></a>.
             </p>
             <p>
+                另外,继续顺着手册学习其它章节内容吧.~<br>
                 Otherwise, continue on to some of the other <a class="link"
                     href="tutorials.html">tutorials</a>.
             </p>
@@ -661,6 +699,8 @@ uploadArchives {
             <hr align="left" width="100">
             <div class="footnote">
                 <p>
+                <sup>[<a href="#N10655" name="ftn.N10655" class="para">3</a>]
+                    </sup>这让人感觉有点囧,我们正在尝试逐步分离两种概念.<br>
                     <sup>[<a href="#N10655" name="ftn.N10655" class="para">3</a>]
                     </sup>We think this is confusing, and we are gradually teasing apart the
                     two concepts in the Gradle DSL.
@@ -668,6 +708,8 @@ uploadArchives {
             </div>
             <div class="footnote">
                 <p>
+                 <sup>[<a href="#N10678" name="ftn.N10678" class="para">4</a>]
+                    </sup>我们也在努力改进语法让发布到Maven仓库不那么费劲.<br>
                     <sup>[<a href="#N10678" name="ftn.N10678" class="para">4</a>]
                     </sup>We are working to make the syntax consistent for resolving from and
                     publishing to Maven repositories.

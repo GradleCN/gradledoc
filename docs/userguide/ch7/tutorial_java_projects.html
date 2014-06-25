@@ -108,17 +108,24 @@
 				<div>
 					<div>
 						<h2 class="title">
-							<a name="N103DA"></a>7.2.&nbsp;A basic Java project
+							<a name="N103DA"></a>7.2.&nbsp;一个基本Java项目
 						</h2>
+						<h4 class="title">
+                            <a name="N103DA"></a>7.2.&nbsp;A basic Java project
+                        </h4>
 					</div>
 				</div>
 			</div>
-			<p>Let's look at a simple example. To use the Java plugin, add
+			<p>
+			来看一下下面这个小例子,想用Java插件,只需增加如下代码到你的脚本里.<br>
+			Let's look at a simple example. To use the Java plugin, add
 				the following to your build file:</p>
 			<div class="example">
 				<a name="javaQuickstart"></a>
 				<p class="title">
-					<b>Example&nbsp;7.1.&nbsp;Using the Java plugin</b>
+					<b>
+					例&nbsp;7.1.&nbsp;采用Java插件<br>
+					Example&nbsp;7.1.&nbsp;Using the Java plugin</b>
 				</p>
 				<div class="example-contents">
 					<p>
@@ -129,6 +136,8 @@
 					</pre>
 					<div class="exampleLocation">
 						<p>
+						<span class="emphasis"><em>备注:</em></span>示例代码可以在Gralde发行包中的
+						<code class="filename">samples/java/quickstart</code>下找到.<br>
 							<span class="emphasis"><em>Note:</em></span> The code for this
 							example can be found at
 							<code class="filename">samples/java/quickstart</code>
@@ -138,18 +147,33 @@
 				</div>
 			</div>
 			<br class="example-break">
-			<p>This is all you need to define a Java project. This will apply
+			<p>
+			定义一个Java项目只需如此而已.这将会为你添加Java插件及其一些内置任务.<br>
+			This is all you need to define a Java project. This will apply
 				the Java plugin to your project, which adds a number of tasks to
 				your project.</p>
 			<div class="tip">
-				<h3 class="title">What tasks are available?</h3>
+                <h3 class="title">添加了哪些任务?</h3>
+				<h5 class="title">What tasks are available?</h5>
 				<p>
+				    你可以运行<strong class="userinput"><code>gradle tasks</code></strong>列出任务列表.这样便可以看到Java插件为你添加了哪些任务<br>
 					You can use <strong class="userinput"><code>gradle
 							tasks</code></strong> to list the tasks of a project. This will let you see the
 					tasks that the Java plugin has added to your project.
 				</p>
 			</div>
 			<p>
+			 <div class="exampleLocation">标准目录结构如下:<br>
+			  project<br>
+			  &nbsp;&nbsp;&nbsp;&nbsp;+build<br>
+		      &nbsp;&nbsp;&nbsp;&nbsp;+src/main/java<br>
+		      &nbsp;&nbsp;&nbsp;&nbsp;+src/main/resources<br>
+		      &nbsp;&nbsp;&nbsp;&nbsp;+src/test/java<br>
+		      &nbsp;&nbsp;&nbsp;&nbsp;+src/test/resources<br>
+			 </div>
+			  Gradle默认会从<code class="filename">src/main/java</code>搜寻打包源码,在<code class="filename">src/test/java</code>下搜寻测试源码.
+			    并且<code class="filename">src/main/resources</code>下的所有文件按都会被打包,所有<code class="filename">src/test/resources</code>下的文件
+			    都会被添加到类路径用以执行测试.所有文件都输出到<code class="filename">build</code>下,打包的文件输出到    <code class="filename">build/libs</code>下<br>
 				Gradle expects to find your production source code under
 				<code class="filename">src/main/java</code>
 				and your test source code under
@@ -170,12 +194,19 @@
 					<div>
 						<div>
 							<h3 class="title">
-								<a name="N10410"></a>7.2.1.&nbsp;Building the project
+								<a name="N10410"></a>7.2.1.&nbsp;构建项目
 							</h3>
+							<h5 class="title">
+                                <a name="N10410"></a>7.2.1.&nbsp;Building the project
+                            </h5>
 						</div>
 					</div>
 				</div>
 				<p>
+				   Java插件为你添加了众多任务.但是它们只是在你需要构建项目的时候才能发挥作用.
+				   最常用的就是<code class="literal">build</code>任务,这会构建整个项目.当你执行
+				   <strong class="userinput"><code>gradle build</code></strong>时,Gralde会编译并执行单元测试,并且将src/main/*下面class和资源文件打包
+				   <br>
 					The Java plugin adds quite a few tasks to your project. However,
 					there are only a handful of tasks that you will need to use to
 					build the project. The most commonly used task is the
@@ -188,10 +219,14 @@
 				<div class="example">
 					<a name="javaQuickstart"></a>
 					<p class="title">
-						<b>Example&nbsp;7.2.&nbsp;Building a Java project</b>
+						<b>
+						例&nbsp;7.2.&nbsp;构建Java项目<br>
+						Example&nbsp;7.2.&nbsp;Building a Java project</b>
 					</p>
 					<div class="example-contents">
 						<p>
+						运行<strong class="userinput"><code>gradle
+                                    build</code></strong>的输出结果<br>
 							Output of <strong class="userinput"><code>gradle
 									build</code></strong>
 						</p>
@@ -214,7 +249,9 @@ Total time: 1 secs</pre>
 					</div>
 				</div>
 				<br class="example-break">
-				<p>Some other useful tasks are:</p>
+				<p>
+				其余一些较常用的任务有如下几个:<br>
+				Some other useful tasks are:</p>
 				<div class="variablelist">
 					<dl>
 						<dt>
@@ -222,6 +259,7 @@ Total time: 1 secs</pre>
 						</dt>
 						<dd>
 							<p>
+							     删除<code class="filename">build</code>目录以及所有构建完成的文件.<br>
 								Deletes the
 								<code class="filename">build</code>
 								directory, removing all built files.
@@ -231,7 +269,10 @@ Total time: 1 secs</pre>
 							<span class="term">assemble</span>
 						</dt>
 						<dd>
-							<p>Compiles and jars your code, but does not run the unit
+							<p>
+							编译并打包jar文件,但不会执行单元测试.一些其他插件可能会增强这个任务的功能.例如,如果采用了War插件,
+							这个任务便会为你的项目打出War包<br>
+							Compiles and jars your code, but does not run the unit
 								tests. Other plugins add more artifacts to this task. For
 								example, if you use the War plugin, this task will also build
 								the WAR file for your project.</p>
@@ -240,7 +281,9 @@ Total time: 1 secs</pre>
 							<span class="term">check</span>
 						</dt>
 						<dd>
-							<p>Compiles and tests your code. Other plugins add more
+							<p>
+							编译并测试代码.一些其他插件也可能会增强这个任务的功能.例如,如果采用了Code-quality插件,这个任务会额外执行Checkstyle <br>
+							Compiles and tests your code. Other plugins add more
 								checks to this task. For example, if you use the Code-quality
 								plugin, this task will also run Checkstyle against your source
 								code.</p>

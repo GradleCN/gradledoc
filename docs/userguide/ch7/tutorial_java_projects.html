@@ -296,12 +296,18 @@ Total time: 1 secs</pre>
 					<div>
 						<div>
 							<h3 class="title">
-								<a name="N1043D"></a>7.2.2.&nbsp;External dependencies
+								<a name="N1043D"></a>7.2.2.&nbsp;外部依赖
 							</h3>
+							<h5 class="title">
+                                <a name="N1043D"></a>7.2.2.&nbsp;External dependencies
+                            </h5>
 						</div>
 					</div>
 				</div>
 				<p>
+				    通常,一个Java项目拥有许多外部依赖.你需要告诉Gradle如何找到并引用这些外部文件.
+				    在Gradle中通常Jar包都存在于<em class="firstterm">仓库中</em>.仓库可以用来搜寻依赖或发布
+				  项目产物.下面是一个采用Maven仓库的例子.<br>
 					Usually, a Java project will have some dependencies on external JAR
 					files. To reference these JAR files in the project, you need to
 					tell Gradle where to find them. In Gradle, artifacts such as JAR
@@ -313,7 +319,9 @@ Total time: 1 secs</pre>
 				<div class="example">
 					<a name="javaQuickstart"></a>
 					<p class="title">
-						<b>Example&nbsp;7.3.&nbsp;Adding Maven repository</b>
+						<b>
+						例&nbsp;7.3&nbsp;添加Maven仓库<br>
+						Example&nbsp;7.3.&nbsp;Adding Maven repository</b>
 					</p>
 					<div class="example-contents">
 						<p>
@@ -325,14 +333,18 @@ Total time: 1 secs</pre>
 					</div>
 				</div>
 				<br class="example-break">
-				<p>Let's add some dependencies. Here, we will declare that our
+				<p>
+				添加依赖.这里声明了编译期所需依赖commons-collections和测试期所需依赖junit.<br>
+				Let's add some dependencies. Here, we will declare that our
 					production classes have a compile-time dependency on commons
 					collections, and that our test classes have a compile-time
 					dependency on junit:</p>
 				<div class="example">
 					<a name="javaQuickstart"></a>
 					<p class="title">
-						<b>Example&nbsp;7.4.&nbsp;Adding dependencies</b>
+						<b>
+						例&nbsp;7.4&nbsp;添加依赖<br>
+						Example&nbsp;7.4.&nbsp;Adding dependencies</b>
 					</p>
 					<div class="example-contents">
 						<p>
@@ -352,6 +364,8 @@ Total time: 1 secs</pre>
 				</div>
 				<br class="example-break">
 				<p>
+				    了解更多可参阅<a class="xref"
+                        href="../ch8/artifact_dependencies_tutorial.html">第&nbsp;8&nsbp;章, <i>依赖管理基础</i></a>.<br>
 					You can find out more in <a class="xref"
 						href="artifact_dependencies_tutorial.html">Chapter&nbsp;8, <i>Dependency
 							Management Basics</i></a>.
@@ -362,12 +376,18 @@ Total time: 1 secs</pre>
 					<div>
 						<div>
 							<h3 class="title">
-								<a name="N10460"></a>7.2.3.&nbsp;customizing the project
+								<a name="N10460"></a>7.2.3.&nbsp;自定义项目
 							</h3>
+							<h5 class="title">
+                                <a name="N10460"></a>7.2.3.&nbsp;customizing the project
+                            </h5>
 						</div>
 					</div>
 				</div>
-				<p>The Java plugin adds a number of properties to your project.
+				<p>
+				Java插件为你的项目添加了众多默认配置.这些默认值通常对于一个普通项目来说已经足够了.但如果你觉得不适用修改起来也很简单.
+				看下面的例子,我们为Java项目指定了版本号以及所用的Jdk版本,并且添加一些属性到mainfest中.<br>
+				The Java plugin adds a number of properties to your project.
 					These properties have default values which are usually sufficient
 					to get started. It's easy to change these values if they don't
 					suit. Let's look at this for our sample. Here we will specify the
@@ -377,7 +397,9 @@ Total time: 1 secs</pre>
 				<div class="example">
 					<a name="javaQuickstart"></a>
 					<p class="title">
-						<b>Example&nbsp;7.5.&nbsp;Customization of MANIFEST.MF</b>
+						<b>
+						例&nbsp;7.5.&nbsp;自定义  MANIFEST.MF<br>
+						Example&nbsp;7.5.&nbsp;Customization of MANIFEST.MF</b>
 					</p>
 					<div class="example-contents">
 						<p>
@@ -398,8 +420,11 @@ jar {
 				</div>
 				<br class="example-break">
 				<div class="tip">
-					<h3 class="title">What properties are available?</h3>
+				<h3 class="title">都有哪些可用属性?</h3>
+					<h5 class="title">What properties are available?</h5>
 					<p>
+					   可以执行<strong class="userinput"><code>gradle properties</code></strong>来得到项目的属性列表.
+					   用这条命令可以看到插件添加的属性以及默认值.<br>
 						You can use <strong class="userinput"><code>gradle
 								properties</code></strong> to list the properties of a project. This will allow
 						you to see the properties added by the Java plugin, and their
@@ -407,6 +432,11 @@ jar {
 					</p>
 				</div>
 				<p>
+				    Java插件添加的都是一些普通任务,如同他们写在Build文件中一样.这意味着前面章节展示的机制都可以用来修改这些任务的行为.
+				    例如,可以设置任务的属性,添加任务行为,更改任务依赖,甚至是重写覆盖整个任务.在下面的例子中,我们将修改    <code class="literal">test</code>任务,
+				     这是一个<a class="ulink"
+                        href="../../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code
+                            class="classname">Test</code></a>类型任务.让我们来在它执行时为它添加一些系统属性.<br>
 					The tasks which the Java plugin adds are regular tasks, exactly the
 					same as if they were declared in the build file. This means you can
 					use any of the mechanisms shown in earlier chapters to customize
@@ -415,14 +445,16 @@ jar {
 					a task entirely. In our sample, we will configure the
 					<code class="literal">test</code>
 					task, which is of type <a class="ulink"
-						href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code
+						href="../../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code
 							class="classname">Test</code></a>, to add a system property when the
 					tests are executed:
 				</p>
 				<div class="example">
 					<a name="javaQuickstart"></a>
 					<p class="title">
-						<b>Example&nbsp;7.6.&nbsp;Adding a test system property</b>
+						<b>
+						例&nbsp;7.6&nbsp;为test添加系统属性<br>
+						Example&nbsp;7.6.&nbsp;Adding a test system property</b>
 					</p>
 					<div class="example-contents">
 						<p>
@@ -442,12 +474,18 @@ jar {
 					<div>
 						<div>
 							<h3 class="title">
-								<a name="N1048B"></a>7.2.4.&nbsp;Publishing the JAR file
+								<a name="N1048B"></a>7.2.4.&nbsp;发布Jar包
 							</h3>
+							<h5 class="title">
+                                <a name="N1048B"></a>7.2.4.&nbsp;Publishing the JAR file
+                            </h5>
 						</div>
 					</div>
 				</div>
-				<p>Usually the JAR file needs to be published somewhere. To do
+				<p>
+				如何发布Jar包?你需要告诉Gradle发布到到哪.在Gradle中Jar包通常被发布到某个仓库中.
+				在下面的例子中,我们会将Jar包发布到本地目录.当然你也可以发布到远程仓库或多个远程仓库中.<br>
+				Usually the JAR file needs to be published somewhere. To do
 					this, you need to tell Gradle where to publish the JAR file. In
 					Gradle, artifacts such as JAR files are published to repositories.
 					In our sample, we will publish to a local directory. You can also
@@ -455,7 +493,9 @@ jar {
 				<div class="example">
 					<a name="javaQuickstart"></a>
 					<p class="title">
-						<b>Example&nbsp;7.7.&nbsp;Publishing the JAR file</b>
+						<b>
+						例&nbsp;7.7.&nbsp;发布Jar包<br>
+						Example&nbsp;7.7.&nbsp;Publishing the JAR file</b>
 					</p>
 					<div class="example-contents">
 						<p>
@@ -473,6 +513,7 @@ jar {
 				</div>
 				<br class="example-break">
 				<p>
+				    执行 <strong class="userinput"><code>gradle uploadArchives</code></strong>以发布Jar包.<br>
 					To publish the JAR file, run <strong class="userinput"><code>gradle
 							uploadArchives</code></strong>.
 				</p>
@@ -482,17 +523,24 @@ jar {
 					<div>
 						<div>
 							<h3 class="title">
-								<a name="N1049F"></a>7.2.5.&nbsp;Creating an Eclipse project
+								<a name="N1049F"></a>7.2.5.&nbsp;创建Eclipse文件
 							</h3>
+							<h5 class="title">
+                                <a name="N1049F"></a>7.2.5.&nbsp;Creating an Eclipse project
+                            </h5>
 						</div>
 					</div>
 				</div>
-				<p>To import your project into Eclipse, you need to add another
+				<p>
+				若要把项目导入Eclipse中,你需要添加另外一个插件到你的脚本文件中.<br>
+				To import your project into Eclipse, you need to add another
 					plugin to your build file:</p>
 				<div class="example">
 					<a name="javaQuickstart"></a>
 					<p class="title">
-						<b>Example&nbsp;7.8.&nbsp;Eclipse plugin</b>
+						<b>
+						例&nbsp;7.8.&nbsp;Eclipse plugin<br>
+						Example&nbsp;7.8.&nbsp;Eclipse plugin</b>
 					</p>
 					<div class="example-contents">
 						<p>
@@ -505,6 +553,8 @@ jar {
 				</div>
 				<br class="example-break">
 				<p>
+				 执行<strong class="userinput"><code>gradle eclipse</code></strong>来生成Eclipse项目文件.了解更多内容请参阅
+				 <a class="xref" href="eclipse_plugin.html">第&nbsp;38&nbsp;章, <i>The Eclipse 插件</i></a>.<br>
 					Now execute <strong class="userinput"><code>gradle
 							eclipse</code></strong> command to generate Eclipse project files. More on
 					Eclipse task can be found in <a class="xref"
@@ -517,16 +567,23 @@ jar {
 					<div>
 						<div>
 							<h3 class="title">
-								<a name="N104B6"></a>7.2.6.&nbsp;Summary
+								<a name="N104B6"></a>7.2.6.&nbsp;示例汇总
 							</h3>
+							<h5 class="title">
+                                <a name="N104B6"></a>7.2.6.&nbsp;Summary
+                            </h5>
 						</div>
 					</div>
 				</div>
-				<p>Here's the complete build file for our sample:</p>
+				<p>
+				这是示例代码汇总得到的一个完整脚本:<br>
+				Here's the complete build file for our sample:</p>
 				<div class="example">
 					<a name="javaQuickstart"></a>
 					<p class="title">
-						<b>Example&nbsp;7.9.&nbsp;Java example - complete build file</b>
+						<b>
+						例&nbsp;7.9.&nbsp;Java 示例 - 一个完整构建脚本<br>
+						Example&nbsp;7.9.&nbsp;Java example - complete build file</b>
 					</p>
 					<div class="example-contents">
 						<p>

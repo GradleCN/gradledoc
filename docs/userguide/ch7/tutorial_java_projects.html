@@ -367,7 +367,7 @@ Total time: 1 secs</pre>
 				    了解更多可参阅<a class="xref"
                         href="../ch8/artifact_dependencies_tutorial.html">第&nbsp;8&nsbp;章, <i>依赖管理基础</i></a>.<br>
 					You can find out more in <a class="xref"
-						href="artifact_dependencies_tutorial.html">Chapter&nbsp;8, <i>Dependency
+						href="../ch8/artifact_dependencies_tutorial.html">Chapter&nbsp;8, <i>Dependency
 							Management Basics</i></a>.
 				</p>
 			</div>
@@ -554,11 +554,11 @@ jar {
 				<br class="example-break">
 				<p>
 				 执行<strong class="userinput"><code>gradle eclipse</code></strong>来生成Eclipse项目文件.了解更多内容请参阅
-				 <a class="xref" href="eclipse_plugin.html">第&nbsp;38&nbsp;章, <i>The Eclipse 插件</i></a>.<br>
+				 <a class="xref" href="../eclipse_plugin.html">第&nbsp;38&nbsp;章, <i>The Eclipse 插件</i></a>.<br>
 					Now execute <strong class="userinput"><code>gradle
 							eclipse</code></strong> command to generate Eclipse project files. More on
 					Eclipse task can be found in <a class="xref"
-						href="eclipse_plugin.html">Chapter&nbsp;38, <i>The Eclipse
+						href="../eclipse_plugin.html">Chapter&nbsp;38, <i>The Eclipse
 							Plugin</i></a>.
 				</p>
 			</div>
@@ -645,17 +645,24 @@ uploadArchives {
 				<div>
 					<div>
 						<h2 class="title">
-							<a name="sec:examples"></a>7.3.&nbsp;Multi-project Java build
+							<a name="sec:examples"></a>7.3.&nbsp;多项目构建
 						</h2>
+						<h4 class="title">
+                            <a name="sec:examples"></a>7.3.&nbsp;Multi-project Java build
+                        </h4>
 					</div>
 				</div>
 			</div>
-			<p>Now let's look at a typical multi-project build. Below is the
+			<p>
+			现在来看一个典型的多项目构建的例子.项目结构如下:<br>
+			Now let's look at a typical multi-project build. Below is the
 				layout for the project:</p>
 			<div class="example">
 				<a name="javaMultiProject"></a>
 				<p class="title">
-					<b>Example&nbsp;7.10.&nbsp;Multi-project build - hierarchical
+					<b>
+					例&nbsp;7.10.&nbsp;多项目构建-项目结构
+					Example&nbsp;7.10.&nbsp;Multi-project build - hierarchical
 						layout</b>
 				</p>
 				<div class="example-contents">
@@ -666,6 +673,8 @@ uploadArchives {
   shared/</pre>
 					<div class="exampleLocation">
 						<p>
+						<span class="emphasis"><em>备注:</em></span> 
+						本示例代码可在Gradle发行包的<code class="filename">samples/java/multiproject</code>位置找到<br>
 							<span class="emphasis"><em>Note:</em></span> The code for this
 							example can be found at
 							<code class="filename">samples/java/multiproject</code>
@@ -676,6 +685,9 @@ uploadArchives {
 			</div>
 			<br class="example-break">
 			<p>
+			   此处有三个工程. <code class="literal">api</code> 工程用来生成给客户端用的jar文件，这个jar文件可以为XML webservice 提供Java客户端.
+			     <code class="literal">webservice</code> 是一个web应用,生成 XML.    <code class="literal">shared</code> 工程包含的是前述两个工程共用的代码.
+			     <br>
 				Here we have three projects. Project
 				<code class="literal">api</code>
 				produces a JAR file which is shipped to the client to provide them a
@@ -694,12 +706,18 @@ uploadArchives {
 					<div>
 						<div>
 							<h3 class="title">
-								<a name="N104ED"></a>7.3.1.&nbsp;Defining a multi-project build
+								<a name="N104ED"></a>7.3.1.&nbsp;多项目构建定义
 							</h3>
+							<h5 class="title">
+                                <a name="N104ED"></a>7.3.1.&nbsp;Defining a multi-project build
+                            </h5>
 						</div>
 					</div>
 				</div>
 				<p>
+				   定义一个多项目构建工程需要在根目录(本例中与multiproject同级)创建一个<em
+                        class="firstterm">setting</em> 配置文件来指明构建包含哪些项目.并且这个文件必需叫<code class="filename">settings.gradle</code>
+                        本例的配置文件如下:<br>
 					To define a multi-project build, you need to create a <em
 						class="firstterm">settings file</em>. The settings file lives in
 					the root directory of the source tree, and specifies which projects
@@ -711,7 +729,9 @@ uploadArchives {
 				<div class="example">
 					<a name="javaMultiProject"></a>
 					<p class="title">
-						<b>Example&nbsp;7.11.&nbsp;Multi-project build -
+						<b>
+						例&nbsp;7.11.&nbsp;多项目构建中的settings.gradle
+						Example&nbsp;7.11.&nbsp;Multi-project build -
 							settings.gradle file</b>
 					</p>
 					<div class="example-contents">
@@ -728,8 +748,10 @@ uploadArchives {
 				</div>
 				<br class="example-break">
 				<p>
+				了解更多可参阅<a class="xref"
+                        href="../multi_project_builds.html">第&nbsp;56&nbsp;章, <i>多项目构建</i></a>.<br>
 					You can find out more about the settings file in <a class="xref"
-						href="multi_project_builds.html">Chapter&nbsp;56, <i>Multi-project
+						href="../multi_project_builds.html">Chapter&nbsp;56, <i>Multi-project
 							Builds</i></a>.
 				</p>
 			</div>
@@ -738,12 +760,18 @@ uploadArchives {
 					<div>
 						<div>
 							<h3 class="title">
-								<a name="N10507"></a>7.3.2.&nbsp;Common configuration
+								<a name="N10507"></a>7.3.2.&nbsp;公共配置
 							</h3>
+							<h5 class="title">
+                                <a name="N10507"></a>7.3.2.&nbsp;Common configuration
+                            </h5>
 						</div>
 					</div>
 				</div>
 				<p>
+				    对多项目构建而言,总有一些共同的配置.在本例中,我们会在根项目上采用<em
+                        class="firstterm">配置注入</em>的方式定义一些公共配置.根项目就像一个容器,子项目会迭代访问它的配置并注入到自己的配置中.
+                                这样我们就可以简单的为所有工程定义主配置单了:<br>
 					For most multi-project builds, there is some configuration which is
 					common to all projects. In our sample, we will define this common
 					configuration in the root project, using a technique called <em
@@ -758,7 +786,9 @@ uploadArchives {
 				<div class="example">
 					<a name="javaMultiProject"></a>
 					<p class="title">
-						<b>Example&nbsp;7.12.&nbsp;Multi-project build - common
+						<b>
+						例&nbsp;7.12.&nbsp;多项目构建-公共配置<br>
+						Example&nbsp;7.12.&nbsp;Multi-project build - common
 							configuration</b>
 					</p>
 					<div class="example-contents">
@@ -792,6 +822,8 @@ uploadArchives {
 				</div>
 				<br class="example-break">
 				<p>
+				    值得注意的是我们为每个子项目都应用了Java插件.这意味着我们在前面章节学习的内容在子项目中也都是可用的.
+				  所以你可以在根项目目录进行编译,测试,打包等所有操作.<br>
 					Notice that our sample applies the Java plugin to each subproject.
 					This means the tasks and configuration properties we have seen in
 					the previous section are available in each subproject. So, you can
@@ -805,12 +837,18 @@ uploadArchives {
 					<div>
 						<div>
 							<h3 class="title">
-								<a name="N10521"></a>7.3.3.&nbsp;Dependencies between projects
+								<a name="N10521"></a>7.3.3.&nbsp;工程依赖
 							</h3>
+							<h5 class="title">
+                                <a name="N10521"></a>7.3.3.&nbsp;Dependencies between projects
+                            </h5>
 						</div>
 					</div>
 				</div>
 				<p>
+				    同一个构建中可以建立工程依赖,一个工程的jar包可以提供给另外一个工程使用.例如我们可以让
+				                <code class="literal">api</code>工程以依赖于<code class="literal">shared</code>工程的jar包.
+				                这样Gradle在构建<code class="literal">api</code>之前总是会先构建<code class="literal">shared</code>工程.<br>
 					You can add dependencies between projects in the same build, so
 					that, for example, the JAR file of one project is used to compile
 					another project. In the
@@ -826,7 +864,9 @@ uploadArchives {
 				<div class="example">
 					<a name="javaMultiProject"></a>
 					<p class="title">
-						<b>Example&nbsp;7.13.&nbsp;Multi-project build - dependencies
+						<b>
+						例&nbsp;7.13.&nbsp;多项目构建-工程依赖<br>
+						Example&nbsp;7.13.&nbsp;Multi-project build - dependencies
 							between projects</b>
 					</p>
 					<div class="example-contents">
@@ -839,8 +879,13 @@ uploadArchives {
 }</pre>
 					</div>
 				</div>
-				<br class="example-break"> See <a class="xref"
-					href="multi_project_builds.html#disable_dependency_projects">Section&nbsp;56.7.1,
+				<br class="example-break"> 
+				参阅
+				 <a class="xref"
+                    href="../multi_project_builds.html#disable_dependency_projects">56.7.1&nbsp;小节,
+                    &ldquo;停用项目依赖&rdquo;</a>来了解如何停用此功能.<br>
+				See <a class="xref"
+					href="../multi_project_builds.html#disable_dependency_projects">Section&nbsp;56.7.1,
 					&ldquo;Disabling the build of dependency projects&rdquo;</a> for how to
 				disable this functionality.
 			</div>
@@ -849,17 +894,24 @@ uploadArchives {
 					<div>
 						<div>
 							<h3 class="title">
-								<a name="N10540"></a>7.3.4.&nbsp;Creating a distribution
+								<a name="N10540"></a>7.3.4.&nbsp;打包发布
 							</h3>
+							<h5 class="title">
+                                <a name="N10540"></a>7.3.4.&nbsp;Creating a distribution
+                            </h5>
 						</div>
 					</div>
 				</div>
-				<p>We also add a distribution, that gets shipped to the client:
+				<p>
+				如何发布,请看下文:<br>
+				We also add a distribution, that gets shipped to the client:
 				</p>
 				<div class="example">
 					<a name="javaMultiProject"></a>
 					<p class="title">
-						<b>Example&nbsp;7.14.&nbsp;Multi-project build - distribution
+						<b>
+						例&nbsp;7.14.&nbsp;多项目构建-发布<br>
+						Example&nbsp;7.14.&nbsp;Multi-project build - distribution
 							file</b>
 					</p>
 					<div class="example-contents">
@@ -888,24 +940,33 @@ artifacts {
 				<div>
 					<div>
 						<h2 class="title">
-							<a name="N1054F"></a>7.4.&nbsp;Where to next?
+							<a name="N1054F"></a>7.4.&nbsp;下一步目标?
 						</h2>
+						<h4 class="title">
+                            <a name="N1054F"></a>7.4.&nbsp;Where to next?
+                        </h4>
 					</div>
 				</div>
 			</div>
 			<p>
+			    本章中,我们了解了如何构建一个基本Java工程.但这都是一小部分基础,用Gradle还可以做很多事.关于Java插件想了解更多可参阅
+			    <a class="xref" href="../java_plugin.html">第&nbsp;23&nbsp;章, <i>The Java Plugin</i></a>,并且你可以在Gradle发行包中的
+			    <code class="filename">samples/java</code>目录找到更多例子.<br>
 				In this chapter, you have seen how to do some of the things you
 				commonly need to build a Java based project. This chapter is not
 				exhaustive, and there are many other things you can do with Java
 				projects in Gradle. You can find out more about the Java plugin in <a
-					class="xref" href="java_plugin.html">Chapter&nbsp;23, <i>The
+					class="xref" href="../java_plugin.html">Chapter&nbsp;23, <i>The
 						Java Plugin</i></a>, and you can find more sample Java projects in the
 				<code class="filename">samples/java</code>
 				directory in the Gradle distribution.
 			</p>
 			<p>
+			  另外,不要忘了继续阅读<a class="xref"
+                    href="../ch8/artifact_dependencies_tutorial.html">第&nbsp;8&nbsp;章, <i>依赖管理基础</i></a>
+                        内容哟~~~<br>
 				Otherwise, continue on to <a class="xref"
-					href="artifact_dependencies_tutorial.html">Chapter&nbsp;8, <i>Dependency
+					href="../ch8/artifact_dependencies_tutorial.html">Chapter&nbsp;8, <i>Dependency
 						Management Basics</i></a>.
 			</p>
 			<p></p>

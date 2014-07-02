@@ -7,7 +7,7 @@
         </p></div><p>
         This chapter describes how to publish build artifacts to an <a class="ulink" href="http://maven.apache.org/" target="_top">Apache Maven</a> Repository.
         A module published to a Maven repository can be consumed by Maven, Gradle (see <a class="xref" href="dependency_management.html">Chapter&nbsp;50, <i>Dependency Management</i></a>) and other tools that understand the Maven repository format.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N16E9F"></a>65.1.&nbsp;The &ldquo;<code class="literal">maven-publish</code>&rdquo; Plugin</h2></div></div></div><p>
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N16F3D"></a>65.1.&nbsp;The &ldquo;<code class="literal">maven-publish</code>&rdquo; Plugin</h2></div></div></div><p>
             The ability to publish in the Maven format is provided by the &ldquo;<code class="literal">maven-publish</code>&rdquo; plugin.
         </p><p>
             The &ldquo;<code class="literal">publishing</code>&rdquo; plugin creates an extension on the project named &ldquo;<code class="literal">publishing</code>&rdquo; of type <a class="ulink" href="../dsl/org.gradle.api.publish.PublishingExtension.html" target="_top"><code class="classname">PublishingExtension</code></a>.
@@ -38,10 +38,10 @@
             For the &ldquo;<code class="literal">maven-publish</code>&rdquo; plugin to have any effect, a <a class="ulink" href="../dsl/org.gradle.api.publish.maven.MavenPublication.html" target="_top"><code class="classname">MavenPublication</code></a> must be added to the set of publications.
             This publication determines which artifacts are actually published as well as the details included in the associated POM file.
             A publication can be configured by adding components, customizing artifacts, and by modifying the generated POM file directly.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16F29"></a>65.2.1.&nbsp;Publishing a Software Component</h3></div></div></div><p>
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16FC7"></a>65.2.1.&nbsp;Publishing a Software Component</h3></div></div></div><p>
                 The simplest way to publish a Gradle project to a Maven repository is to specify a <a class="ulink" href="../javadoc/org/gradle/api/component/SoftwareComponent.html" target="_top"><code class="classname">SoftwareComponent</code></a> to publish.
                 The components presently available for publication are:
-            </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;65.1.&nbsp;Software Components</b></p><div class="table-contents"><table id="N16F33"><thead><tr>
+            </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;65.1.&nbsp;Software Components</b></p><div class="table-contents"><table id="N16FD1"><thead><tr>
                         <td>Name</td>
                         <td>Provided By</td>
                         <td>Artifacts</td>
@@ -62,7 +62,7 @@
         mavenJava(MavenPublication) {
             from components.java
         }
-    }</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16F74"></a>65.2.2.&nbsp;Publishing custom artifacts</h3></div></div></div><p>
+    }</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N17012"></a>65.2.2.&nbsp;Publishing custom artifacts</h3></div></div></div><p>
                 It is also possible to explicitly configure artifacts to be included in the publication. Artifacts are commonly supplied as raw files, or as instances of
                 <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.AbstractArchiveTask.html" target="_top"><code class="classname">AbstractArchiveTask</code></a> (e.g. Jar, Zip).
             </p><p>
@@ -86,7 +86,7 @@ publishing {
     }
 }</pre></div></div><br class="example-break"><p>
                 See <a class="ulink" href="../dsl/org.gradle.api.publish.maven.MavenPublication.html" target="_top"><code class="classname">MavenPublication</code></a> for more detailed documentation on how artifacts can be customized.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16F99"></a>65.2.3.&nbsp;Identity values in the generated POM</h3></div></div></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N17037"></a>65.2.3.&nbsp;Identity values in the generated POM</h3></div></div></div><p>
                 The attributes of the generated <code class="literal">POM</code> file will contain identity values derived from the following project properties:
             </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><code class="literal">groupId</code> - <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:group" target="_top"><code class="classname">Project.getGroup()</code></a></li><li class="listitem"><code class="literal">artifactId</code> - <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:name" target="_top"><code class="classname">Project.getName()</code></a></li><li class="listitem"><code class="literal">version</code> - <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:version" target="_top"><code class="classname">Project.getVersion()</code></a></li></ul></div><p>
                 Overriding the default identity values is easy: simply specify the <code class="literal">groupId</code>, <code class="literal">artifactId</code>
@@ -110,7 +110,7 @@ publishing {
             </p><p>
                 The only Unicode values that are explicitly prohibited are '<code class="literal">\</code>', '<code class="literal">/</code>' and any ISO control character.
                 Supplied values are validated early in publication.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16FE1"></a>65.2.4.&nbsp;Modifying the generated POM</h3></div></div></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1707F"></a>65.2.4.&nbsp;Modifying the generated POM</h3></div></div></div><p>
                 At times, the POM file generated from the project information will need to be tweaked before publishing. The &ldquo;<code class="literal">maven-publish</code>&rdquo;
                 plugin provides a hook to allow such modification.
             </p><div class="example"><a name="publishing_maven:pom_modification"></a><p class="title"><b>Example&nbsp;65.5.&nbsp;Modifying the POM file</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">publications {
@@ -130,7 +130,7 @@ publishing {
                 Maven Pom, so care must be taken when using this feature.
             </p><p>
                 The identifier (groupId, artifactId, version) of the published module is an exception; these values cannot be modified in the POM using the `withXML` hook.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N17000"></a>65.2.5.&nbsp;Publishing multiple modules</h3></div></div></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1709E"></a>65.2.5.&nbsp;Publishing multiple modules</h3></div></div></div><p>
                  Sometimes it's useful to publish multiple modules from your Gradle build, without creating a separate Gradle subproject.
                  An example is publishing a separate API and implementation jar for your library. With Gradle this is simple:
              </p><div class="example"><a name="publishing_maven:publish-multiple-publications"></a><p class="title"><b>Example&nbsp;65.6.&nbsp;Publishing multiple modules from a single project</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task apiJar(type: Jar) {

@@ -1,5 +1,5 @@
 <html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Appendix&nbsp;A.&nbsp;Gradle Samples</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="publishing_maven.html" title="Chapter&nbsp;65.&nbsp;Maven Publishing (new)"><link rel="next" href="potential_traps.html" title="Appendix&nbsp;B.&nbsp;Potential Traps"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="publishing_maven.html" title="Chapter&nbsp;65.&nbsp;Maven Publishing (new)">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="potential_traps.html" title="Appendix&nbsp;B.&nbsp;Potential Traps">Next</a></div></div></div><div class="appendix"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="sample_list"></a>Appendix&nbsp;A.&nbsp;Gradle Samples</h1></div></div></div><p>Listed below are some of the stand-alone samples which are included in the Gradle distribution. You can find these samples in the <code class="filename">
-      <em class="replaceable"><code>GRADLE_HOME</code></em>/samples</code> directory of the distribution.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;A.1.&nbsp;Samples included in the distribution</b></p><div class="table-contents"><table id="N17111"><thead><td>Sample</td><td>Description</td></thead><tr>
+      <em class="replaceable"><code>GRADLE_HOME</code></em>/samples</code> directory of the distribution.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;A.1.&nbsp;Samples included in the distribution</b></p><div class="table-contents"><table id="N171AF"><thead><td>Sample</td><td>Description</td></thead><tr>
       <td>
         <code class="filename">announce</code>
       </td>
@@ -29,7 +29,7 @@
       </td>
     </tr><tr>
       <td>
-        <a class="link" href="sample_list.html#-1042543908">
+        <a class="link" href="sample_list.html#-1241809347">
           <code class="filename">customBuildLanguage</code>
         </a>
       </td>
@@ -40,7 +40,7 @@
       </td>
     </tr><tr>
       <td>
-        <a class="link" href="sample_list.html#-436160729">
+        <a class="link" href="sample_list.html#-483118767">
           <code class="filename">customDistribution</code>
         </a>
       </td>
@@ -49,7 +49,7 @@
       </td>
     </tr><tr>
       <td>
-        <a class="link" href="sample_list.html#116514348">
+        <a class="link" href="sample_list.html#1805725798">
           <code class="filename">customPlugin</code>
         </a>
       </td>
@@ -116,7 +116,7 @@
       </td>
     </tr><tr>
       <td>
-        <a class="link" href="sample_list.html#-1192485014">
+        <a class="link" href="sample_list.html#1527440619">
           <code class="filename">java/multiproject</code>
         </a>
       </td>
@@ -266,7 +266,7 @@
       <td>
         <p>Web application quickstart project</p>
       </td>
-    </tr></table></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="-1042543908"></a>A.1.&nbsp;Sample <code class="filename">customBuildLanguage</code>
+    </tr></table></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="-1241809347"></a>A.1.&nbsp;Sample <code class="filename">customBuildLanguage</code>
     </h2></div></div></div><p>This sample demonstrates how to add some custom elements to the build DSL. It also demonstrates the use of
         custom plug-ins to organize build logic.
     </p><p>The build is composed of 2 types of projects. The first type of project represents a product, and the second
@@ -279,10 +279,10 @@
         <code class="literal">product { }</code> element. This is a custom element.
     </p><p>The build scripts of each project contain only declarative elements. The bulk of the work is done by 2
         custom plug-ins found in <code class="filename">buildSrc/src/main/groovy</code>.
-    </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="-436160729"></a>A.2.&nbsp;Sample <code class="filename">customDistribution</code>
+    </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="-483118767"></a>A.2.&nbsp;Sample <code class="filename">customDistribution</code>
     </h2></div></div></div><p>This sample demonstrates how to create a custom Gradle distribution and use it with the Gradle wrapper.</p><p>This sample contains the following projects:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>The <code class="filename">plugin</code> directory contains the project that implements a custom plugin, and bundles the plugin into a custom
-                Gradle distribution.</p></li><li class="listitem"><p>The <code class="filename">consumer</code> directory contains the project that uses the custom distribution.</p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="116514348"></a>A.3.&nbsp;Sample <code class="filename">customPlugin</code>
-    </h2></div></div></div><p>A set of projects that show how to implement, test, publish and use a custom plugin and task.</p><p>This sample contains the following projects:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>The <code class="filename">plugin</code> directory contains the project that implements and publishes the plugin.</p></li><li class="listitem"><p>The <code class="filename">consumer</code> directory contains the project that uses the plugin.</p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="-1192485014"></a>A.4.&nbsp;Sample <code class="filename">java/multiproject</code>
+                Gradle distribution.</p></li><li class="listitem"><p>The <code class="filename">consumer</code> directory contains the project that uses the custom distribution.</p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="1805725798"></a>A.3.&nbsp;Sample <code class="filename">customPlugin</code>
+    </h2></div></div></div><p>A set of projects that show how to implement, test, publish and use a custom plugin and task.</p><p>This sample contains the following projects:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>The <code class="filename">plugin</code> directory contains the project that implements and publishes the plugin.</p></li><li class="listitem"><p>The <code class="filename">consumer</code> directory contains the project that uses the plugin.</p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="1527440619"></a>A.4.&nbsp;Sample <code class="filename">java/multiproject</code>
     </h2></div></div></div><p>This sample demonstrates how an application can be composed using multiple Java projects.</p><p>This build creates a client-server application which is distributed as 2 archives. First, there is a client
         ZIP which includes an API JAR, which a 3rd party application would compile against, and a client runtime. Then,
         there is a server WAR which provides a web service.

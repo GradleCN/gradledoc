@@ -1,5 +1,5 @@
 <html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;11.&nbsp;Using the Gradle Command-Line</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="web_project_tutorial.html" title="Chapter&nbsp;10.&nbsp;Web Application Quickstart"><link rel="next" href="tutorial_gradle_gui.html" title="Chapter&nbsp;12.&nbsp;Using the Gradle Graphical User Interface"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="web_project_tutorial.html" title="Chapter&nbsp;10.&nbsp;Web Application Quickstart">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_gradle_gui.html" title="Chapter&nbsp;12.&nbsp;Using the Gradle Graphical User Interface">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="tutorial_gradle_command_line"></a>Chapter&nbsp;11.&nbsp;Using the Gradle Command-Line</h1></div></div></div><p>This chapter introduces the basics of the Gradle command-line. You run a build using the
-        <span class="command"><strong>gradle</strong></span> command, which you have already seen in action in previous chapters.</p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10779"></a>11.1.&nbsp;Executing multiple tasks</h2></div></div></div><p>You can execute multiple tasks in a single build by listing each of the tasks on the command-line. For example,
+        <span class="command"><strong>gradle</strong></span> command, which you have already seen in action in previous chapters.</p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1077C"></a>11.1.&nbsp;Executing multiple tasks</h2></div></div></div><p>You can execute multiple tasks in a single build by listing each of the tasks on the command-line. For example,
             the command <strong class="userinput"><code>gradle compile test</code></strong> will execute the <code class="literal">compile</code> and
             <code class="literal">test</code> tasks. Gradle will execute the tasks in the order that they are listed on the
             command-line, and will also execute the dependencies for each task. Each task is executed once only,
@@ -7,7 +7,7 @@
             dependency of another task, or both. Let's look at an example.</p><p>
             Below four tasks are defined. Both <code class="literal">dist</code> and <code class="literal">test</code> depend on the
             <code class="literal">compile</code> task. Running <strong class="userinput"><code>gradle dist test</code></strong> for this build script
-            results in the <code class="literal">compile</code> task being executed only once.</p><div class="figure"><a name="N10798"></a><p class="title"><b>Figure&nbsp;11.1.&nbsp;Task dependencies</b></p><div class="figure-contents"><img src="img/commandLineTutorialTasks.png" alt="Task dependencies"></div></div><br class="figure-break"><div class="example"><a name="multipleTasksFromCommandLine"></a><p class="title"><b>Example&nbsp;11.1.&nbsp;Executing multiple tasks</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task compile &lt;&lt; {
+            results in the <code class="literal">compile</code> task being executed only once.</p><div class="figure"><a name="N1079B"></a><p class="title"><b>Figure&nbsp;11.1.&nbsp;Task dependencies</b></p><div class="figure-contents"><img src="img/commandLineTutorialTasks.png" alt="Task dependencies"></div></div><br class="figure-break"><div class="example"><a name="multipleTasksFromCommandLine"></a><p class="title"><b>Example&nbsp;11.1.&nbsp;Executing multiple tasks</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task compile &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'compiling source'</span>
 }
 
@@ -54,7 +54,7 @@ Total time: 1 secs</pre></div></div><br class="example-break"><p>You can see fro
             instead of stopping as soon as the first failure is encountered. Each of the encountered failures will be reported at the end of the build.
         </p><p>If a task fails, any subsequent tasks that were depending on it will not be executed, as it is not safe to do so. For example, tests will not
             run if there is a compilation failure in the code under test; because the test task will depend on the compilation task (either directly or indirectly).
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N107F0"></a>11.4.&nbsp;Task name abbreviation</h2></div></div></div><p>When you specify tasks on the command-line, you don't have to provide the full name of the task. You only need to provide enough of the
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N107F3"></a>11.4.&nbsp;Task name abbreviation</h2></div></div></div><p>When you specify tasks on the command-line, you don't have to provide the full name of the task. You only need to provide enough of the
             task name to uniquely identify the task. For example, in the sample build above, you can execute task
             <code class="literal">dist</code> by running <strong class="userinput"><code>gradle d</code></strong>:</p><div class="example"><a name="abbreviateTaskName"></a><p class="title"><b>Example&nbsp;11.3.&nbsp;Abbreviated task name</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle di</code></strong></p><pre class="screen">&gt; gradle di
 :compile
@@ -91,7 +91,7 @@ using build file 'build.gradle' in 'subdir'.</pre></div></div><br class="example
         </p><p>In addition to the built-in tasks shown below, you can also use the
             <a class="link" href="project_reports_plugin.html">project report plugin</a> to add tasks to your project which will
             generate these reports.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10861"></a>11.6.1.&nbsp;Listing projects</h3></div></div></div><p>Running <strong class="userinput"><code>gradle projects</code></strong> gives you a list of the sub-projects of the selected project,
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10864"></a>11.6.1.&nbsp;Listing projects</h3></div></div></div><p>Running <strong class="userinput"><code>gradle projects</code></strong> gives you a list of the sub-projects of the selected project,
                 displayed in a hierarchy. Here is an example:
             </p><div class="example"><a name="projectListReport"></a><p class="title"><b>Example&nbsp;11.7.&nbsp;Obtaining information about projects</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q projects</code></strong></p><pre class="screen">&gt; gradle -q projects
 ------------------------------------------------------------
@@ -171,12 +171,24 @@ wrapper - Generates Gradle wrapper files. [incubating]
 Help tasks
 ----------
 dependencies - Displays all dependencies declared in root project 'projectReports'.
+api:dependencies - Displays all dependencies declared in project ':api'.
+webapp:dependencies - Displays all dependencies declared in project ':webapp'.
 dependencyInsight - Displays the insight into a specific dependency in root project 'projectReports'.
+api:dependencyInsight - Displays the insight into a specific dependency in project ':api'.
+webapp:dependencyInsight - Displays the insight into a specific dependency in project ':webapp'.
 help - Displays a help message
+api:help - Displays a help message
+webapp:help - Displays a help message
 projects - Displays the sub-projects of root project 'projectReports'.
+api:projects - Displays the sub-projects of project ':api'.
+webapp:projects - Displays the sub-projects of project ':webapp'.
 properties - Displays the properties of root project 'projectReports'.
-tasks - Displays the tasks runnable from root project 'projectReports' (some of the displayed tasks may belong to subprojects).</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:show_task_details"></a>11.6.3.&nbsp;Show task usage details</h3></div></div></div><p>Running <strong class="userinput"><code>gradle help --task someTask</code></strong> gives you detailed information about a specific task or multiple
-                tasks matching the given task name in your multiproject build 
+api:properties - Displays the properties of project ':api'.
+webapp:properties - Displays the properties of project ':webapp'.
+tasks - Displays the tasks runnable from root project 'projectReports' (some of the displayed tasks may belong to subprojects).
+api:tasks - Displays the tasks runnable from project ':api'.
+webapp:tasks - Displays the tasks runnable from project ':webapp'.</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:show_task_details"></a>11.6.3.&nbsp;Show task usage details</h3></div></div></div><p>Running <strong class="userinput"><code>gradle help --task someTask</code></strong> gives you detailed information about a specific task or multiple
+                tasks matching the given task name in your multiproject build.
                 Below is an example of this detailed information:
             </p><div class="example"><a name="taskHelp"></a><p class="title"><b>Example&nbsp;11.12.&nbsp;Obtaining detailed help for tasks</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q help --task libs</code></strong></p><pre class="screen">&gt; gradle -q help --task libs
 Detailed task information for libs
@@ -206,7 +218,7 @@ Project :api - The shared API for the application
 ------------------------------------------------------------
 
 compile
-\--- org.codehaus.groovy:groovy-all:2.2.0
+\--- org.codehaus.groovy:groovy-all:2.3.3
 
 testCompile
 \--- junit:junit:4.11
@@ -218,7 +230,7 @@ Project :webapp - The Web application implementation
 
 compile
 +--- project :api
-|    \--- org.codehaus.groovy:groovy-all:2.2.0
+|    \--- org.codehaus.groovy:groovy-all:2.3.3
 \--- commons-io:commons-io:1.2
 
 testCompile
@@ -236,7 +248,7 @@ testCompile
                 gives you an insight into a particular dependency (or dependencies) that match specified input.
                 Below is an example of this report:
             </p><div class="example"><a name="dependencyInsightReport"></a><p class="title"><b>Example&nbsp;11.15.&nbsp;Getting the insight into a particular dependency</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q webapp:dependencyInsight --dependency groovy --configuration compile</code></strong></p><pre class="screen">&gt; gradle -q webapp:dependencyInsight --dependency groovy --configuration compile
-org.codehaus.groovy:groovy-all:2.2.0
+org.codehaus.groovy:groovy-all:2.3.3
 \--- project :api
      \--- compile</pre></div></div><br class="example-break"><p>
                 This task is extremely useful for investigating the dependency resolution,
@@ -262,6 +274,7 @@ ant: org.gradle.api.internal.project.DefaultAntBuilder@12345
 antBuilderFactory: org.gradle.api.internal.project.DefaultAntBuilderFactory@12345
 artifacts: org.gradle.api.internal.artifacts.dsl.DefaultArtifactHandler@12345
 asDynamicObject: org.gradle.api.internal.ExtensibleDynamicObject@12345
+baseClassLoaderScope: org.gradle.api.internal.initialization.DefaultClassLoaderScope@12345
 buildDir: /home/user/gradle/samples/userguide/tutorial/projectReports/api/build
 buildFile: /home/user/gradle/samples/userguide/tutorial/projectReports/api/build.gradle</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:profiling_build"></a>11.6.7.&nbsp;Profiling a build</h3></div></div></div><p>The <strong class="userinput"><code>--profile</code></strong> command line option will record some useful timing information
             while your build is running and write a report to the <code class="filename">build/reports/profile</code> directory.
@@ -278,5 +291,5 @@ buildFile: /home/user/gradle/samples/userguide/tutorial/projectReports/api/build
             part of the <code class="literal">clean</code> and <code class="literal">compile</code> tasks.
             This is complementary to the <code class="option">tasks</code> task, which shows you the tasks which are available for
             execution.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10952"></a>11.8.&nbsp;Summary</h2></div></div></div><p>In this chapter, you have seen some of the things you can do with Gradle from the command-line. You can
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10953"></a>11.8.&nbsp;Summary</h2></div></div></div><p>In this chapter, you have seen some of the things you can do with Gradle from the command-line. You can
             find out more about the <span class="command"><strong>gradle</strong></span> command in <a class="xref" href="gradle_command_line.html">Appendix&nbsp;D, <i>Gradle Command Line</i></a>.</p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="web_project_tutorial.html" title="Chapter&nbsp;10.&nbsp;Web Application Quickstart">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_gradle_gui.html" title="Chapter&nbsp;12.&nbsp;Using the Gradle Graphical User Interface">Next</a></div></div></div></body></html>

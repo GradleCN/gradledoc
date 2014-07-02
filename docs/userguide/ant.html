@@ -12,13 +12,13 @@
         simply by relying on Groovy, and the fantastic <code class="literal">AntBuilder</code>.
     </p><p>Finally, since build scripts are Groovy scripts, you can always execute an Ant build as an external process.
         Your build script may contain statements like:<code class="literal">"ant clean compile".execute()</code>.
-        <sup>[<a href="#ftn.N113E2" name="N113E2" class="footnote">8</a>]</sup>
+        <sup>[<a href="#ftn.N113DF" name="N113DF" class="footnote">8</a>]</sup>
     </p><p>You can use Gradle's Ant integration as a path for migrating your build from Ant to Gradle. For example, you
         could start by importing your existing Ant build. Then you could move your dependency declarations from the Ant
         script to your build file. Finally, you could move your tasks across to your build file, or replace them with
         some of Gradle's plugins. This process can be done in parts over time, and you can have a working Gradle build
         during the entire process.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N113E8"></a>17.1.&nbsp;Using Ant tasks and types in your build</h2></div></div></div><p>In your build script, a property called <code class="literal">ant</code> is provided by Gradle. This is a reference
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N113E5"></a>17.1.&nbsp;Using Ant tasks and types in your build</h2></div></div></div><p>In your build script, a property called <code class="literal">ant</code> is provided by Gradle. This is a reference
             to an <a class="ulink" href="../javadoc/org/gradle/api/AntBuilder.html" target="_top"><code class="classname">AntBuilder</code></a> instance. This <code class="literal">AntBuilder</code> is used to
             access Ant tasks, types and properties from your build script. There is a very simple mapping from Ant's
             <code class="filename">build.xml</code> format to Groovy, which is explained below.
@@ -65,7 +65,7 @@ Total time: 1 secs</pre></div></div><br class="example-break"><p>You pass nested
     }
 }</pre></div></div><br class="example-break"><p>More information about <code class="literal">AntBuilder</code> can be found in 'Groovy in Action' 8.4 or at the
             <a class="ulink" href="http://groovy.codehaus.org/Using+Ant+from+Groovy" target="_top">Groovy Wiki</a>
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N11452"></a>17.1.1.&nbsp;Using custom Ant tasks in your build</h3></div></div></div><p>To make custom tasks available in your build,
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1144F"></a>17.1.1.&nbsp;Using custom Ant tasks in your build</h3></div></div></div><p>To make custom tasks available in your build,
                 you can use the <code class="literal">taskdef</code> (usually easier) or <code class="literal">typedef</code> Ant task,
                 just as you would in a <code class="literal">build.xml</code> file. You can then refer to the custom Ant task as you
                 would a built-in Ant task.
@@ -94,7 +94,7 @@ dependencies {
         formatter(type: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'text'</span>, toConsole: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'true'</span>)
         fileset(dir: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src'</span>)
     }
-}</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N11488"></a>17.2.&nbsp;Importing an Ant build</h2></div></div></div><p>You can use the <code class="literal">ant.importBuild()</code> method to import an Ant build into your Gradle
+}</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N11485"></a>17.2.&nbsp;Importing an Ant build</h2></div></div></div><p>You can use the <code class="literal">ant.importBuild()</code> method to import an Ant build into your Gradle
             project. When you import an Ant build, each Ant target is treated as a Gradle task. This means you can
             manipulate and execute the Ant targets in exactly the same way as Gradle tasks.
         </p><div class="example"><a name="antHello"></a><p class="title"><b>Example&nbsp;17.8.&nbsp;Importing an Ant build</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">ant.importBuild <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build.xml'</span></pre><p><code class="filename">build.xml</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;project&gt;</span>
@@ -147,7 +147,7 @@ Hello, from Gradle
 
 BUILD SUCCESSFUL
 
-Total time: 1 secs</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N114E2"></a>17.3.&nbsp;Ant properties and references</h2></div></div></div><p>There are several ways to set an Ant property, so that the property can be used by Ant tasks. You can
+Total time: 1 secs</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N114DF"></a>17.3.&nbsp;Ant properties and references</h2></div></div></div><p>There are several ways to set an Ant property, so that the property can be used by Ant tasks. You can
             set the property directly on the <code class="literal">AntBuilder</code> instance. The Ant properties are also
             available as a Map which you can change. You can also use the Ant <code class="literal">property</code> task.
             Below are some examples of how to do this.
@@ -161,6 +161,6 @@ println ant.properties.antProp
 println ant.properties[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'antProp'</span>]</pre></div></div><br class="example-break"><p>There are several ways to set an Ant reference:</p><div class="example"><a name="antProperties"></a><p class="title"><b>Example&nbsp;17.14.&nbsp;Setting an Ant reference</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">ant.path(id: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'classpath'</span>, location: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'libs'</span>)
 ant.references.classpath = ant.path(location: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'libs'</span>)
 ant.references[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'classpath'</span>] = ant.path(location: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'libs'</span>)</pre><p><code class="filename">build.xml</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;path</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">refid</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"classpath"</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">/&gt;</span></pre></div></div><br class="example-break"><p>There are several ways to get an Ant reference:</p><div class="example"><a name="antProperties"></a><p class="title"><b>Example&nbsp;17.15.&nbsp;Getting an Ant reference</b></p><div class="example-contents"><p><code class="filename">build.xml</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">&lt;path</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">id</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"antPath"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-attribute">location</span>=<span xmlns:xslthl="http://xslthl.sf.net" class="hl-value">"libs"</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-tag">/&gt;</span></pre><p><code class="filename">build.gradle</code></p><pre class="programlisting">println ant.references.antPath
-println ant.references[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'antPath'</span>]</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N11536"></a>17.4.&nbsp;API</h2></div></div></div><p>The Ant integration is provided by <a class="ulink" href="../javadoc/org/gradle/api/AntBuilder.html" target="_top"><code class="classname">AntBuilder</code></a>.</p></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N113E2" name="ftn.N113E2" class="para">8</a>] </sup>In Groovy you can execute Strings. To learn more about executing external processes with Groovy have a
+println ant.references[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'antPath'</span>]</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N11533"></a>17.4.&nbsp;API</h2></div></div></div><p>The Ant integration is provided by <a class="ulink" href="../javadoc/org/gradle/api/AntBuilder.html" target="_top"><code class="classname">AntBuilder</code></a>.</p></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N113DF" name="ftn.N113DF" class="para">8</a>] </sup>In Groovy you can execute Strings. To learn more about executing external processes with Groovy have a
                 look in 'Groovy in Action' 9.3.2 or at the Groovy wiki
             </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="working_with_files.html" title="Chapter&nbsp;16.&nbsp;Working With Files">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="logging.html" title="Chapter&nbsp;18.&nbsp;Logging">Next</a></div></div></div></body></html>

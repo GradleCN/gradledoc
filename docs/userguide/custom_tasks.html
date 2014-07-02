@@ -17,7 +17,7 @@
         You can implement a custom task class in pretty much any language you like, provided it ends up compiled to bytecode.
         In our examples, we are going to use Groovy as the implementation language, but you could use, for example, Java
         or Scala. In general, using Groovy is the easiest option, because the Gradle API is designed to work well with Groovy.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N16475"></a>57.1.&nbsp;Packaging a task class</h2></div></div></div><p>There are several places where you can put the source for the task class.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1651A"></a>57.1.&nbsp;Packaging a task class</h2></div></div></div><p>There are several places where you can put the source for the task class.
         </p><div class="variablelist"><dl><dt><span class="term">Build script</span></dt><dd><p>You can include the task class directly in the build script. This has the benefit that the task class is
                         automatically compiled and included in the classpath of the build script without you having to do anything.
                         However, the task class is not visible outside the build script, and so you cannot reuse the task class
@@ -38,7 +38,7 @@
                         some combination of the two.
                     </p></dd></dl></div><p> In our examples, we will start with the task class in the build script, to keep things simple.
             Then we will look at creating a standalone project.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N164A1"></a>57.2.&nbsp;Writing a simple task class</h2></div></div></div><p>To implement a custom task class, you extend <a class="ulink" href="../dsl/org.gradle.api.DefaultTask.html" target="_top"><code class="classname">DefaultTask</code></a>.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N16546"></a>57.2.&nbsp;Writing a simple task class</h2></div></div></div><p>To implement a custom task class, you extend <a class="ulink" href="../dsl/org.gradle.api.DefaultTask.html" target="_top"><code class="classname">DefaultTask</code></a>.
         </p><div class="example"><a name="customTask"></a><p class="title"><b>Example&nbsp;57.1.&nbsp;Defining a custom task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> GreetingTask <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> DefaultTask {
 }</pre></div></div><br class="example-break"><p>This task doesn't do anything useful, so let's add some behaviour. To do so, we add a method to the task
             and mark it with the <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskAction.html" target="_top"><code class="classname">TaskAction</code></a> annotation. Gradle will call the
@@ -73,7 +73,7 @@ task greeting(type: GreetingTask) {
     }
 }</pre><p>Output of <strong class="userinput"><code>gradle -q hello greeting</code></strong></p><pre class="screen">&gt; gradle -q hello greeting
 hello from GreetingTask
-greetings from GreetingTask</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N164EA"></a>57.3.&nbsp;A standalone project</h2></div></div></div><p>Now we will move our task to a standalone project, so we can publish it and share it with others.
+greetings from GreetingTask</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1658F"></a>57.3.&nbsp;A standalone project</h2></div></div></div><p>Now we will move our task to a standalone project, so we can publish it and share it with others.
             This project is simply a Groovy project that produces a JAR containing the task class.
             Here is a simple build script for the project. It applies the Groovy plugin, and adds the Gradle API
             as a compile-time dependency.
@@ -94,7 +94,7 @@ dependencies {
     def greet() {
         println greeting
     }
-}</pre></div></div><br class="example-break"><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1650E"></a>57.3.1.&nbsp;Using your task class in another project</h3></div></div></div><p>To use a task class in a build script, you need to add the class to the build script's classpath. To
+}</pre></div></div><br class="example-break"><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N165B3"></a>57.3.1.&nbsp;Using your task class in another project</h3></div></div></div><p>To use a task class in a build script, you need to add the class to the build script's classpath. To
                 do this, you use a <code class="literal">buildscript { }</code> block, as described in <a class="xref" href="organizing_build_logic.html#sec:external_dependencies">Section&nbsp;59.5, &ldquo;External dependencies for the build script&rdquo;</a>.
                 The following example shows how you might do this when the JAR containing the task class has been published
                 to a local repository:
@@ -111,7 +111,7 @@ dependencies {
 
 task greeting(type: org.gradle.GreetingTask) {
     greeting = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'howdy!'</span>
-}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16523"></a>57.3.2.&nbsp;Writing tests for your task class</h3></div></div></div><p>You can use the <a class="ulink" href="../javadoc/org/gradle/testfixtures/ProjectBuilder.html" target="_top"><code class="classname">ProjectBuilder</code></a> class to create
+}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N165C8"></a>57.3.2.&nbsp;Writing tests for your task class</h3></div></div></div><p>You can use the <a class="ulink" href="../javadoc/org/gradle/testfixtures/ProjectBuilder.html" target="_top"><code class="classname">ProjectBuilder</code></a> class to create
                 <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> instances to use when you test your task class.
             </p><div class="example"><a name="customTaskStandalone"></a><p class="title"><b>Example&nbsp;57.7.&nbsp;Testing a custom task</b></p><div class="example-contents"><p><code class="filename">src/test/groovy/org/gradle/GreetingTaskTest.groovy</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> GreetingTaskTest {
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Test</span>
@@ -135,7 +135,7 @@ task greeting(type: org.gradle.GreetingTask) {
             This can be particularly useful for a transformer task, that converts input files to output files on a 1:1 basis.
         </p><p>
             If you'd like to optimise your build so that only out-of-date inputs are processed, you can do so with an <em class="firstterm">incremental task</em>.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16558"></a>57.4.1.&nbsp;Implementing an incremental task</h3></div></div></div><p>
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N165FD"></a>57.4.1.&nbsp;Implementing an incremental task</h3></div></div></div><p>
                 For a task to process inputs incrementally, that task must contain an <em class="firstterm">incremental task action</em>. This is a task action method that contains a
                 single <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html" target="_top"><code class="classname">IncrementalTaskInputs</code></a> parameter, which indicates to Gradle that the action will process the changed inputs only.
             </p><p>
@@ -171,7 +171,7 @@ task greeting(type: org.gradle.GreetingTask) {
                 and delete output files for any removed inputs.
             </p><p>
                 A task may only contain a single incremental task action.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16588"></a>57.4.2.&nbsp;Which inputs are considered out of date?</h3></div></div></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1662D"></a>57.4.2.&nbsp;Which inputs are considered out of date?</h3></div></div></div><p>
                 When Gradle has history of a previous task execution, and the only changes to the task execution context since that execution are to input files,
                 then Gradle is able to determine which input files need to be reprocessed by the task.
                 In this case, the <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:outOfDate(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.outOfDate()</code></a> action will be executed for any input file that was <span class="emphasis"><em>added</em></span> or <span class="emphasis"><em>modified</em></span>,
@@ -184,7 +184,7 @@ task greeting(type: org.gradle.GreetingTask) {
                 <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:removed(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.removed()</code></a> action will not be executed at all.
             </p><p>
                 You can check if Gradle was able to determine the incremental changes to input files with <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:incremental" target="_top"><code class="classname">IncrementalTaskInputs.isIncremental()</code></a>.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N165C9"></a>57.4.3.&nbsp;An incremental task in action</h3></div></div></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1666E"></a>57.4.3.&nbsp;An incremental task in action</h3></div></div></div><p>
                 Given the incremental task implementation <a class="link" href="custom_tasks.html#taskDefinition" title="Example&nbsp;57.8.&nbsp;Defining an incremental task action">above</a>, we can explore the various change scenarios by example.
                 Note that the various mutation tasks ('updateInputs', 'removeInput', etc) are only present for demonstration purposes: these would not normally be part of your build script.
             </p><p>

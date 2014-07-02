@@ -30,11 +30,6 @@
                 </li><li class="listitem">Validating and prompting for user supplied configuration.
                 </li><li class="listitem">Prompting for and managing user credentials.
                 </li></ul></div><p>
-        </p><p>The Tooling API is the official and recommended way to embed Gradle.
-            This means that the existing APIs, namely <a class="ulink" href="../javadoc/org/gradle/GradleLauncher.html" target="_top"><code class="classname">GradleLauncher</code></a>
-            and the open API (the UIFactory and friends),
-            are deprecated and will be removed in some future version of Gradle.
-            If you happen to use one of the above APIs, please consider changing your application to use the tooling API instead.
         </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:embedding_daemon"></a>62.2.&nbsp;Tooling API and the Gradle Build Daemon</h2></div></div></div><p>Please take a look at <a class="xref" href="gradle_daemon.html">Chapter&nbsp;19, <i>The Gradle Daemon</i></a>.
             The Tooling API uses the daemon all the time, e.g. you cannot officially use the Tooling API without the daemon.
             This means that subsequent calls to the Tooling API, be it model building requests or task executing requests

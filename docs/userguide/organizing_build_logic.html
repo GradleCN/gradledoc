@@ -3,7 +3,7 @@
         into a method. If multiple projects of a multi-project build share some logic you can define this method in the
         parent project. If the build logic gets too complex for being properly modeled by methods you want have an OO
         Model.
-        <sup>[<a href="#ftn.N167C1" name="N167C1" class="footnote">25</a>]</sup>
+        <sup>[<a href="#ftn.N16866" name="N16866" class="footnote">25</a>]</sup>
         Gradle makes this very easy. Just drop your classes in a certain directory and Gradle automatically compiles them
         and puts them in the classpath of your build script.
     </p><p>Here is a summary of the ways you can organise your build logic:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>POGOs. You can declare and use plain old Groovy objects (POGOs) directly in your build script. The
@@ -28,8 +28,10 @@
             </p></li></ul></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:inherited_properties_and_methods"></a>59.1.&nbsp;Inherited properties and methods</h2></div></div></div><p>Any method or property defined in a project build script is also visible to all the sub-projects. You
             can use this to define common configurations, and to extract build logic into methods which can be reused
             by the sub-projects.
-        </p><div class="example"><a name="inheritedBuildLogic"></a><p class="title"><b>Example&nbsp;59.1.&nbsp;Using inherited properties and methods</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">srcDirName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/java'</span>
+        </p><div class="example"><a name="inheritedBuildLogic"></a><p class="title"><b>Example&nbsp;59.1.&nbsp;Using inherited properties and methods</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Define an extra property</span>
+ext.srcDirName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/java'</span>
 
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Define a method</span>
 def getSrcDir(project) {
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">return</span> project.file(srcDirName)
 }</pre><p><code class="filename">child/build.gradle</code></p><pre class="programlisting">task show &lt;&lt; {
@@ -48,11 +50,13 @@ srcDir: child/src/java</pre></div></div><br class="example-break"></div><div cla
             any kind of configuration such as repositories, plug-ins, tasks, and so on.
             The following sample shows how this works.
         </p><div class="example"><a name="injectedBuildLogic"></a><p class="title"><b>Example&nbsp;59.2.&nbsp;Using injected properties and methods</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">subprojects {
-    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Inject a property and method</span>
-    srcDirName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/java'</span>
-    srcDir = { file(srcDirName) }
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Define a new property</span>
+    ext.srcDirName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/java'</span>
 
-    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Inject a task</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Define a method using a closure as the method body</span>
+    ext.srcDir = { file(srcDirName) }
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Define a task</span>
     task show &lt;&lt; {
         println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'project: '</span> + project.path
         println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'srcDirName: '</span> + srcDirName
@@ -63,7 +67,7 @@ srcDir: child/src/java</pre></div></div><br class="example-break"></div><div cla
 
 <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Inject special case configuration into a particular project</span>
 project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':child2'</span>) {
-    srcDirName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$srcDirName/legacy"</span>
+    ext.srcDirName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$srcDirName/legacy"</span>
 }</pre><p><code class="filename">child1/build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Use injected property and method. Here, we override the injected value</span>
 srcDirName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
 def dir = srcDir()</pre><p>Output of <strong class="userinput"><code>gradle -q show</code></strong></p><pre class="screen">&gt; gradle -q show
@@ -77,7 +81,7 @@ srcDir: child2/src/java/legacy</pre></div></div><br class="example-break"></div>
             You don't need to provide any further instruction. This can be a good place to add your custom tasks and plugins.
         </p><p>For multi-project builds there can be only one <code class="filename">buildSrc</code> directory, which has to be
             in the root project directory.
-        </p><p>Listed below is the default build script that Gradle applies to the <code class="filename">buildSrc</code> project:</p><div class="figure"><a name="N1685A"></a><p class="title"><b>Figure&nbsp;59.1.&nbsp;Default buildSrc build script</b></p><div class="figure-contents"><pre class="programlisting">apply plugin: 'groovy'
+        </p><p>Listed below is the default build script that Gradle applies to the <code class="filename">buildSrc</code> project:</p><div class="figure"><a name="N168FF"></a><p class="title"><b>Figure&nbsp;59.1.&nbsp;Default buildSrc build script</b></p><div class="figure-contents"><pre class="programlisting">apply plugin: 'groovy'
 dependencies {
     compile gradleApi()
     compile localGroovy()
@@ -145,7 +149,7 @@ aGVsbG8gd29ybGQK</pre></div></div><br class="example-break"><p>
             build scripts of all sub-projects.
         </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:ant_optional_dependencies"></a>59.6.&nbsp;Ant optional dependencies</h2></div></div></div><p>For reasons we don't fully understand yet, external dependencies are not picked up by Ant's optional
             tasks. But you can easily do it in another way.
-            <sup>[<a href="#ftn.N168F8" name="N168F8" class="footnote">26</a>]</sup>
+            <sup>[<a href="#ftn.N1699D" name="N1699D" class="footnote">26</a>]</sup>
         </p><div class="example"><a name="buildLogic"></a><p class="title"><b>Example&nbsp;59.8.&nbsp;Ant optional dependencies</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">configurations {
     ftpAntTask
 }
@@ -173,8 +177,8 @@ task ftp &lt;&lt; {
             maintain code base. It is our experience that even very complex custom build logic is rarely shared between
             different builds. Other build tools enforce a separation of this build logic into a separate project. Gradle
             spares you this unnecessary overhead and indirection.
-        </p></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N167C1" name="ftn.N167C1" class="para">25</a>] </sup>Which might range from a single class to something very complex.
-            </p></div><div class="footnote"><p><sup>[<a href="#N168F8" name="ftn.N168F8" class="para">26</a>] </sup>In fact, we think this is anyway the nicer solution. Only if your buildscript and Ant's optional
+        </p></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N16866" name="ftn.N16866" class="para">25</a>] </sup>Which might range from a single class to something very complex.
+            </p></div><div class="footnote"><p><sup>[<a href="#N1699D" name="ftn.N1699D" class="para">26</a>] </sup>In fact, we think this is anyway the nicer solution. Only if your buildscript and Ant's optional
                     task need the <span class="emphasis"><em>same</em></span> library you would have to define it two times. In such a
                     case it would be nice, if Ant's optional task would automatically pickup the classpath defined
                     in the <code class="literal">gradesettings</code>.

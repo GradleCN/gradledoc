@@ -11,8 +11,7 @@ configFile = file(configFile.absolutePath)
 <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Using a File object with a relative path</span>
 configFile = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/config.xml'</span>))</pre></div></div><br class="example-break"><p>You can pass any object to the <code class="literal">file()</code> method, and it will attempt to convert the value
             to an absolute <code class="classname">File</code> object. Usually, you would pass it a
-            <code class="classname">String</code> or <code class="classname">File</code> instance. The supplied object's
-            <code class="literal">toString()</code> value is used as the file path. If this path is an absolute path, it is used
+            <code class="classname">String</code> or <code class="classname">File</code> instance. If this path is an absolute path, it is used
             to construct a <code class="classname">File</code> instance. Otherwise, a <code class="classname">File</code> instance is
             constructed by prepending the project directory path to the supplied path. The <code class="literal">file()</code>
             method also understands URLs, such as <code class="literal">file:/some/path.xml</code>.
@@ -27,7 +26,7 @@ configFile = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">n
             <code class="literal">FileCollection</code>.
         </p><p>
             One way to obtain a <code class="literal">FileCollection</code> instance is to use the
-            <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:files(java.lang.Object...)" target="_top"><code class="classname">Project.files()</code></a> method. You can pass this method any number of
+            <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:files(java.lang.Object[])" target="_top"><code class="classname">Project.files()</code></a> method. You can pass this method any number of
             objects, which are then converted into a set of <code class="classname">File</code> objects. The
             <code class="literal">files()</code> method accepts any type of object as its parameters. These are evaluated relative
             to the project directory, as per the <code class="literal">file()</code> method, described in <a class="xref" href="working_with_files.html#sec:locating_files">Section&nbsp;16.1, &ldquo;Locating files&rdquo;</a>.
@@ -193,7 +192,7 @@ compile {
             the files to. You may also specify how to transform the files as they are copied. You do all this using a
             <em class="firstterm">copy spec</em>. A copy spec is represented by the <a class="ulink" href="../javadoc/org/gradle/api/file/CopySpec.html" target="_top"><code class="classname">CopySpec</code></a> interface. The
             <code class="literal">Copy</code> task implements this interface.
-            You specify the source files using the <a class="ulink" href="../javadoc/org/gradle/api/file/CopySpec.html#from(java.lang.Object...)" target="_top"><code class="classname">CopySpec.from()</code></a>
+            You specify the source files using the <a class="ulink" href="../javadoc/org/gradle/api/file/CopySpec.html#from(java.lang.Object[])" target="_top"><code class="classname">CopySpec.from()</code></a>
             method. To specify the destination directory, use the <a class="ulink" href="../javadoc/org/gradle/api/file/CopySpec.html#into(java.lang.Object)" target="_top"><code class="classname">CopySpec.into()</code></a>
             method.
         </p><div class="example"><a name="copy"></a><p class="title"><b>Example&nbsp;16.10.&nbsp;Copying files using the copy task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task copyTask(type: Copy) {
@@ -257,7 +256,7 @@ compile {
             without any extra effort on your part. The <code class="literal">copy()</code> method can be used to copy files as <span class="emphasis"><em>part</em></span> of a task's
             implementation. That is, the copy method is intended to be used by custom tasks (see <a class="xref" href="custom_tasks.html">Chapter&nbsp;57, <i>Writing Custom Task Classes</i></a>) that need to copy files
             as part of their function. In such a scenario, the custom task should sufficiently declare the inputs/outputs relevant to the copy action.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N11201"></a>16.6.1.&nbsp;Renaming files</h3></div></div></div><div class="example"><a name="renameOnCopy"></a><p class="title"><b>Example&nbsp;16.15.&nbsp;Renaming files as they are copied</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task rename(type: Copy) {
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N111FE"></a>16.6.1.&nbsp;Renaming files</h3></div></div></div><div class="example"><a name="renameOnCopy"></a><p class="title"><b>Example&nbsp;16.15.&nbsp;Renaming files as they are copied</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task rename(type: Copy) {
     from <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/main/webapp'</span>
     into <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build/explodedWar'</span>
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Use a closure to map the file name</span>
@@ -267,7 +266,7 @@ compile {
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Use a regular expression to map the file name</span>
     rename <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'(.+)-staging-(.+)'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'$1$2'</span>
     rename(/(.+)-staging-(.+)/, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'$1$2'</span>)
-}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1120E"></a>16.6.2.&nbsp;Filtering files</h3></div></div></div><div class="example"><a name="filterOnCopy"></a><p class="title"><b>Example&nbsp;16.16.&nbsp;Filtering files as they are copied</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.apache.tools.ant.filters.FixCrLfFilter
+}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1120B"></a>16.6.2.&nbsp;Filtering files</h3></div></div></div><div class="example"><a name="filterOnCopy"></a><p class="title"><b>Example&nbsp;16.16.&nbsp;Filtering files as they are copied</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.apache.tools.ant.filters.FixCrLfFilter
 <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.apache.tools.ant.filters.ReplaceTokens
 
 task filter(type: Copy) {
@@ -283,7 +282,7 @@ task filter(type: Copy) {
     filter { String line -&gt;
         <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"[$line]"</span>
     }
-}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1121B"></a>16.6.3.&nbsp;Using the <code class="classname">CopySpec</code> class</h3></div></div></div><p>Copy specs form a hierarchy. A copy spec inherits its destination path, include patterns, exclude patterns, copy actions,
+}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N11218"></a>16.6.3.&nbsp;Using the <code class="classname">CopySpec</code> class</h3></div></div></div><p>Copy specs form a hierarchy. A copy spec inherits its destination path, include patterns, exclude patterns, copy actions,
                 name mappings and filters.</p><div class="example"><a name="nestedCopySpecs"></a><p class="title"><b>Example&nbsp;16.17.&nbsp;Nested copy specs</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task nestedSpecs(type: Copy) {
     into <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build/explodedWar'</span>
     exclude <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*staging*'</span>
@@ -326,7 +325,7 @@ task zip(type: Zip) {
             files using the <code class="literal">from()</code> method, and can optionally specify where they end up in the
             archive using the <code class="literal">into()</code> method. You can filter the contents of file, rename files, and
             all the other things you can do with a copy spec.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1128C"></a>16.8.1.&nbsp;Archive naming</h3></div></div></div><p>The default name for a generated archive is <code class="filename"><em class="replaceable"><code>projectName</code></em>-<em class="replaceable"><code>version</code></em>.<em class="replaceable"><code>type</code></em></code>
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N11289"></a>16.8.1.&nbsp;Archive naming</h3></div></div></div><p>The default name for a generated archive is <code class="filename"><em class="replaceable"><code>projectName</code></em>-<em class="replaceable"><code>version</code></em>.<em class="replaceable"><code>type</code></em></code>
                 For example:
             </p><div class="example"><a name="archiveNaming"></a><p class="title"><b>Example&nbsp;16.20.&nbsp;Creation of ZIP archive</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
 
@@ -418,6 +417,6 @@ gradle-wrapper-1.0-src.zip</pre></div></div><br class="example-break"><div xmlns
                     <td>Depends on the archive type, and for TAR files, the compression type as well: <code class="filename">zip</code>, <code class="filename">jar</code>,
                         <code class="filename">war</code>, <code class="filename">tar</code>, <code class="filename">tgz</code> or <code class="filename">tbz2</code>.</td>
                     <td>The extension of the archive file name.</td>
-                </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N113B0"></a>16.8.2.&nbsp;Sharing content between multiple archives</h3></div></div></div><p>You can use the <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:copySpec(groovy.lang.Closure)" target="_top"><code class="classname">Project.copySpec()</code></a> method to share content between archives.</p></div><p>Often you will want to publish an archive, so that it is usable from another project. This process is
+                </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N113AD"></a>16.8.2.&nbsp;Sharing content between multiple archives</h3></div></div></div><p>You can use the <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:copySpec(groovy.lang.Closure)" target="_top"><code class="classname">Project.copySpec()</code></a> method to share content between archives.</p></div><p>Often you will want to publish an archive, so that it is usable from another project. This process is
             described in <a class="xref" href="artifact_management.html">Chapter&nbsp;51, <i>Publishing artifacts</i></a>
         </p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="more_about_tasks.html" title="Chapter&nbsp;15.&nbsp;More about Tasks">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="ant.html" title="Chapter&nbsp;17.&nbsp;Using Ant from Gradle">Next</a></div></div></div></body></html>

@@ -4,7 +4,7 @@
         So if you are interested in WTP integration then only apply the <code class="literal">eclipse-wtp</code> plugin. Otherwise applying <code class="literal">eclipse</code> plugin is enough.
         This change was requested by Eclipse users who take advantage of <code class="literal">war</code> or <code class="literal">ear</code> plugin
         but they don't use Eclipse WTP. Internally, <code class="literal">eclipse-wtp</code> also applies the <code class="literal">eclipse</code> plugin so you don't need to apply both of those plugins.
-    </p><p>What exactly the Eclipse plugin generates depends on which other plugins are used:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;38.1.&nbsp;Eclipse plugin behavior</b></p><div class="table-contents"><table id="N13D06"><thead><tr><td>Plugin</td><td>Description</td></tr></thead><tr>
+    </p><p>What exactly the Eclipse plugin generates depends on which other plugins are used:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;38.1.&nbsp;Eclipse plugin behavior</b></p><div class="table-contents"><table id="N13CE9"><thead><tr><td>Plugin</td><td>Description</td></tr></thead><tr>
             <td>None</td><td>Generates minimal <code class="filename">.project</code> file.</td>
         </tr><tr>
             <td><a class="link" href="java_plugin.html">Java</a></td><td>Adds Java configuration to <code class="filename">.project</code>.
@@ -21,9 +21,9 @@
             Generates WTP settings files only if <code class="literal">eclipse-wtp</code> plugin was applied.</td>
         </tr></table></div></div><p>The Eclipse plugin is open to customization and provides a standardized set of hooks
         for adding and removing content from the generated files.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13D63"></a>38.1.&nbsp;Usage</h2></div></div></div><p>To use the Eclipse plugin, include this in your build script:</p><div class="example"><a name="useEclipsePlugin"></a><p class="title"><b>Example&nbsp;38.1.&nbsp;Using the Eclipse plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'eclipse'</span></pre></div></div><br class="example-break"><p>The Eclipse plugin adds a number of tasks to your projects. The main tasks that you will use
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13D46"></a>38.1.&nbsp;Usage</h2></div></div></div><p>To use the Eclipse plugin, include this in your build script:</p><div class="example"><a name="useEclipsePlugin"></a><p class="title"><b>Example&nbsp;38.1.&nbsp;Using the Eclipse plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'eclipse'</span></pre></div></div><br class="example-break"><p>The Eclipse plugin adds a number of tasks to your projects. The main tasks that you will use
             are the <code class="literal">eclipse</code> and <code class="literal">cleanEclipse</code> tasks.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13D7A"></a>38.2.&nbsp;Tasks</h2></div></div></div><p>The Eclipse plugin adds the tasks shown below to a project.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;38.2.&nbsp;Eclipse plugin - tasks</b></p><div class="table-contents"><table id="eclipsetasks"><thead><tr>
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13D5D"></a>38.2.&nbsp;Tasks</h2></div></div></div><p>The Eclipse plugin adds the tasks shown below to a project.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;38.2.&nbsp;Eclipse plugin - tasks</b></p><div class="table-contents"><table id="eclipsetasks"><thead><tr>
                     <td>Task name</td>
                     <td>Depends on</td>
                     <td>Type</td>
@@ -141,7 +141,7 @@
                     <a class="ulink" href="../dsl/org.gradle.plugins.ide.eclipse.GenerateEclipseWtpFacet.html" target="_top"><code class="classname">GenerateEclipseWtpFacet</code></a>
                 </td>
                 <td>Generates the <code class="filename">.settings/org.eclipse.wst.common.project.facet.core.xml</code> file only if <code class="literal">eclipse-wtp</code> plugin was applied.</td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13EE4"></a>38.3.&nbsp;Configuration</h2></div></div></div><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;38.3.&nbsp;Configuration of the Eclipse plugin</b></p><div class="table-contents"><table id="eclipse-configuration"><thead><tr>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13EC7"></a>38.3.&nbsp;Configuration</h2></div></div></div><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;38.3.&nbsp;Configuration of the Eclipse plugin</b></p><div class="table-contents"><table id="eclipse-configuration"><thead><tr>
                     <td>Model</td>
                     <td>Reference name</td>
                     <td>Description</td>
@@ -181,19 +181,19 @@
                 </td>
                 <td><code class="literal">eclipse.wtp.facet</code></td>
                 <td>Allows configuring wtp facet information only if <code class="literal">eclipse-wtp</code> plugin was applied.</td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13F63"></a>38.4.&nbsp;Customizing the generated files</h2></div></div></div><p>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13F46"></a>38.4.&nbsp;Customizing the generated files</h2></div></div></div><p>
             The Eclipse plugin allows you to customize the generated metadata files. The plugin provides a DSL for configuring model objects
             that model the Eclipse view of the project. These model objects are then merged with the existing Eclipse XML metadata to ultimately
             generate new metadata. The model objects provide lower level hooks for working with domain objects representing the file content 
             before and after merging with the model configuration. They also provide a very low level hook for working directly with the raw 
             XML for adjustment before it is persisted, for fine tuning and configuration that the Eclipse plugin does not model.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N13F68"></a>38.4.1.&nbsp;Merging</h3></div></div></div><p>Sections of existing Eclipse files that are also the target of generated content will be amended or overwritten,
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N13F4B"></a>38.4.1.&nbsp;Merging</h3></div></div></div><p>Sections of existing Eclipse files that are also the target of generated content will be amended or overwritten,
                  depending on the particular section. The remaining sections will be left as-is.</p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="sec:complete-overwrite"></a>38.4.1.1.&nbsp;Disabling merging with a complete overwrite</h4></div></div></div><p>To completely overwrite existing Eclipse files, execute a clean task together with its corresponding generation task,
                     for example <strong class="userinput"><code>gradle cleanEclipse eclipse</code></strong> (in that order). If you want to make this
                     the default behavior, add <code class="code">tasks.eclipse.dependsOn(cleanEclipse)</code> to your build script. This makes it
                     unnecessary to execute the clean task explicitly.
-                </p><p>Complete overwrite works equally well for individual files, for example by executing <strong class="userinput"><code> gradle cleanEclipseClasspath eclipseClasspath</code></strong>.
-                </p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N13F7E"></a>38.4.2.&nbsp;Hooking into the generation lifecycle</h3></div></div></div><p>The Eclipse plugin provides objects modeling the sections of the Eclipse files
+                </p><p>Complete overwrite works equally well for individual files, for example by executing <strong class="userinput"><code>gradle cleanEclipseClasspath eclipseClasspath</code></strong>.
+                </p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N13F61"></a>38.4.2.&nbsp;Hooking into the generation lifecycle</h3></div></div></div><p>The Eclipse plugin provides objects modeling the sections of the Eclipse files
                 that are generated by Gradle. The generation lifecycle is as follows:
                 </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">The file is read; or a default version provided by Gradle is used if it does not exist</li><li class="listitem">The <code class="code">beforeMerged</code> hook is executed with a domain object representing the existing file</li><li class="listitem">The existing content is merged with the configuration inferred from the Gradle build or defined explicitly in the eclipse DSL</li><li class="listitem">The <code class="code">whenMerged</code> hook is executed with a domain object representing contents of the file to be persisted</li><li class="listitem">The <code class="code">withXml</code> hook is executed with a raw representation of the XML that will be persisted</li><li class="listitem">The final XML is persisted</li></ol></div><p>
                 The following table lists the domain object used for each of the Eclipse model types:
@@ -243,14 +243,14 @@
                     </p><div class="example"><a name="partialOverwritesProject"></a><p class="title"><b>Example&nbsp;38.3.&nbsp;Partial Overwrite for Project</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">eclipse.project.file.beforeMerged { project -&gt;
     project.natures.clear()
 }</pre></div></div><p><br class="example-break">
-                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N14060"></a>38.4.2.2.&nbsp;Modifying the fully populated domain objects</h4></div></div></div><p>The <code class="code">whenMerged</code> hook allows to manipulate the fully populated domain objects. Often this is the
+                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N14043"></a>38.4.2.2.&nbsp;Modifying the fully populated domain objects</h4></div></div></div><p>The <code class="code">whenMerged</code> hook allows to manipulate the fully populated domain objects. Often this is the
                     preferred way to customize Eclipse files. Here is how you would export all the dependencies of an Eclipse project:
                     </p><div class="example"><a name="exportDependencies"></a><p class="title"><b>Example&nbsp;38.4.&nbsp;Export Dependencies</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">eclipse.classpath.file {
     whenMerged { classpath -&gt;
         classpath.entries.findAll { entry -&gt; entry.kind == <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'lib'</span> }*.exported = false
     }
 }</pre></div></div><p><br class="example-break">
-                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N14073"></a>38.4.2.3.&nbsp;Modifying the XML representation</h4></div></div></div><p>The <code class="code">withXml</code>hook allows to manipulate the in-memory XML representation just before the file gets written to disk.
+                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N14056"></a>38.4.2.3.&nbsp;Modifying the XML representation</h4></div></div></div><p>The <code class="code">withXml</code>hook allows to manipulate the in-memory XML representation just before the file gets written to disk.
                     Although Groovy's XML support makes up for a lot, this approach is less convenient than manipulating the domain objects.
                     In return, you get total control over the generated file, including sections not modeled by the domain objects.
                     </p><div class="example"><a name="wtpWithXml"></a><p class="title"><b>Example&nbsp;38.5.&nbsp;Customizing the XML</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'eclipse-wtp'</span>

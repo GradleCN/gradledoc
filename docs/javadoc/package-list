@@ -5,8 +5,8 @@ org.gradle.api.artifacts.cache
 org.gradle.api.artifacts.component
 org.gradle.api.artifacts.dsl
 org.gradle.api.artifacts.maven
+org.gradle.api.artifacts.query
 org.gradle.api.artifacts.repositories
-org.gradle.api.artifacts.resolution
 org.gradle.api.artifacts.result
 org.gradle.api.component
 org.gradle.api.distribution
@@ -17,6 +17,7 @@ org.gradle.api.initialization
 org.gradle.api.initialization.dsl
 org.gradle.api.invocation
 org.gradle.api.java.archives
+org.gradle.api.jvm
 org.gradle.api.logging
 org.gradle.api.plugins
 org.gradle.api.plugins.announce
@@ -55,12 +56,13 @@ org.gradle.ide.visualstudio
 org.gradle.language
 org.gradle.language.assembler
 org.gradle.language.base
+org.gradle.language.base.artifact
 org.gradle.language.base.plugins
 org.gradle.language.c
 org.gradle.language.cpp
 org.gradle.language.java
+org.gradle.language.java.artifact
 org.gradle.language.jvm
-org.gradle.language.jvm.plugins
 org.gradle.language.jvm.tasks
 org.gradle.language.objectivec
 org.gradle.language.objectivecpp
@@ -88,6 +90,9 @@ org.gradle.plugins.javascript.jshint
 org.gradle.plugins.javascript.rhino
 org.gradle.plugins.javascript.rhino.worker
 org.gradle.process
+org.gradle.runtime.base
+org.gradle.runtime.jvm
+org.gradle.runtime.jvm.plugins
 org.gradle.testfixtures
 org.gradle.testing.jacoco.tasks
 org.gradle.tooling

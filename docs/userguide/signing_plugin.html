@@ -6,7 +6,7 @@
         The signing plugin currently only provides support for generating <a class="ulink" href="http://www.pgpi.org/" target="_top">PGP signatures</a> 
         (which is the signature format <a class="ulink" href="https://docs.sonatype.org/display/Repository/Central+Sync+Requirements" target="_top">required for 
         publication to the Maven Central Repository</a>).
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N156EC"></a>53.1.&nbsp;Usage</h2></div></div></div><p>To use the Signing plugin, include in your build script:</p><div class="example"><a name="useSigningPlugin"></a><p class="title"><b>Example&nbsp;53.1.&nbsp;Using the Signing plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'signing'</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N156FB"></a>53.2.&nbsp;Signatory credentials</h2></div></div></div><p>
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1573F"></a>53.1.&nbsp;Usage</h2></div></div></div><p>To use the Signing plugin, include in your build script:</p><div class="example"><a name="useSigningPlugin"></a><p class="title"><b>Example&nbsp;53.1.&nbsp;Using the Signing plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'signing'</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1574E"></a>53.2.&nbsp;Signatory credentials</h2></div></div></div><p>
             In order to create PGP signatures, you will need a key pair (instructions on creating a key pair using the <a class="ulink" href="http://www.gnupg.org/" target="_top">GnuPG tools</a> 
             can be found in the <a class="ulink" href="http://www.gnupg.org/documentation/howtos.html" target="_top">GnuPG HOWTOs</a>). You need to provide the signing plugin
             with your key information, which means three things: 
@@ -37,10 +37,10 @@ gradle.taskGraph.whenReady { taskGraph -&gt;
 
         console.printf "\nThanks.\n\n"
     }
-}</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1572D"></a>53.3.&nbsp;Specifying what to sign</h2></div></div></div><p>
+}</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N15780"></a>53.3.&nbsp;Specifying what to sign</h2></div></div></div><p>
             As well as configuring how things are to be signed (i.e. the signatory configuration), you must also specify what is to be signed. 
             The Signing plugin provides a DSL that allows you to specify the tasks and/or configurations that should be signed.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15732"></a>53.3.1.&nbsp;Signing Configurations</h3></div></div></div><p>
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15785"></a>53.3.1.&nbsp;Signing Configurations</h3></div></div></div><p>
                 It is common to want to sign the artifacts of a configuration. For example, the <a class="link" href="java_plugin.html">Java plugin</a> 
                 configures a jar to built and this jar artifact is added to the <code class="literal">archives</code> configuration. 
                 Using the Signing DSL, you can specify that all of the artifacts of this configuration should be signed.
@@ -59,7 +59,7 @@ gradle.taskGraph.whenReady { taskGraph -&gt;
 
 BUILD SUCCESSFUL
 
-Total time: 1 secs</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1575F"></a>53.3.2.&nbsp;Signing Tasks</h3></div></div></div><p>
+Total time: 1 secs</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N157B2"></a>53.3.2.&nbsp;Signing Tasks</h3></div></div></div><p>
                 In some cases the artifact that you need to sign may not be part of a configuration. In this case you can directly sign the task that
                 produces the artifact to sign.
             </p><div class="example"><a name="signingTasks"></a><p class="title"><b>Example&nbsp;53.4.&nbsp;Signing a task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task stuffZip (type: Zip) {
@@ -83,7 +83,7 @@ Total time: 1 secs</pre></div></div><br class="example-break"><p>
                 For a task to be &ldquo;signable&rdquo;, it must produce an archive of some type. Tasks that do this are the <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Tar.html" target="_top"><code class="classname">Tar</code></a>,
                 <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Zip.html" target="_top"><code class="classname">Zip</code></a>, <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Jar.html" target="_top"><code class="classname">Jar</code></a>, 
                 <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.War.html" target="_top"><code class="classname">War</code></a> and <a class="ulink" href="../dsl/org.gradle.plugins.ear.Ear.html" target="_top"><code class="classname">Ear</code></a> tasks.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1579D"></a>53.3.3.&nbsp;Conditional Signing</h3></div></div></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N157F0"></a>53.3.3.&nbsp;Conditional Signing</h3></div></div></div><p>
                 A common usage pattern is to only sign build artifacts under certain conditions. For example, you may not wish to sign artifacts for non release versions.
                 To achieve this, you can specify that signing is only required under certain conditions.
             </p><div class="example"><a name="conditionalSigning"></a><p class="title"><b>Example&nbsp;53.6.&nbsp;Conditional signing</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">version = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0-SNAPSHOT'</span>
@@ -96,11 +96,11 @@ signing {
                 In this example, we only want to require signing if we are building a release version and we are going to publish it. Because we are inspecting the task
                 graph to determine if we are going to be publishing, we must set the <code class="literal">signing.required</code> property to a closure to defer the evaluation. See
                 <a class="ulink" href="../groovydoc/org/gradle/plugins/signing/SigningExtension.html#setRequired(java.lang.Object)" target="_top"><code class="classname">SigningExtension.setRequired()</code></a> for more information.
-            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N157B6"></a>53.4.&nbsp;Publishing the signatures</h2></div></div></div><p>
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N15809"></a>53.4.&nbsp;Publishing the signatures</h2></div></div></div><p>
             When specifying what is to be signed via the Signing DSL, the resultant signature artifacts are automatically added to the <code class="literal">signatures</code> and
             <code class="literal">archives</code> dependency configurations. This means that if you want to upload your signatures to your distribution repository along
             with the artifacts you simply execute the <code class="literal">uploadArchives</code> task as normal.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N157C4"></a>53.5.&nbsp;Signing POM files</h2></div></div></div><p>
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N15817"></a>53.5.&nbsp;Signing POM files</h2></div></div></div><p>
             When deploying signatures for your artifacts to a Maven repository, you will also want to sign the published POM file. The signing plugin adds a
             <code class="literal">signing.signPom()</code> (see: <a class="ulink" href="../dsl/org.gradle.plugins.signing.SigningExtension.html#org.gradle.plugins.signing.SigningExtension:signPom(org.gradle.api.artifacts.maven.MavenDeployment, groovy.lang.Closure)" target="_top"><code class="classname">SigningExtension.signPom()</code></a>) method that can be used in the
             <code class="literal">beforeDeployment()</code> block in your upload task configuration.

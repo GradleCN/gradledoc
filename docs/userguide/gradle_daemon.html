@@ -26,8 +26,8 @@
                     or check for new versions of snapshot dependencies.</li><li class="listitem">Utilize a pool of reusable processes available for compilation and testing.
                     For example, both the Groovy and Scala compilers have a large startup cost.
                     The build daemon could maintain a process with Groovy and/or Scala already loaded.</li><li class="listitem">Preemptive execution of certain tasks, for example compilation. Quicker feedback.</li><li class="listitem">Fast and accurate bash tab completion.</li><li class="listitem">Periodically garbage collect the Gradle caches.</li></ul></div><p>
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="reusing_daemons"></a>19.2.&nbsp;Reusing and expiration of daemons</h2></div></div></div><p>The basic idea is that the gradle command forks a daemon process, which performs the actual build.
-            Subsequent invocations of the gradle command will reuse the daemon, avoiding the startup costs.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="reusing_daemons"></a>19.2.&nbsp;Reusing and expiration of daemons</h2></div></div></div><p>The basic idea is that the Gradle command forks a daemon process, which performs the actual build.
+            Subsequent invocations of the Gradle command will reuse the daemon, avoiding the startup costs.
             Sometimes we cannot use an existing daemon because it is busy or its java version or jvm arguments are different.
             For exact details on when exactly new daemon process is forked read the dedicated section below.
             The daemon process automatically expire after 3 hours of idle time.

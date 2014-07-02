@@ -7,7 +7,7 @@
     </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>A build with a newer version of Gradle than it's currently using (i.e. upgrading the Gradle version).</p></li><li class="listitem"><p>A Gradle build with a build executed by another tool such as Apache Ant, Apache Maven or something else (i.e. migrating to Gradle).</p></li><li class="listitem"><p>The same Gradle build, with the same version, before and after a change to the build (i.e. testing build changes).</p></li></ul></div><p>
         By comparing builds in these scenarios you can make an informed decision about the Gradle upgrade, migration to Gradle or build change by understanding the differences in the outcomes.
         The comparison process produces a HTML report outlining which outcomes were found to be identical and identifying the differences between non-identical outcomes.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N16AEE"></a>63.1.&nbsp;Definition of terms</h2></div></div></div><p>The following are the terms used for build comparison and their definitions.</p><div class="variablelist"><dl><dt><span class="term">&ldquo;Build&rdquo;</span></dt><dd><p>
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N16B8C"></a>63.1.&nbsp;Definition of terms</h2></div></div></div><p>The following are the terms used for build comparison and their definitions.</p><div class="variablelist"><dl><dt><span class="term">&ldquo;Build&rdquo;</span></dt><dd><p>
                         In the context of build comparison, a build is not necessarily a Gradle build.
                         It can be any invokable &ldquo;process&rdquo; that produces observable &ldquo;outcomes&rdquo;.
                         At least one of the builds in a comparison will be a Gradle build.
@@ -35,21 +35,21 @@
                         can be compared in so far as they can be identified to be logically equivalent to an unknown build outcome in the other build,
                         but no meaningful comparison of what the build outcome actually is can be performed. Using the latest Gradle version
                         for the host build will avoid encountering unknown build outcomes.
-                    </p></dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N16B24"></a>63.2.&nbsp;Current Capabilities</h2></div></div></div><p>
+                    </p></dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N16BC2"></a>63.2.&nbsp;Current Capabilities</h2></div></div></div><p>
             As this is an <a class="link" href="feature_lifecycle.html">incubating</a> feature, a limited set of the eventual functionality has been implemented at this time.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16B2D"></a>63.2.1.&nbsp;Supported builds</h3></div></div></div><p>
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16BCB"></a>63.2.1.&nbsp;Supported builds</h3></div></div></div><p>
                 Only support for executing Gradle builds is available at this time.
                 Source and target build must execute with Gradle newer or equal to <code class="literal">1.0</code>.
                 Host build must be at least <code class="literal">1.2</code>.
             </p><p>
                 Future versions will provide support for executing builds from other build systems such as Apache Ant
                 or Apache Maven, as well as support for executing arbitrary processes (e.g. shell script based builds)
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16B3A"></a>63.2.2.&nbsp;Supported build outcomes</h3></div></div></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16BD8"></a>63.2.2.&nbsp;Supported build outcomes</h3></div></div></div><p>
                 Only support for comparing build outcomes that are <code class="literal">zip</code> archives is supported at this time.
                 This includes <code class="literal">jar</code>, <code class="literal">war</code> and <code class="literal">ear</code> archives.
             </p><p>
                 Future versions will provide support for comparing outcomes such as test execution (i.e. which tests were executed, which tests failed, etc.)
-            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N16B4D"></a>63.3.&nbsp;Comparing Gradle Builds</h2></div></div></div><p>
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N16BEB"></a>63.3.&nbsp;Comparing Gradle Builds</h2></div></div></div><p>
             The <code class="literal">compare-gradle-builds</code> plugin can be used to facilitate a comparison between two Gradle builds. The plugin
             adds a <a class="ulink" href="../dsl/org.gradle.api.plugins.buildcomparison.gradle.CompareGradleBuilds.html" target="_top"><code class="classname">CompareGradleBuilds</code></a> task named &ldquo;<code class="literal">compareGradleBuilds</code>&rdquo;
             to the project. The configuration of this task specifies what is to be compared. By default, it is configured to compare the current build with itself
@@ -67,7 +67,7 @@
     }
 }</pre><p>
             The example above configures a comparison between two different projects using two different Gradle versions.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16B68"></a>63.3.1.&nbsp;Trying Gradle upgrades</h3></div></div></div><p>
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16C06"></a>63.3.1.&nbsp;Trying Gradle upgrades</h3></div></div></div><p>
                 You can use the build comparison functionality to very quickly try a new Gradle version with your build.
             </p><p>
                 To try your current build with a different Gradle version, simply add the following to the <code class="filename">build.gradle</code> of the <em class="firstterm">root project</em>.
@@ -77,7 +77,7 @@ compareGradleBuilds {
     targetBuild.gradleVersion = "&laquo;gradle version&raquo;"
 }</pre><p>
                 Then simply execute the <span class="command"><strong>compareGradleBuilds</strong></span> task. You will see the console output of the &ldquo;source&rdquo; and &ldquo;target&rdquo; builds as they are executing.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16B7C"></a>63.3.2.&nbsp;The comparison &ldquo;result&rdquo;</h3></div></div></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16C1A"></a>63.3.2.&nbsp;The comparison &ldquo;result&rdquo;</h3></div></div></div><p>
                 If there are any differences between the <em class="firstterm">compared outcomes</em>, the task will fail. The location of the HTML report
                 providing insight into the comparison will be given. If all compared outcomes are found to be identical, and there are no uncompared outcomes,
                 and there are no unknown build outcomes the task will succeed.
@@ -85,7 +85,7 @@ compareGradleBuilds {
                 You can configure the task to not fail on compared outcome differences by setting the <code class="literal">ignoreFailures</code> property to true.
             </p><pre class="programlisting">compareGradleBuilds {
     ignoreFailures = true
-}</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16B8B"></a>63.3.3.&nbsp;Which archives are compared?</h3></div></div></div><p>
+}</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16C29"></a>63.3.3.&nbsp;Which archives are compared?</h3></div></div></div><p>
                 For an archive to be a candidate for comparison, it must be added as an artifact of the archives configuration.
                 Take a look at <a class="xref" href="artifact_management.html">Chapter&nbsp;51, <i>Publishing artifacts</i></a> for more information on how to configure and add artifacts.
             </p><p>

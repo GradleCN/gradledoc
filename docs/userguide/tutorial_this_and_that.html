@@ -5,7 +5,8 @@
             tasks that need the directory have a
             <span class="emphasis"><em>dependsOn</em></span>
             relationship):
-        </p><div class="example"><a name="makeDirectory"></a><p class="title"><b>Example&nbsp;14.1.&nbsp;Directory creation with mkdir</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">classesDir = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build/classes'</span>)
+        </p><div class="example"><a name="makeDirectory"></a><p class="title"><b>Example&nbsp;14.1.&nbsp;Directory creation with mkdir</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">def classesDir = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build/classes'</span>)
+
 task resources &lt;&lt; {
     classesDir.mkdirs()
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// do something</span>
@@ -75,7 +76,7 @@ task hello &lt;&lt; {
 configuring root project 'configureProjectUsingScript'
 hello from other script</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:configuring_arbitrary_objects"></a>14.4.&nbsp;Configuring arbitrary objects</h2></div></div></div><p>You can configure arbitrary objects in the following very readable way.
         </p><div class="example"><a name="configureObject"></a><p class="title"><b>Example&nbsp;14.4.&nbsp;Configuring arbitrary objects</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task configure &lt;&lt; {
-    pos = configure(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> java.text.FieldPosition(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">10</span>)) {
+    def pos = configure(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> java.text.FieldPosition(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">10</span>)) {
         beginIndex = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">1</span>
         endIndex = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">5</span>
     }
@@ -85,13 +86,12 @@ hello from other script</pre></div></div><br class="example-break"></div><div cl
 1
 5</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10C8A"></a>14.5.&nbsp;Configuring arbitrary objects using an external script</h2></div></div></div><p>You can also configure arbitrary objects using an external script.
         </p><div class="example"><a name="configureObjectUsingScript"></a><p class="title"><b>Example&nbsp;14.5.&nbsp;Configuring arbitrary objects using a script</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task configure &lt;&lt; {
-    pos = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> java.text.FieldPosition(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">10</span>)
+    def pos = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> java.text.FieldPosition(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">10</span>)
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Apply the script</span>
     apply from: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'other.gradle'</span>, to: pos
     println pos.beginIndex
     println pos.endIndex
-}</pre><p><code class="filename">other.gradle</code></p><pre class="programlisting">beginIndex = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">1</span>;
-endIndex = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">5</span>;</pre><p>Output of <strong class="userinput"><code>gradle -q configure</code></strong></p><pre class="screen">&gt; gradle -q configure
+}</pre><p><code class="filename">other.gradle</code></p><pre class="programlisting"></pre><p>Output of <strong class="userinput"><code>gradle -q configure</code></strong></p><pre class="screen">&gt; gradle -q configure
 1
 5</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:caching"></a>14.6.&nbsp;Caching</h2></div></div></div><p>To improve responsiveness Gradle caches all compiled scripts by default. This includes all build scripts,
             initialization scripts, and other scripts. The first time you run a build for a project, Gradle creates a

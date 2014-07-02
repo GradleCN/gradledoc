@@ -133,7 +133,7 @@ println configurations[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-strin
 configurations.compile {
     description = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'compile classpath'</span>
 }</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:how_to_declare_your_dependencies"></a>50.4.&nbsp;How to declare your dependencies</h2></div></div></div><p>There are several different types of dependencies that you can declare:
-        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;50.1.&nbsp;Dependency types</b></p><div class="table-contents"><table id="N14C92"><thead><tr>
+        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;50.1.&nbsp;Dependency types</b></p><div class="table-contents"><table id="N14C75"><thead><tr>
                     <td>Type</td>
                     <td>Description</td>
                 </tr></thead><tr>
@@ -220,7 +220,7 @@ configurations.compile {
             </div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ssub:artifact_dependencies"></a>50.4.1.2.&nbsp;Artifact only notation</h4></div></div></div><p>As said above, if no module descriptor file can be found, Gradle by default
                     downloads a jar with the name of the module. But sometimes, even if the repository contains module descriptors, you want to download only the artifact jar, without
                     the dependencies.
-                    <sup>[<a href="#ftn.N14D3A" name="N14D3A" class="footnote">14</a>]</sup>
+                    <sup>[<a href="#ftn.N14D1D" name="N14D1D" class="footnote">14</a>]</sup>
                     And sometimes you want to download a zip from a repository, that does not have module descriptors. Gradle provides an <span class="emphasis"><em>artifact only</em></span>
                     notation for those use cases - simply prefix the extension that you want to be downloaded with <code class="literal">'@'</code> sign:
                     </p><div class="example"><a name="artifactOnly"></a><p class="title"><b>Example&nbsp;50.5.&nbsp;Artifact only notation</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
@@ -229,7 +229,7 @@ configurations.compile {
 }</pre></div></div><p><br class="example-break">
                     An artifact only notation creates a module dependency which downloads only the artifact file with the specified extension. Existing module descriptors are ignored.
                 </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="sub:classifiers"></a>50.4.1.3.&nbsp;Classifiers</h4></div></div></div><p>The Maven dependency management has the notion of classifiers.
-                    <sup>[<a href="#ftn.N14D58" name="N14D58" class="footnote">15</a>]</sup>
+                    <sup>[<a href="#ftn.N14D3B" name="N14D3B" class="footnote">15</a>]</sup>
                     Gradle supports this. To retrieve classified dependencies from a Maven repository you can write:
                 </p><div class="example"><a name="classifier"></a><p class="title"><b>Example&nbsp;50.6.&nbsp;Dependency with classifier</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">compile <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.gradle.test.classifiers:service:1.0:jdk15@jar"</span>
     otherConf group: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle.test.classifiers'</span>, name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'service'</span>, version: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0'</span>, classifier: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'jdk14'</span></pre></div></div><br class="example-break"><p>As can be seen in the first line above, classifiers can be used together with artifact only notation.
@@ -246,7 +246,7 @@ jta-1.1.jar
 slf4j-api-1.6.1.jar</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:client_module_dependencies"></a>50.4.2.&nbsp;Client module dependencies</h3></div></div></div><p>Client module dependencies allow to declare <span class="emphasis"><em>transitive</em></span> dependencies directly in the build script. They are a replacement for a module descriptor
                 in an external repository.
             </p><div class="example"><a name="client-modules"></a><p class="title"><b>Example&nbsp;50.8.&nbsp;Client module dependencies - transitive dependencies</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
-    runtime module(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.codehaus.groovy:groovy-all:2.2.0"</span>) {
+    runtime module(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.codehaus.groovy:groovy:2.3.3"</span>) {
         dependency(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"commons-cli:commons-cli:1.0"</span>) {
             transitive = false
         }
@@ -345,7 +345,7 @@ dependencies {
             </p><p>
                 Other examples of the dependency exclusions can be found in the reference for <a class="ulink" href="../javadoc/org/gradle/api/artifacts/ModuleDependency.html" target="_top"><code class="classname">ModuleDependency</code></a> or
                 <a class="ulink" href="../dsl/org.gradle.api.artifacts.dsl.DependencyHandler.html" target="_top"><code class="classname">DependencyHandler</code></a>.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N14E4D"></a>50.4.8.&nbsp;Optional attributes</h3></div></div></div><p><a name="para:dependencies_with_empty_attributes"></a>All attributes for a dependency are optional, except the name. It depends on the repository type,
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N14E30"></a>50.4.8.&nbsp;Optional attributes</h3></div></div></div><p><a name="para:dependencies_with_empty_attributes"></a>All attributes for a dependency are optional, except the name. It depends on the repository type,
                 which information is need for actually finding the dependencies in the repository.
                 See <a class="xref" href="dependency_management.html#sec:repositories">Section&nbsp;50.6, &ldquo;Repositories&rdquo;</a>. If you work for example with Maven repositories, you need to define the
                 group, name and version. If you work with filesystem repositories you might only need the name or the name
@@ -354,7 +354,7 @@ dependencies {
     runtime <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":junit:4.10"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":testng"</span>
     runtime name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'testng'</span> 
 }</pre></div></div><br class="example-break"><p><a name="para:notation_collections"></a>You can also assign collections or arrays of dependency notations to a configuration:
-            </p><div class="example"><a name="listGrouping"></a><p class="title"><b>Example&nbsp;50.16.&nbsp;Collections and arrays of dependencies</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">List groovy = [<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.codehaus.groovy:groovy-all:2.2.0@jar"</span>,
+            </p><div class="example"><a name="listGrouping"></a><p class="title"><b>Example&nbsp;50.16.&nbsp;Collections and arrays of dependencies</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">List groovy = [<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.codehaus.groovy:groovy-all:2.3.3@jar"</span>,
                <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"commons-cli:commons-cli:1.0@jar"</span>,
                <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.apache.ant:ant:1.9.3@jar"</span>]
 List hibernate = [<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.hibernate:hibernate:3.0.5@jar'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'somegroup:someorg:1.0@jar'</span>]
@@ -368,7 +368,7 @@ dependencies {
     runtime group: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.somegroup'</span>, name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'somedependency'</span>, version: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0'</span>, configuration: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'someConfiguration'</span>
 }</pre></div></div><br class="example-break"><p>To do the same for project dependencies you need to declare:</p><div class="example"><a name="dependencyConfigurationsProjects"></a><p class="title"><b>Example&nbsp;50.18.&nbsp;Dependency configurations for project</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
     compile project(path: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':api'</span>, configuration: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'spi'</span>)
-}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N14E89"></a>50.4.10.&nbsp;Dependency reports</h3></div></div></div><p>You can generate dependency reports from the command line (see <a class="xref" href="tutorial_gradle_command_line.html#para:commandline_dependency_report">Section&nbsp;11.6.4, &ldquo;Listing project dependencies&rdquo;</a>).
+}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N14E6C"></a>50.4.10.&nbsp;Dependency reports</h3></div></div></div><p>You can generate dependency reports from the command line (see <a class="xref" href="tutorial_gradle_command_line.html#para:commandline_dependency_report">Section&nbsp;11.6.4, &ldquo;Listing project dependencies&rdquo;</a>).
                 With the help of the Project report plugin (see <a class="xref" href="project_reports_plugin.html">Chapter&nbsp;41, <i>The Project Report Plugin</i></a>) such a report can be created by your build.
             </p><p>
                 Since Gradle 1.2 there is also a new programmatic API to access the resolved dependency information.
@@ -473,7 +473,7 @@ seal-2.0.jar</pre></div></div><br class="example-break"><p>In the example above,
             particular repository, it will attempt to download all of the artifacts for that module from <span class="emphasis"><em>the same repository</em></span>.
             Although module meta-data and module artifacts must be located in the same repository, it is possible to compose a single repository of multiple
             URLs, giving multiple locations to search for meta-data files and jar files.
-        </p><p>There are several different types of repositories you can declare:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;50.2.&nbsp;Repository types</b></p><div class="table-contents"><table id="N14F63"><thead><tr>
+        </p><p>There are several different types of repositories you can declare:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;50.2.&nbsp;Repository types</b></p><div class="table-contents"><table id="N14F46"><thead><tr>
                     <td>Type</td>
                     <td>Description</td>
                 </tr></thead><tr>
@@ -506,29 +506,74 @@ seal-2.0.jar</pre></div></div><br class="example-break"><p>In the example above,
                     <a class="link" href="dependency_management.html#sec:flat_dir_resolver">Flat directory repository</a>
                 </td>
                 <td>A simple repository on the local filesystem. Does not support any meta-data formats.</td>
-            </tr></table></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:maven_central"></a>50.6.1.&nbsp;Maven central repository</h3></div></div></div><p>To add the central Maven 2 repository (<a class="ulink" href="http://repo1.maven.org/maven2" target="_top">http://repo1.maven.org/maven2</a>) simply add this to your build script:
-            </p><div class="example"><a name="mavenCentral"></a><p class="title"><b>Example&nbsp;50.25.&nbsp;Adding central Maven repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+            </tr></table></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:supported_transport_protocols"></a>50.6.1.&nbsp;Supported repository transport protocols</h3></div></div></div><p>Maven and Ivy repositories support the use of various transport protocols. At the moment the following protocols are supported:
+            </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;50.3.&nbsp;Repository transport protocols</b></p><div class="table-contents"><table id="N14FA0"><thead><tr>
+                        <td>Type</td>
+                        <td>Authentication schemes</td>
+                    </tr></thead><tr>
+                    <td><code class="literal">file</code></td>
+                    <td>none</td>
+                </tr><tr>
+                    <td><code class="literal">http</code></td>
+                    <td>username/password</td>
+                </tr><tr>
+                    <td><code class="literal">https</code></td>
+                    <td>username/password</td>
+                </tr><tr>
+                    <td><code class="literal">sftp</code></td>
+                    <td>username/password</td>
+                </tr></table></div></div><p>To define a repository use the <code class="literal">repositories</code> configuration block. Within the <code class="literal">repositories</code> closure,
+                a Maven repository is declared with <code class="literal">maven</code>. An Ivy repository is declared with <code class="literal">ivy</code>. The transport protocol
+                is part of the URL definition for a repository. The following build script demonstrates how to create a HTTP-based Maven and Ivy repository:
+            </p><div class="example"><a name="mavenIvyRepositoriesNoAuth"></a><p class="title"><b>Example&nbsp;50.25.&nbsp;Declaring a Maven and Ivy repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+    maven {
+        url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://repo.mycompany.com/maven2"</span>
+    }
+
+    ivy {
+        url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://repo.mycompany.com/repo"</span>
+    }
+}</pre></div></div><br class="example-break"><p>If authentication is required for a repository, the relevant credentials can be provided. The following example shows how to provide
+                username/password-based authentication for SFTP repositories:
+            </p><div class="example"><a name="mavenIvyRepositoriesAuth"></a><p class="title"><b>Example&nbsp;50.26.&nbsp;Providing credentials to a Maven and Ivy repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+    maven {
+        url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sftp://repo.mycompany.com:22/maven2"</span>
+        credentials {
+            username <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'user'</span>
+            password <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'password'</span>
+        }
+    }
+
+    ivy {
+        url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sftp://repo.mycompany.com:22/repo"</span>
+        credentials {
+            username <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'user'</span>
+            password <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'password'</span>
+        }
+    }
+}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:maven_central"></a>50.6.2.&nbsp;Maven central repository</h3></div></div></div><p>To add the central Maven 2 repository (<a class="ulink" href="http://repo1.maven.org/maven2" target="_top">http://repo1.maven.org/maven2</a>) simply add this to your build script:
+            </p><div class="example"><a name="mavenCentral"></a><p class="title"><b>Example&nbsp;50.27.&nbsp;Adding central Maven repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
     mavenCentral()
 }</pre></div></div><br class="example-break"><p>Now Gradle will look for your dependencies in this repository.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:maven_jcenter"></a>50.6.2.&nbsp;Maven JCenter repository</h3></div></div></div><p><a class="ulink" href="http://bintray.com" target="_top">Bintray</a>'s JCenter is an up-to-date collection of all popular Maven OSS artifacts, including artifacts published directly to Bintray.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:maven_jcenter"></a>50.6.3.&nbsp;Maven JCenter repository</h3></div></div></div><p><a class="ulink" href="http://bintray.com" target="_top">Bintray</a>'s JCenter is an up-to-date collection of all popular Maven OSS artifacts, including artifacts published directly to Bintray.
             </p><p>To add the JCenter Maven repository (<a class="ulink" href="http://jcenter.bintray.com" target="_top">http://jcenter.bintray.com</a>) simply add this to your build script:
-            </p><div class="example"><a name="mavenJcenter"></a><p class="title"><b>Example&nbsp;50.26.&nbsp;Adding Bintray's JCenter Maven repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+            </p><div class="example"><a name="mavenJcenter"></a><p class="title"><b>Example&nbsp;50.28.&nbsp;Adding Bintray's JCenter Maven repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
     jcenter()
 }</pre></div></div><br class="example-break"><p>Now Gradle will look for your dependencies in the JCenter repository.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:maven_local"></a>50.6.3.&nbsp;Local Maven repository</h3></div></div></div><p>To use the local Maven cache as a repository you can do:</p><div class="example"><a name="mavenLocalRepo"></a><p class="title"><b>Example&nbsp;50.27.&nbsp;Adding the local Maven cache as a repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:maven_local"></a>50.6.4.&nbsp;Local Maven repository</h3></div></div></div><p>To use the local Maven cache as a repository you can do:</p><div class="example"><a name="mavenLocalRepo"></a><p class="title"><b>Example&nbsp;50.29.&nbsp;Adding the local Maven cache as a repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
     mavenLocal()
 }</pre></div></div><br class="example-break"><p>Gradle uses the same logic as Maven to identify the location of your local Maven cache. If a local repository location is defined in a <code class="filename">settings.xml</code>, this location
                 will be used. The <code class="filename">settings.xml</code> in <code class="filename"><em class="replaceable"><code>USER_HOME</code></em>/.m2</code> takes precedence over the <code class="filename">settings.xml</code>
                 in <code class="filename"><em class="replaceable"><code>M2_HOME</code></em>/conf</code>. If no <code class="filename">settings.xml</code> is available, Gradle uses the default location
                 <code class="filename"><em class="replaceable"><code>USER_HOME</code></em>/.m2/repository</code>.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:maven_repo"></a>50.6.4.&nbsp;Maven repositories</h3></div></div></div><p>For adding a custom Maven repository you can do:
-            </p><div class="example"><a name="mavenLikeRepo"></a><p class="title"><b>Example&nbsp;50.28.&nbsp;Adding custom Maven repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:maven_repo"></a>50.6.5.&nbsp;Maven repositories</h3></div></div></div><p>For adding a custom Maven repository you can do:
+            </p><div class="example"><a name="mavenLikeRepo"></a><p class="title"><b>Example&nbsp;50.30.&nbsp;Adding custom Maven repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
     maven {
         url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://repo.mycompany.com/maven2"</span>
     }
 }</pre></div></div><br class="example-break"><p>Sometimes a repository will have the POMs published to one location, and the JARs and other artifacts published at another location.
                 To define such a repository, you can do:
-            </p><div class="example"><a name="mavenLikeRepoWithJarRepo"></a><p class="title"><b>Example&nbsp;50.29.&nbsp;Adding additional Maven repositories for JAR files</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+            </p><div class="example"><a name="mavenLikeRepoWithJarRepo"></a><p class="title"><b>Example&nbsp;50.31.&nbsp;Adding additional Maven repositories for JAR files</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
     maven {
         <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Look for POMs and artifacts, such as JARs, here</span>
         url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://repo2.mycompany.com/maven2"</span>
@@ -537,8 +582,8 @@ seal-2.0.jar</pre></div></div><br class="example-break"><p>In the example above,
         artifactUrls <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://repo.mycompany.com/jars2"</span>
     }
 }</pre></div></div><br class="example-break"><p>Gradle will look at the first URL for the POM and the JAR. If the JAR can't be found there, the artifact URLs are used to look for JARs.
-            </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N15031"></a>50.6.4.1.&nbsp;Accessing password protected Maven repositories</h4></div></div></div><p>To access a Maven repository which uses basic authentication, you specify the username and password to use when you define the repository:
-                </p><div class="example"><a name="mavenPasswordProtectedRepo"></a><p class="title"><b>Example&nbsp;50.30.&nbsp;Accessing password protected Maven repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+            </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N1506E"></a>50.6.5.1.&nbsp;Accessing password protected Maven repositories</h4></div></div></div><p>To access a Maven repository which uses basic authentication, you specify the username and password to use when you define the repository:
+                </p><div class="example"><a name="mavenPasswordProtectedRepo"></a><p class="title"><b>Example&nbsp;50.32.&nbsp;Accessing password protected Maven repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
     maven {
         credentials {
             username <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'user'</span>
@@ -547,8 +592,8 @@ seal-2.0.jar</pre></div></div><br class="example-break"><p>In the example above,
         url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://repo.mycompany.com/maven2"</span>
     }
 }</pre></div></div><br class="example-break"><p>It is advisable to keep your username and password in <code class="filename">gradle.properties</code> rather than directly in the build file.
-                </p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:flat_dir_resolver"></a>50.6.5.&nbsp;Flat directory repository</h3></div></div></div><p>If you want to use a (flat) filesystem directory as a repository, simply type:
-            </p><div class="example"><a name="flatDirMulti"></a><p class="title"><b>Example&nbsp;50.31.&nbsp;Flat repository resolver</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+                </p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:flat_dir_resolver"></a>50.6.6.&nbsp;Flat directory repository</h3></div></div></div><p>If you want to use a (flat) filesystem directory as a repository, simply type:
+            </p><div class="example"><a name="flatDirMulti"></a><p class="title"><b>Example&nbsp;50.33.&nbsp;Flat repository resolver</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
     flatDir {
         dirs <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'lib'</span>
     }
@@ -559,35 +604,34 @@ seal-2.0.jar</pre></div></div><br class="example-break"><p>In the example above,
                 work with flat directory resolvers you don't need to set all attributes of a dependency.
                 See
                 <a class="xref" href="dependency_management.html#para:dependencies_with_empty_attributes">Section&nbsp;50.4.8, &ldquo;Optional attributes&rdquo;</a>
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:ivy_repositories"></a>50.6.6.&nbsp;Ivy repositories</h3></div></div></div><p>To use an Ivy repository with a standard layout:</p><div class="example"><a name="ivyRepository"></a><p class="title"><b>Example&nbsp;50.32.&nbsp;Ivy repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:ivy_repositories"></a>50.6.7.&nbsp;Ivy repositories</h3></div></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N1509B"></a>50.6.7.1.&nbsp;Defining an Ivy repository with a standard layout</h4></div></div></div><div class="example"><a name="ivyRepository"></a><p class="title"><b>Example&nbsp;50.34.&nbsp;Ivy repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+    ivy {
+        url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://repo.mycompany.com/repo"</span>
+    }
+}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N150A8"></a>50.6.7.2.&nbsp;Defining a named layout for an Ivy repository</h4></div></div></div><p>
+                    You can specify that your repository conforms to the Ivy or Maven default layout by using a named layout.
+                </p><div class="example"><a name="ivyRepository"></a><p class="title"><b>Example&nbsp;50.35.&nbsp;Ivy repository with named layout</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
     ivy {
         url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://repo.mycompany.com/repo"</span>
         layout <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"maven"</span>
     }
-}</pre></div></div><br class="example-break"><p>See
-                <a class="ulink" href="../dsl/org.gradle.api.artifacts.repositories.IvyArtifactRepository.html" target="_top"><code class="classname">IvyArtifactRepository</code></a>
-                for details.
-            </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N15071"></a>50.6.6.1.&nbsp;Defining custom patterns for an Ivy repository</h4></div></div></div><p>To define an Ivy repository with a non-standard layout, you can define a pattern layout for the repository:
-                </p><div class="example"><a name="ivyRepository"></a><p class="title"><b>Example&nbsp;50.33.&nbsp;Ivy repository with pattern layout</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+}</pre></div></div><br class="example-break"><p>
+                    Valid named layout values are <code class="literal">'gradle'</code> (the default), <code class="literal">'maven'</code> and <code class="literal">'ivy'</code>.
+                    See <a class="ulink" href="../dsl/org.gradle.api.artifacts.repositories.IvyArtifactRepository.html#org.gradle.api.artifacts.repositories.IvyArtifactRepository:layout(java.lang.String, groovy.lang.Closure)" target="_top"><code class="classname">IvyArtifactRepository.layout()</code></a> for details of these named layouts.
+                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N150C7"></a>50.6.7.3.&nbsp;Defining custom pattern layout for an Ivy repository</h4></div></div></div><p>To define an Ivy repository with a non-standard layout, you can define a 'pattern' layout for the repository:
+                </p><div class="example"><a name="ivyRepository"></a><p class="title"><b>Example&nbsp;50.36.&nbsp;Ivy repository with pattern layout</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
     ivy {
         url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://repo.mycompany.com/repo"</span>
         layout <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"pattern"</span>, {
             artifact <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"[module]/[revision]/[type]/[artifact].[ext]"</span>
         }
     }
-}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N15080"></a>50.6.6.2.&nbsp;Ivy repository with Maven compatible layout</h4></div></div></div><p>Optionally, a repository with pattern layout can have its 'organisation' part laid out in Maven style, with
-                    forward slashes replacing dots as separators. For example, the organisation <code class="literal">my.company</code> would then be represented as <code class="literal">my/company</code>.
-                </p><div class="example"><a name="ivyRepository"></a><p class="title"><b>Example&nbsp;50.34.&nbsp;Ivy repository with Maven compatible layout</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
-    ivy {
-        url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://repo.mycompany.com/repo"</span>
-        layout <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"pattern"</span>, {
-            artifact <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"[organisation]/[module]/[revision]/[artifact]-[revision].[ext]"</span>
-            m2compatible = true
-        }
-    }
-}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N15095"></a>50.6.6.3.&nbsp;Defining different artifact and Ivy file locations for an Ivy repository</h4></div></div></div><p>To define an Ivy repository which fetches Ivy files and artifacts from different locations, you can use the pattern layout with separate patterns to use to locate
-                    the Ivy files and artifacts:
-                </p><div class="example"><a name="ivyRepository"></a><p class="title"><b>Example&nbsp;50.35.&nbsp;Ivy repository with custom patterns</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+}</pre></div></div><br class="example-break"><p>To define an Ivy repository which fetches Ivy files and artifacts from different locations,
+                    you can define separate patterns to use to locate the Ivy files and artifacts:
+                </p><p>
+                    Each <code class="literal">artifact</code> or <code class="literal">ivy</code> specified for a repository adds an <span class="emphasis"><em>additional</em></span> pattern to use.
+                    The patterns are used in the order that they are defined.
+                </p><div class="example"><a name="ivyRepository"></a><p class="title"><b>Example&nbsp;50.37.&nbsp;Ivy repository with multiple custom patterns</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
     ivy {
         url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://repo.mycompany.com/repo"</span>
         layout <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"pattern"</span>, {
@@ -596,11 +640,18 @@ seal-2.0.jar</pre></div></div><br class="example-break"><p>In the example above,
             ivy <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"ivy-files/[organisation]/[module]/[revision]/ivy.xml"</span>
         }
     }
-}</pre></div></div><br class="example-break"><p>
-                    Each <code class="literal">artifact</code> or <code class="literal">ivy</code> specified for a repository adds an <span class="emphasis"><em>additional</em></span> pattern to use. The patterns are used in the order
-                    that they are defined.
-                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N150AF"></a>50.6.6.4.&nbsp;Accessing password protected Ivy repositories</h4></div></div></div><p>To access an Ivy repository which uses basic authentication, you specify the username and password to use when you define the repository:
-                </p><div class="example"><a name="ivyRepository"></a><p class="title"><b>Example&nbsp;50.36.&nbsp;Ivy repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+}</pre></div></div><br class="example-break"><p>Optionally, a repository with pattern layout can have its 'organisation' part laid out in Maven style, with
+                    forward slashes replacing dots as separators. For example, the organisation <code class="literal">my.company</code> would then be represented as <code class="literal">my/company</code>.
+                </p><div class="example"><a name="ivyRepository"></a><p class="title"><b>Example&nbsp;50.38.&nbsp;Ivy repository with Maven compatible layout</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+    ivy {
+        url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://repo.mycompany.com/repo"</span>
+        layout <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"pattern"</span>, {
+            artifact <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"[organisation]/[module]/[revision]/[artifact]-[revision].[ext]"</span>
+            m2compatible = true
+        }
+    }
+}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N150FF"></a>50.6.7.4.&nbsp;Accessing password protected Ivy repositories</h4></div></div></div><p>To access an Ivy repository which uses basic authentication, you specify the username and password to use when you define the repository:
+                </p><div class="example"><a name="ivyRepository"></a><p class="title"><b>Example&nbsp;50.39.&nbsp;Ivy repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
     ivy {
         url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'http://repo.mycompany.com'</span>
         credentials {
@@ -608,8 +659,8 @@ seal-2.0.jar</pre></div></div><br class="example-break"><p>In the example above,
             password <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'password'</span>
         }
     }
-}</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N150BE"></a>50.6.7.&nbsp;Working with repositories</h3></div></div></div><p>To access a repository:</p><div class="example"><a name="defineRepository"></a><p class="title"><b>Example&nbsp;50.37.&nbsp;Accessing a repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">println repositories.localRepository.name
-    println repositories[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'localRepository'</span>].name</pre></div></div><br class="example-break"><p>To configure a repository:</p><div class="example"><a name="defineRepository"></a><p class="title"><b>Example&nbsp;50.38.&nbsp;Configuration of a repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+}</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1510E"></a>50.6.8.&nbsp;Working with repositories</h3></div></div></div><p>To access a repository:</p><div class="example"><a name="defineRepository"></a><p class="title"><b>Example&nbsp;50.40.&nbsp;Accessing a repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">println repositories.localRepository.name
+    println repositories[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'localRepository'</span>].name</pre></div></div><br class="example-break"><p>To configure a repository:</p><div class="example"><a name="defineRepository"></a><p class="title"><b>Example&nbsp;50.41.&nbsp;Configuration of a repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
     flatDir {
         name <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'localRepository'</span>
     }
@@ -621,14 +672,15 @@ repositories {
 }
 repositories.localRepository {
     dirs <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'lib'</span>
-}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:more_about_ivy_resolvers"></a>50.6.8.&nbsp;More about Ivy resolvers</h3></div></div></div><p>Gradle, thanks to Ivy under its hood, is extremely flexible regarding repositories:
-            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>There are many options for the protocol to communicate with the repository (e.g. filesystem, http, ssh, ...)
+}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:more_about_ivy_resolvers"></a>50.6.9.&nbsp;More about Ivy resolvers</h3></div></div></div><p>Gradle, thanks to Ivy under its hood, is extremely flexible regarding repositories:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>There are many options for the protocol to communicate with the repository (e.g. filesystem, http, ssh, sftp ...)
+                    </p></li><li class="listitem"><p>The protocol sftp currently only supports username/password-based authentication.
                     </p></li><li class="listitem"><p>Each repository can have its own layout.
                     </p></li></ul></div><p>Let's say, you declare a dependency on the <code class="literal">junit:junit:3.8.2</code> library.
                 Now how does Gradle find it in the repositories? Somehow the dependency information has to be mapped to a
                 path. In contrast to Maven, where this path is fixed, with Gradle you can define a pattern that defines
                 what the path will look like. Here are some examples:
-                <sup>[<a href="#ftn.N150EB" name="N150EB" class="footnote">16</a>]</sup>
+                <sup>[<a href="#ftn.N1513E" name="N1513E" class="footnote">16</a>]</sup>
             </p><pre class="programlisting">// Maven2 layout (if a repository is marked as Maven2 compatible, the organization (group) is split into subfolders according to the dots.)
 someroot/[organisation]/[module]/[revision]/[module]-[revision].[ext]
 
@@ -637,7 +689,7 @@ someroot/[organisation]/[module]/[revision]/[type]s/[artifact].[ext]
 
 // Simple layout (the organization is not used, no nested folders.)
 someroot/[artifact]-[revision].[ext]</pre><p>To add any kind of repository (you can pretty easy write your own ones) you can do:
-            </p><div class="example"><a name="fileSystemResolver"></a><p class="title"><b>Example&nbsp;50.39.&nbsp;Definition of a custom repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+            </p><div class="example"><a name="fileSystemResolver"></a><p class="title"><b>Example&nbsp;50.42.&nbsp;Definition of a custom repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
     ivy {
         ivyPattern <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$projectDir/repo/[organisation]/[module]-ivy-[revision].xml"</span>
         artifactPattern <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$projectDir/repo/[organisation]/[module]-[revision](-[classifier]).[ext]"</span>
@@ -660,7 +712,7 @@ someroot/[artifact]-[revision].[ext]</pre><p>To add any kind of repository (you 
                 </p><p>When the dependency is declared by a static version and a module descriptor file is found in a repository, there is no need to continue searching later
                     repositories and the remainder of the process is short-circuited.
                 </p></li><li class="listitem"><p>All of the artifacts for the module are then requested from the <span class="emphasis"><em>same repository</em></span> that was chosen in the process above.
-                </p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1513F"></a>50.8.&nbsp;Fine-tuning the dependency resolution process</h2></div></div></div><p>In most cases, Gradle's default dependency management will resolve the dependencies that you want in your build. In some cases, however, it can be necessary to tweak
+                </p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N15192"></a>50.8.&nbsp;Fine-tuning the dependency resolution process</h2></div></div></div><p>In most cases, Gradle's default dependency management will resolve the dependencies that you want in your build. In some cases, however, it can be necessary to tweak
             dependency resolution to ensure that your build receives exactly the right dependencies.
         </p><p>There are a number of ways that you can influence how Gradle resolves dependencies.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:forcing_modules"></a>50.8.1.&nbsp;Forcing a particular module version</h3></div></div></div><p>Forcing a module version tells Gradle to always use a specific version for given dependency (transitive or not), overriding any version specified in a
                 published module descriptor. This can be very useful when tackling version conflicts - for more information see <a class="xref" href="dependency_management.html#sub:version_conflicts">Section&nbsp;50.2.3, &ldquo;Resolve version conflicts&rdquo;</a>.
@@ -685,7 +737,7 @@ someroot/[artifact]-[revision].[ext]</pre><p>To add any kind of repository (you 
                 </p><p>
                     Dependency resolve rules give you the power to enforce releasable units in your build.
                     Imagine a releasable unit defined by all libraries that have 'org.gradle' group. We can force all of these libraries to use a consistent version:
-                    </p><div class="example"><a name="releasable-unit"></a><p class="title"><b>Example&nbsp;50.40.&nbsp;Forcing consistent version for a group of libraries</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">configurations.all {
+                    </p><div class="example"><a name="releasable-unit"></a><p class="title"><b>Example&nbsp;50.43.&nbsp;Forcing consistent version for a group of libraries</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details -&gt;
         <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (details.requested.group == <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle'</span>) {
             details.useVersion <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.4'</span>
@@ -693,12 +745,12 @@ someroot/[artifact]-[revision].[ext]</pre><p>To add any kind of repository (you 
     }
 }</pre></div></div><p><br class="example-break">
                 </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="sec:custom_versioning_scheme"></a>50.8.2.2.&nbsp;Implement a custom versioning scheme</h4></div></div></div><p>
-                    In some corporate environments, the list of module versions that can be declared in gradle builds is maintained and audited externally.
+                    In some corporate environments, the list of module versions that can be declared in Gradle builds is maintained and audited externally.
                     Dependency resolve rules provide a neat implementation of this pattern:
                     </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">In the build script, the developer declares dependencies with the module group and name, but uses a placeholder version, for example: '<code class="literal">default</code>'.</li><li class="listitem">The 'default' version is resolved to a specific version via a dependency resolve rule, which looks up the version in a corporate catalog of approved modules.</li></ul></div><p>
 
                     This rule implementation can be neatly encapsulated in a corporate plugin, and shared across all builds within the organisation.
-                    </p><div class="example"><a name="custom-versioning-scheme"></a><p class="title"><b>Example&nbsp;50.41.&nbsp;Using a custom versioning scheme</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">configurations.all {
+                    </p><div class="example"><a name="custom-versioning-scheme"></a><p class="title"><b>Example&nbsp;50.44.&nbsp;Using a custom versioning scheme</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details -&gt;
         <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (details.requested.version == <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'default'</span>) {
             def version = findDefaultVersionInCatalog(details.requested.group, details.requested.name)
@@ -722,7 +774,7 @@ def findDefaultVersionInCatalog(String group, String name) {
                     The rule provided will enforce just this: any time version <code class="literal">1.2</code> is encountered it will be replaced with <code class="literal">1.2.1</code>.
                     Note that this is different from a forced version as described above, in that any other versions of this module would not be affected.
                     This means that the 'newest' conflict resolution strategy would still select version <code class="literal">1.3</code> if this version was also pulled transitively.
-                    </p><div class="example"><a name="blacklisting_version"></a><p class="title"><b>Example&nbsp;50.42.&nbsp;Blacklisting a version with a replacement</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">configurations.all {
+                    </p><div class="example"><a name="blacklisting_version"></a><p class="title"><b>Example&nbsp;50.45.&nbsp;Blacklisting a version with a replacement</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details -&gt;
         <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (details.requested.group == <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.software'</span> &amp;&amp; details.requested.name == <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'some-library'</span> &amp;&amp; details.requested.version == <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.2'</span>) {
             <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//prefer different version which contains some necessary fixes</span>
@@ -733,7 +785,7 @@ def findDefaultVersionInCatalog(String group, String name) {
                 </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="sec:module_substitution"></a>50.8.2.4.&nbsp;Substituting a dependency module with a compatible replacement</h4></div></div></div><p>At times a completely different module can serve as a replacement for a requested module dependency.
                     Examples include using '<code class="literal">groovy</code>' in place of '<code class="literal">groovy-all</code>', or using '<code class="literal">log4j-over-slf4j</code>' instead of '<code class="literal">log4j</code>'.
                     Starting with Gradle 1.5 you can make these substitutions using dependency resolve rules:
-                    </p><div class="example"><a name="module_substitution"></a><p class="title"><b>Example&nbsp;50.43.&nbsp;Changing dependency group and/or name at the resolution</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">configurations.all {
+                    </p><div class="example"><a name="module_substitution"></a><p class="title"><b>Example&nbsp;50.46.&nbsp;Changing dependency group and/or name at the resolution</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details -&gt;
         <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (details.requested.name == <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'groovy-all'</span>) {
             <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//prefer 'groovy' over 'groovy-all':</span>
@@ -751,7 +803,7 @@ def findDefaultVersionInCatalog(String group, String name) {
                 <code class="literal">rev</code> attribute for a given dependency definition. If the <code class="literal">revConstraint</code> attribute is not present, the <code class="literal">rev</code> attribute is used
                 instead.
             </p><p>To enable dynamic resolve mode, you need to set the appropriate option on the repository definition. A couple of examples are shown below. Note that dynamic resolve mode is only
-                available for Gradle's Ivy repositories. It is not available for Maven repositories, or custom Ivy <code class="classname">DependencyResolver</code> implementations.</p><div class="example"><a name="dynamicResolveMode"></a><p class="title"><b>Example&nbsp;50.44.&nbsp;Enabling dynamic resolve mode</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Can enable dynamic resolve mode when you define the repository</span>
+                available for Gradle's Ivy repositories. It is not available for Maven repositories, or custom Ivy <code class="classname">DependencyResolver</code> implementations.</p><div class="example"><a name="dynamicResolveMode"></a><p class="title"><b>Example&nbsp;50.47.&nbsp;Enabling dynamic resolve mode</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Can enable dynamic resolve mode when you define the repository</span>
 repositories {
     ivy {
         url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://repo.mycompany.com/repo"</span>
@@ -777,7 +829,7 @@ repositories.withType(IvyArtifactRepository) {
                 will resolve to the highest module version that has status <code class="literal">someStatus</code> or a more mature status. For example, with the default status scheme in place,
                 <code class="literal">latest.integration</code> will select the highest module version regardless of its status (because <code class="literal">integration</code> is the least mature status),
                 whereas <code class="literal">latest.release</code> will select the highest module version with status <code class="literal">release</code>. Here is what this looks like in code:
-            </p><div class="example"><a name="latestSelector"></a><p class="title"><b>Example&nbsp;50.45.&nbsp;'Latest' version selector</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
+            </p><div class="example"><a name="latestSelector"></a><p class="title"><b>Example&nbsp;50.48.&nbsp;'Latest' version selector</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
     config1 <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sea.fish:tuna:latest.integration"</span>
     config2 <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sea.fish:tuna:latest.release"</span>
 }
@@ -791,7 +843,7 @@ tuna-1.5.jar
 
 tuna-1.4.jar</pre></div></div><br class="example-break"><p>
                 The next example demonstrates <code class="literal">latest</code> selectors based on a custom status scheme declared in a module metadata rule:
-            </p><div class="example"><a name="customStatusScheme"></a><p class="title"><b>Example&nbsp;50.46.&nbsp;Custom status scheme</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
+            </p><div class="example"><a name="customStatusScheme"></a><p class="title"><b>Example&nbsp;50.49.&nbsp;Custom status scheme</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
     config3 <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"air.birds:albatros:latest.silver"</span>
     components {
         eachComponent { ComponentMetadataDetails details -&gt;
@@ -860,10 +912,10 @@ albatros-2.0.jar</pre></div></div><br class="example-break"></div></div><div cla
                 <code class="literal">ResolutionStrategy</code>
                 for a configuration.
             </p><p>By default, Gradle caches dynamic versions for 24 hours. To change how long Gradle will cache the resolved version for a dynamic version, use:
-            </p><div class="example"><a name="dynamic-version-cache-control"></a><p class="title"><b>Example&nbsp;50.47.&nbsp;Dynamic version cache control</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">configurations.all {
+            </p><div class="example"><a name="dynamic-version-cache-control"></a><p class="title"><b>Example&nbsp;50.50.&nbsp;Dynamic version cache control</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">configurations.all {
     resolutionStrategy.cacheDynamicVersionsFor <span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">10</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'minutes'</span>
 }</pre></div></div><br class="example-break"><p>By default, Gradle caches changing modules for 24 hours. To change how long Gradle will cache the meta-data and artifacts for a changing module, use:
-            </p><div class="example"><a name="changing-module-cache-control"></a><p class="title"><b>Example&nbsp;50.48.&nbsp;Changing module cache control</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">configurations.all {
+            </p><div class="example"><a name="changing-module-cache-control"></a><p class="title"><b>Example&nbsp;50.51.&nbsp;Changing module cache control</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">configurations.all {
     resolutionStrategy.cacheChangingModulesFor <span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">4</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hours'</span>
 }</pre></div></div><br class="example-break"><p>For more details, take a look at the API documentation for<a class="ulink" href="../dsl/org.gradle.api.artifacts.ResolutionStrategy.html" target="_top"><code class="classname">ResolutionStrategy</code></a>.
             </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:strategies_of_transitive_dependency_management"></a>50.10.&nbsp;Strategies for transitive dependency management</h2></div></div></div><p>Many projects rely on the <a class="ulink" href="http://repo1.maven.org/maven2" target="_top">Maven Central repository</a>. This is not without problems.
@@ -877,7 +929,7 @@ albatros-2.0.jar</pre></div></div><br class="example-break"></div></div><div cla
                 </p></li><li class="listitem"><p>You want to deal properly with wrong metadata in a Maven Central POM file.
                 </p></li><li class="listitem"><p>You don't want to expose people who want to build your project, to the downtimes or sometimes very long response times of Maven Central.
                 </p></li></ul></div><p>It is not a big deal to set-up a custom repository.
-            <sup>[<a href="#ftn.N15329" name="N15329" class="footnote">17</a>]</sup>
+            <sup>[<a href="#ftn.N1537C" name="N1537C" class="footnote">17</a>]</sup>
             But it can be tedious, to keep it up to date. For a new version, you have always to create the new XML
             descriptor and the directories. And your custom repository is another infrastructure element which might
             have downtimes and needs to be updated. To enable historical builds, you need to keep all the past
@@ -887,7 +939,7 @@ albatros-2.0.jar</pre></div></div><br class="example-break"></div></div><div cla
             This is changing with new services like <a class="ulink" href="http://bintray.com" target="_top">Bintray</a> that let developers host and
             distribute their release binaries using a self-service repository platform. Bintray also supports sharing approved artifacts
             though the <a class="ulink" href="http://jcenter.bintray.com" target="_top">JCenter</a> public repository to provide a single resolution address for
-            all popular OSS java artifacts (see <a class="xref" href="dependency_management.html#sub:maven_jcenter">Section&nbsp;50.6.2, &ldquo;Maven JCenter repository&rdquo;</a>).
+            all popular OSS java artifacts (see <a class="xref" href="dependency_management.html#sub:maven_jcenter">Section&nbsp;50.6.3, &ldquo;Maven JCenter repository&rdquo;</a>).
         </p><p>This is a reason why some projects prefer to store their libraries in their version control system. This
             approach is fully supported by Gradle. The libraries can be stored in a flat directory without any XML module
             descriptor files. Yet Gradle offers complete transitive dependency management. You can use either client module
@@ -909,10 +961,10 @@ albatros-2.0.jar</pre></div></div><br class="example-break"></div></div><div cla
                 dependency reports don't show your real dependency graph and the <code class="literal">compile</code>
                 task uses all dependencies, not just the first level dependencies. All in all, your build is less
                 maintainable and reliable than it could be when using client modules. And you don't gain anything.
-            </p></div></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N14D3A" name="ftn.N14D3A" class="para">14</a>] </sup>Gradle supports partial multiproject builds (see <a class="xref" href="multi_project_builds.html">Chapter&nbsp;56, <i>Multi-project Builds</i></a>).</p></div><div class="footnote"><p><sup>[<a href="#N14D58" name="ftn.N14D58" class="para">15</a>] </sup>
+            </p></div></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N14D1D" name="ftn.N14D1D" class="para">14</a>] </sup>Gradle supports partial multiproject builds (see <a class="xref" href="multi_project_builds.html">Chapter&nbsp;56, <i>Multi-project Builds</i></a>).</p></div><div class="footnote"><p><sup>[<a href="#N14D3B" name="ftn.N14D3B" class="para">15</a>] </sup>
                             <a class="ulink" href="http://books.sonatype.com/mvnref-book/reference/pom-relationships-sect-project-relationships.html" target="_top">http://books.sonatype.com/mvnref-book/reference/pom-relationships-sect-project-relationships.html</a>
-                        </p></div><div class="footnote"><p><sup>[<a href="#N150EB" name="ftn.N150EB" class="para">16</a>] </sup>At <a class="ulink" href="http://ant.apache.org/ivy/history/latest-milestone/concept.html" target="_top">http://ant.apache.org/ivy/history/latest-milestone/concept.html</a> you can learn more about ivy patterns.
-                    </p></div><div class="footnote"><p><sup>[<a href="#N15329" name="ftn.N15329" class="para">17</a>] </sup>If you want to shield your project from the downtimes of Maven Central things get more complicated. You
+                        </p></div><div class="footnote"><p><sup>[<a href="#N1513E" name="ftn.N1513E" class="para">16</a>] </sup>At <a class="ulink" href="http://ant.apache.org/ivy/history/latest-milestone/concept.html" target="_top">http://ant.apache.org/ivy/history/latest-milestone/concept.html</a> you can learn more about ivy patterns.
+                    </p></div><div class="footnote"><p><sup>[<a href="#N1537C" name="ftn.N1537C" class="para">17</a>] </sup>If you want to shield your project from the downtimes of Maven Central things get more complicated. You
                     probably want to set-up a repository proxy for this. In an enterprise environment this is rather
                     common. For an open source project it looks like overkill.
                 </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="buildDashboard_plugin.html" title="Chapter&nbsp;49.&nbsp;The Build Dashboard Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="artifact_management.html" title="Chapter&nbsp;51.&nbsp;Publishing artifacts">Next</a></div></div></div></body></html>

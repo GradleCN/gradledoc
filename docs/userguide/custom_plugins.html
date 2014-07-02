@@ -5,7 +5,7 @@
         You can implement a custom plugin in any language you like, provided the implementation ends up compiled as
         bytecode. For the examples here, we are going to use Groovy as the implementation language. You could use
         Java or Scala instead, if you want.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N16666"></a>58.1.&nbsp;Packaging a plugin</h2></div></div></div><p>There are several places where you can put the source for the plugin.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1670B"></a>58.1.&nbsp;Packaging a plugin</h2></div></div></div><p>There are several places where you can put the source for the plugin.
         </p><div class="variablelist"><dl><dt><span class="term">Build script</span></dt><dd><p>You can include the source for the plugin directly in the build script. This has the benefit that the plugin is
                         automatically compiled and included in the classpath of the build script without you having to do anything.
                         However, the plugin is not visible outside the build script, and so you cannot reuse the plugin
@@ -24,7 +24,7 @@
                         some combination of the two.
                     </p></dd></dl></div><p> In our examples, we will start with the plugin in the build script, to keep things simple.
             Then we will look at creating a standalone project.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1668F"></a>58.2.&nbsp;Writing a simple plugin</h2></div></div></div><p>To create a custom plugin, you need to write an implementation of <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a>.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N16734"></a>58.2.&nbsp;Writing a simple plugin</h2></div></div></div><p>To create a custom plugin, you need to write an implementation of <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a>.
             Gradle instantiates the plugin and calls the plugin instance's <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html#apply(T)" target="_top"><code class="classname">Plugin.apply()</code></a> method when the
             plugin is used with a project. The project
             object is passed as a parameter, which the plugin can use to configure the project however it needs to.
@@ -40,7 +40,7 @@
 }</pre><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
 Hello from the GreetingPlugin</pre></div></div><br class="example-break"><p>
             One thing to note is that a new instance of a given plugin is created for each project it is applied to.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N166B3"></a>58.3.&nbsp;Getting input from the build</h2></div></div></div><p>Most plugins need to obtain some configuration from the build script. One method for doing this is to use <em class="firstterm">extension objects</em>.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N16758"></a>58.3.&nbsp;Getting input from the build</h2></div></div></div><p>Most plugins need to obtain some configuration from the build script. One method for doing this is to use <em class="firstterm">extension objects</em>.
              The Gradle <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> has an associated <a class="ulink" href="../javadoc/org/gradle/api/plugins/ExtensionContainer.html" target="_top"><code class="classname">ExtensionContainer</code></a> object
              that helps keep track of all the settings and properties being passed to plugins. You can capture user input by telling
              the extension container about your plugin. To capture input, simply add a Java Bean compliant class into the extension container's list of
@@ -95,7 +95,7 @@ Hi from Gradle</pre></div></div><br class="example-break"><p>In this example, se
             The name of the closure block in the build script (<code class="literal">greeting</code>) needs to match the extension object name.
             Then, when the closure is executed, the fields on the extension object will be mapped to the variables within the closure
             based on the standard Groovy closure delegate feature.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N166FF"></a>58.4.&nbsp;Working with files in custom tasks and plugins</h2></div></div></div><p>
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N167A4"></a>58.4.&nbsp;Working with files in custom tasks and plugins</h2></div></div></div><p>
             When developing custom tasks and plugins, it's a good idea to be very flexible when accepting input configuration for file locations.
             To do this, you can leverage the <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:file(java.lang.Object)" target="_top"><code class="classname">Project.file()</code></a> method to resolve values to files as late as possible.
         </p><div class="example"><a name="lazyFileProperties"></a><p class="title"><b>Example&nbsp;58.4.&nbsp;Evaluating file properties lazily</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> GreetingToFileTask <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> DefaultTask {
@@ -122,14 +122,14 @@ task sayGreeting(dependsOn: greet) &lt;&lt; {
     println file(greetingFile).text
 }
 
-greetingFile = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/hello.txt"</span></pre><p>Output of <strong class="userinput"><code>gradle -q sayGreeting</code></strong></p><pre class="screen">&gt; gradle -q sayGreeting
+ext.greetingFile = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/hello.txt"</span></pre><p>Output of <strong class="userinput"><code>gradle -q sayGreeting</code></strong></p><pre class="screen">&gt; gradle -q sayGreeting
 Hello!</pre></div></div><br class="example-break"><p>
             In this example, we configure the <code class="literal">greet</code> task <code class="literal">destination</code> property as a closure, which is evaluated with
             the <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:file(java.lang.Object)" target="_top"><code class="classname">Project.file()</code></a> method to turn the return value of the closure into a file object
             at the last minute. You will notice that in the example above we specify the <code class="literal">greetingFile</code> property value after we have 
             configured to use it for the task. This kind of lazy evaluation is a key benefit of accepting any value when setting a file property, then 
             resolving that value when reading the property.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N16729"></a>58.5.&nbsp;A standalone project</h2></div></div></div><p>Now we will move our plugin to a standalone project, so we can publish it and share it with others.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N167CE"></a>58.5.&nbsp;A standalone project</h2></div></div></div><p>Now we will move our plugin to a standalone project, so we can publish it and share it with others.
             This project is simply a Groovy project that produces a JAR containing the plugin classes.
             Here is a simple build script for the project. It applies the Groovy plugin, and adds the Gradle API
             as a compile-time dependency.
@@ -144,7 +144,7 @@ dependencies {
 	</p><div class="example"><a name="customPluginStandalone"></a><p class="title"><b>Example&nbsp;58.6.&nbsp;Wiring for a custom plugin</b></p><div class="example-contents"><p><code class="filename">src/main/resources/META-INF/gradle-plugins/greeting.properties</code></p><pre class="programlisting">implementation-class=org.gradle.GreetingPlugin</pre></div></div><br class="example-break"><p>
 	    Notice that the properties filename matches the plugin's name and is placed in the resources folder, and
 	    that the <code class="literal">implementation-class</code> property identifies the <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a> implementation class.
-	</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1675E"></a>58.5.1.&nbsp;Using your plugin in another project</h3></div></div></div><p>To use a plugin in a build script, you need to add the plugin classes to the build script's classpath. To
+	</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16803"></a>58.5.1.&nbsp;Using your plugin in another project</h3></div></div></div><p>To use a plugin in a build script, you need to add the plugin classes to the build script's classpath. To
                 do this, you use a <code class="literal">buildscript { }</code> block, as described in <a class="xref" href="organizing_build_logic.html#sec:external_dependencies">Section&nbsp;59.5, &ldquo;External dependencies for the build script&rdquo;</a>.
                 The following example shows how you might do this when the JAR containing the plugin has been published
                 to a local repository:
@@ -158,7 +158,7 @@ dependencies {
         classpath group: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle'</span>, name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'customPlugin'</span>, version: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0-SNAPSHOT'</span>
     }
 }
-apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'greeting'</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16773"></a>58.5.2.&nbsp;Writing tests for your plugin</h3></div></div></div><p>You can use the <a class="ulink" href="../javadoc/org/gradle/testfixtures/ProjectBuilder.html" target="_top"><code class="classname">ProjectBuilder</code></a> class to create
+apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'greeting'</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N16818"></a>58.5.2.&nbsp;Writing tests for your plugin</h3></div></div></div><p>You can use the <a class="ulink" href="../javadoc/org/gradle/testfixtures/ProjectBuilder.html" target="_top"><code class="classname">ProjectBuilder</code></a> class to create
                 <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> instances to use when you test your plugin implementation.
             </p><div class="example"><a name="customPluginStandalone"></a><p class="title"><b>Example&nbsp;58.8.&nbsp;Testing a custom plugin</b></p><div class="example-contents"><p><code class="filename">src/test/groovy/org/gradle/GreetingPluginTest.groovy</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> GreetingPluginTest {
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Test</span>
@@ -168,7 +168,7 @@ apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'greet
 
         assertTrue(project.tasks.hello <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">instanceof</span> GreetingTask)
     }
-}</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1678C"></a>58.6.&nbsp;Maintaining multiple domain objects</h2></div></div></div><p>Gradle provides some utility classes for maintaining collections of object, which work well with the Gradle build language.</p><div class="example"><a name="domainObjectContainer"></a><p class="title"><b>Example&nbsp;58.9.&nbsp;Managing domain objects</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: DocumentationPlugin
+}</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N16831"></a>58.6.&nbsp;Maintaining multiple domain objects</h2></div></div></div><p>Gradle provides some utility classes for maintaining collections of object, which work well with the Gradle build language.</p><div class="example"><a name="domainObjectContainer"></a><p class="title"><b>Example&nbsp;58.9.&nbsp;Managing domain objects</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: DocumentationPlugin
 
 books {
     quickStart {
@@ -209,7 +209,7 @@ task books &lt;&lt; {
 developerGuide -&gt; /home/user/gradle/samples/userguide/organizeBuildLogic/customPluginWithDomainObjectContainer/src/docs/developerGuide
 quickStart -&gt; /home/user/gradle/samples/userguide/organizeBuildLogic/customPluginWithDomainObjectContainer/src/docs/quick-start
 userGuide -&gt; /home/user/gradle/samples/userguide/organizeBuildLogic/customPluginWithDomainObjectContainer/src/docs/userGuide</pre></div></div><br class="example-break"><p>
-            The <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:container(java.lang.Class)" target="_top"><code class="classname">Project.container()</code></a> methods create instances of <a class="ulink" href="../javadoc/org/gradle/api/NamedDomainObjectContainer.html" target="_top"><code class="classname">NamedDomainObjectContainer</code></a>, that have many useful methods for managing and configuring the objects. In order
+            The <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:container(java.lang.Class)" target="_top"><code class="classname">Project.container()</code></a> methods create instances of <a class="ulink" href="../dsl/org.gradle.api.NamedDomainObjectContainer.html" target="_top"><code class="classname">NamedDomainObjectContainer</code></a>, that have many useful methods for managing and configuring the objects. In order
             to use a type with any of the <code class="literal">project.container</code> methods, it MUST expose a property named &ldquo;<code class="literal">name</code>&rdquo;
             as the unique, and constant, name for the object. The <code class="literal">project.container(Class)</code> variant of the container method creates 
             new instances by attempting to invoke the constructor of the class that takes a single string argument, which is the desired name of the object. 

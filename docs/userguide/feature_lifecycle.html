@@ -15,9 +15,9 @@
         typically means
         an API or DSL method or property in this context, but it is not restricted to this definition.
         Command line arguments and modes of execution (e.g. the Build Daemon) are two examples of other kinds of features.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N173CB"></a>C.1.&nbsp;States</h2></div></div></div><p>
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N17469"></a>C.1.&nbsp;States</h2></div></div></div><p>
             Features can be in one of 4 states:
-        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Internal</p></li><li class="listitem"><p>Incubating</p></li><li class="listitem"><p>Public</p></li><li class="listitem"><p>Deprecated</p></li></ul></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N173DD"></a>C.1.1.&nbsp;Internal</h3></div></div></div><p>
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Internal</p></li><li class="listitem"><p>Incubating</p></li><li class="listitem"><p>Public</p></li><li class="listitem"><p>Deprecated</p></li></ul></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1747B"></a>C.1.1.&nbsp;Internal</h3></div></div></div><p>
                 Internal features are not designed for public use and are only intended to be used by Gradle itself. They can change in any way at any
                 point in time without any notice. Therefore, we recommend avoiding the use of such features.
                 Internal features are not documented. If it appears in this User Guide, the DSL Reference or the API Reference documentation then
@@ -36,7 +36,7 @@
                 Features in incubation are clearly indicated to be so. In the source code, all methods/properties/classes that are incubating are
                 annotated with <a class="ulink" href="../javadoc/org/gradle/api/Incubating.html" target="_top"><code class="classname">Incubating</code></a>, which is also used to specially mark them in the DSL and API references. If an incubating
                 feature is discussed in this User Guide, it will be explicitly said to be in the incubating state.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N173F6"></a>C.1.3.&nbsp;Public</h3></div></div></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N17494"></a>C.1.3.&nbsp;Public</h3></div></div></div><p>
                 The default state for a non-internal feature is <em class="firstterm">public</em>.
                 Anything that is documented in the User Guide, DSL Reference or API references that
                 is not explicitly said to be incubating or deprecated is considered public. Features are said to be <em class="firstterm">promoted</em> from an
@@ -44,7 +44,7 @@
             </p><p>
                 A public feature will <span class="emphasis"><em>never</em></span> be removed or intentionally changed without undergoing deprecation.
                 All public features are subject to the backwards compatibility policy.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N17406"></a>C.1.4.&nbsp;Deprecated</h3></div></div></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N174A4"></a>C.1.4.&nbsp;Deprecated</h3></div></div></div><p>
                 Some features will become superseded or irrelevant due to the natural evolution of Gradle. Such features will eventually be removed
                 from Gradle after being <em class="firstterm">deprecated</em>. A deprecated feature will <span class="emphasis"><em>never</em></span>
                 be changed, until it is finally removed according to the backwards compatibility policy.

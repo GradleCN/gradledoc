@@ -26,7 +26,7 @@
                     Only relevant projects are configured which results in faster builds for large multi-projects.
                     See <a class="xref" href="multi_project_builds.html#sec:configuration_on_demand">Section&nbsp;56.1.1.1, &ldquo;Configuration on demand&rdquo;</a>.</p></dd>
             <dt><span class="term"><code class="literal">org.gradle.parallel</code></span></dt><dd><p>When configured, Gradle will run in incubating parallel mode.</p></dd>
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1179E"></a>20.1.1.&nbsp;Forked java processes</h3></div></div></div><p>Many settings (like the java version and maximum heap size) can only be specified when launching a new JVM for the build process. This means that Gradle
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1179B"></a>20.1.1.&nbsp;Forked java processes</h3></div></div></div><p>Many settings (like the java version and maximum heap size) can only be specified when launching a new JVM for the build process. This means that Gradle
                 must launch a separate JVM process to execute the build after parsing the various <code class="filename">gradle.properties</code> files.
                 When running with the daemon, a JVM with the correct parameters is started once and reused for each daemon build execution.
                 When Gradle is executed without the daemon, then a new JVM must be launched for every build execution,
@@ -36,11 +36,11 @@
             specifying <code class="literal">org.gradle.java.home</code> or <code class="literal">org.gradle.jvmargs</code>. See <a class="xref" href="gradle_daemon.html">Chapter&nbsp;19, <i>The Gradle Daemon</i></a> for more details.</p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:accessing_the_web_via_a_proxy"></a>20.2.&nbsp;Accessing the web via a proxy</h2></div></div></div><p>Configuring an HTTP proxy (for example for downloading dependencies) is done via standard JVM system properties. These properties can be set directly in the build script; for example <code class="literal">
                 System.setProperty('http.proxyHost', 'www.somehost.org')</code> for the proxy host. Alternatively, the properties can be specified in a gradle.properties file,
             either in the build's root directory or in the Gradle home directory.
-        </p><div class="example"><a name="N117BA"></a><p class="title"><b>Example&nbsp;20.1.&nbsp;Configuring an HTTP proxy</b></p><div class="example-contents"><p><code class="filename">gradle.properties</code></p><pre class="programlisting">systemProp.http.proxyHost=www.somehost.org
+        </p><div class="example"><a name="N117B7"></a><p class="title"><b>Example&nbsp;20.1.&nbsp;Configuring an HTTP proxy</b></p><div class="example-contents"><p><code class="filename">gradle.properties</code></p><pre class="programlisting">systemProp.http.proxyHost=www.somehost.org
 systemProp.http.proxyPort=8080
 systemProp.http.proxyUser=userid
 systemProp.http.proxyPassword=password
-systemProp.http.nonProxyHosts=*.nonproxyrepos.com|localhost</pre></div></div><br class="example-break"><p>There are separate settings for HTTPS.</p><div class="example"><a name="N117C4"></a><p class="title"><b>Example&nbsp;20.2.&nbsp;Configuring an HTTPS proxy</b></p><div class="example-contents"><p><code class="filename">gradle.properties</code></p><pre class="programlisting">systemProp.https.proxyHost=www.somehost.org
+systemProp.http.nonProxyHosts=*.nonproxyrepos.com|localhost</pre></div></div><br class="example-break"><p>There are separate settings for HTTPS.</p><div class="example"><a name="N117C1"></a><p class="title"><b>Example&nbsp;20.2.&nbsp;Configuring an HTTPS proxy</b></p><div class="example-contents"><p><code class="filename">gradle.properties</code></p><pre class="programlisting">systemProp.https.proxyHost=www.somehost.org
 systemProp.https.proxyPort=8080
 systemProp.https.proxyUser=userid
 systemProp.https.proxyPassword=password

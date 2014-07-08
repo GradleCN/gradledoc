@@ -468,17 +468,23 @@ using build file 'build.gradle' in 'subdir'.</pre>
 				<div>
 					<div>
 						<h2 class="title">
-							<a name="sec:obtaining_information_about_your_build"></a>11.6.&nbsp;Obtaining
-							information about your build
+							<a name="sec:obtaining_information_about_your_build"></a>11.6.&nbsp;获取构建信息
 						</h2>
+						<h4 class="title">
+                            <a name="sec:obtaining_information_about_your_build"></a>11.6.&nbsp;Obtaining
+                            information about your build
+                        </h4>
 					</div>
 				</div>
 			</div>
-			<p>Gradle provides several built-in tasks which show particular
+			<p>
+			Gradle提供了许多内置任务来收集构建信息.这些内置任务对于了解依赖结构以及解决问题都是很有帮助的.<br>
+			Gradle provides several built-in tasks which show particular
 				details of your build. This can be useful for understanding the
 				structure and dependencies of your build, and for debugging
 				problems.</p>
 			<p>
+			    了解更多,可以参阅<a class="link" href="project_reports_plugin.html">项目报告插件</a>以为你的项目添加构建报告.<br>
 				In addition to the built-in tasks shown below, you can also use the
 				<a class="link" href="project_reports_plugin.html">project
 					report plugin</a> to add tasks to your project which will generate
@@ -489,11 +495,15 @@ using build file 'build.gradle' in 'subdir'.</pre>
 					<div>
 						<div>
 							<h3 class="title">
-								<a name="N10864"></a>11.6.1.&nbsp;Listing projects
+								<a name="N10864"></a>11.6.1.&nbsp;项目列表
 							</h3>
+							<h5 class="title">
+                                <a name="N10864"></a>11.6.1.&nbsp;Listing projects
+                            </h5>
 						</div>
 					</div>
 				</div>
+				执行<strong class="userinput"><code>gradle projects</code></strong>会为你列出子项目名称列表.如下例.<br> 
 				<p>
 					Running <strong class="userinput"><code>gradle
 							projects</code></strong> gives you a list of the sub-projects of the selected
@@ -502,11 +512,15 @@ using build file 'build.gradle' in 'subdir'.</pre>
 				<div class="example">
 					<a name="projectListReport"></a>
 					<p class="title">
-						<b>Example&nbsp;11.7.&nbsp;Obtaining information about
+						<b>
+						例&nbsp;11.7.&nbsp;收集项目信息<br>
+						Example&nbsp;11.7.&nbsp;Obtaining information about
 							projects</b>
 					</p>
 					<div class="example-contents">
 						<p>
+						<strong class="userinput"><code>gradle
+                                    -q projects</code></strong>的输出结果<br>
 							Output of <strong class="userinput"><code>gradle
 									-q projects</code></strong>
 						</p>
@@ -525,6 +539,7 @@ For example, try running gradle :api:tasks</pre>
 				</div>
 				<br class="example-break">
 				<p>
+				    这份报告展示了每个项目的描述信息.当然你可以在项目中用<code class="literal">description</code>属性来指定这些描述信息.<br>
 					The report shows the description of each project, if specified. You
 					can provide a description for a project by setting the
 					<code class="literal">description</code>
@@ -533,7 +548,9 @@ For example, try running gradle :api:tasks</pre>
 				<div class="example">
 					<a name="projectListReport"></a>
 					<p class="title">
-						<b>Example&nbsp;11.8.&nbsp;Providing a description for a
+						<b>
+						例&nbsp;11.8.&nbsp;为项目添加描述信息.<br>
+						Example&nbsp;11.8.&nbsp;Providing a description for a
 							project</b>
 					</p>
 					<div class="example-contents">
@@ -552,12 +569,17 @@ For example, try running gradle :api:tasks</pre>
 					<div>
 						<div>
 							<h3 class="title">
-								<a name="sec:listing_tasks"></a>11.6.2.&nbsp;Listing tasks
+								<a name="sec:listing_tasks"></a>11.6.2.&nbsp;任务列表
 							</h3>
+							<h5 class="title">
+                                <a name="sec:listing_tasks"></a>11.6.2.&nbsp;Listing tasks
+                            </h5>
 						</div>
 					</div>
 				</div>
 				<p>
+				 执行<strong class="userinput"><code>gradle tasks</code></strong>会列出项目中所有任务.
+				 这会显示项目中所有的默认任务以及每个任务的描述.如下例<br>
 					Running <strong class="userinput"><code>gradle
 							tasks</code></strong> gives you a list of the main tasks of the selected project.
 					This report shows the default tasks for the project, if any, and a
@@ -566,7 +588,9 @@ For example, try running gradle :api:tasks</pre>
 				<div class="example">
 					<a name="taskListReport"></a>
 					<p class="title">
-						<b>Example&nbsp;11.9.&nbsp;Obtaining information about tasks</b>
+						<b>
+						例&nbsp;11.9.&nbsp;获取任务信息<br>
+						Example&nbsp;11.9.&nbsp;Obtaining information about tasks</b>
 					</p>
 					<div class="example-contents">
 						<p>
@@ -605,6 +629,8 @@ To see all tasks and more detail, run with --all.</pre>
 				</div>
 				<br class="example-break">
 				<p>
+				默认情况下,这只会显示那些被分组的任务.你可以通过为任务设置<code class="literal">group</code>属性和<code class="literal">description</code>来把
+				这些信息展示到结果中.<br>
 					By default, this report shows only those tasks which have been
 					assigned to a task group. You can do this by setting the
 					<code class="literal">group</code>
@@ -615,7 +641,9 @@ To see all tasks and more detail, run with --all.</pre>
 				<div class="example">
 					<a name="taskListReport"></a>
 					<p class="title">
-						<b>Example&nbsp;11.10.&nbsp;Changing the content of the task
+						<b>
+						例&nbsp;11.10.&nbsp;更改任务报告内容<br>
+						Example&nbsp;11.10.&nbsp;Changing the content of the task
 							report</b>
 					</p>
 					<div class="example-contents">
@@ -631,6 +659,7 @@ To see all tasks and more detail, run with --all.</pre>
 				</div>
 				<br class="example-break">
 				<p>
+				    当然你也可以用<code class="option">--all</code>参数来收集更多任务信息.这会列出项目中所有任务以及任务之间的依赖关系.<br>
 					You can obtain more information in the task listing using the
 					<code class="option">--all</code>
 					option. With this option, the task report lists all tasks in the
@@ -701,13 +730,18 @@ webapp:tasks - Displays the tasks runnable from project ':webapp'.</pre>
 					<div>
 						<div>
 							<h3 class="title">
-								<a name="sec:show_task_details"></a>11.6.3.&nbsp;Show task usage
-								details
+								<a name="sec:show_task_details"></a>11.6.3.&nbsp;获取任务帮助信息
 							</h3>
+							<h5 class="title">
+                                <a name="sec:show_task_details"></a>11.6.3.&nbsp;Show task usage
+                                details
+                            </h5>
 						</div>
 					</div>
 				</div>
 				<p>
+				执行<strong class="userinput"><code>gradle help --task someTask</code></strong>可以显示指定任务的详细信息.
+				或者多项目构建中相同任务名称的所有任务的信息.如下例.<br> 
 					Running <strong class="userinput"><code>gradle help
 							--task someTask</code></strong> gives you detailed information about a specific
 					task or multiple tasks matching the given task name in your
@@ -717,10 +751,14 @@ webapp:tasks - Displays the tasks runnable from project ':webapp'.</pre>
 				<div class="example">
 					<a name="taskHelp"></a>
 					<p class="title">
-						<b>Example&nbsp;11.12.&nbsp;Obtaining detailed help for tasks</b>
+						<b>
+						例&nbsp;11.12.&nbsp;获取任务帮助<br>
+						Example&nbsp;11.12.&nbsp;Obtaining detailed help for tasks</b>
 					</p>
 					<div class="example-contents">
 						<p>
+						<strong class="userinput"><code>gradle
+                                    -q help --task libs</code></strong>的输出结果<br>
 							Output of <strong class="userinput"><code>gradle
 									-q help --task libs</code></strong>
 						</p>
@@ -739,7 +777,9 @@ Description
 					</div>
 				</div>
 				<br class="example-break">
-				<p>This information includes the full task path, the task type,
+				<p>
+				这些结果包含了任务的路径、类型以及描述信息等.<br>
+				This information includes the full task path, the task type,
 					possible commandline options and the description of the given task.
 				</p>
 			</div>

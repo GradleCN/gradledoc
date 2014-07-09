@@ -1083,6 +1083,9 @@ buildFile: /home/user/gradle/samples/userguide/tutorial/projectReports/api/build
 				</div>
 			</div>
 			<p>
+			     有时可能你只想知道某个任务在一个任务集中按顺序执行的结果,但并不想实际执行这些任务.那么你可以用<code class="option">-m</code>参数
+			     例如<strong class="userinput"><code>gradle -m clean compile</code></strong>会调用<code class="literal">clean</code>
+                                  和   <code class="literal">compile</code>,这与<code class="option">tasks</code>可以形成互补,让你知道哪些任务可以用于执行.<br>
 				Sometimes you are interested in which tasks are executed in which
 				order for a given set of tasks specified on the command line, but
 				you don't want the tasks to be executed. You can use the
@@ -1102,12 +1105,19 @@ buildFile: /home/user/gradle/samples/userguide/tutorial/projectReports/api/build
 				<div>
 					<div>
 						<h2 class="title">
-							<a name="N10953"></a>11.8.&nbsp;Summary
+							<a name="N10953"></a>11.8.&nbsp;本章小结
 						</h2>
+						<h4 class="title">
+                            <a name="N10953"></a>11.8.&nbsp;Summary
+                        </h4>
 					</div>
 				</div>
 			</div>
 			<p>
+			在本章中你学到很多用命令行可以做的事情,了解更多你可以参阅<span
+                    class="command"><strong>gradle</strong></span> command in <a
+                    class="xref" href="gradle_command_line.html">附录&nbsp;D, <i>Gradle
+                        命令行</i></a>.<br>
 				In this chapter, you have seen some of the things you can do with
 				Gradle from the command-line. You can find out more about the <span
 					class="command"><strong>gradle</strong></span> command in <a
@@ -1120,12 +1130,12 @@ buildFile: /home/user/gradle/samples/userguide/tutorial/projectReports/api/build
 		<div>
 			<div class="navbar">
 				<a xmlns:xslthl="http://xslthl.sf.net"
-					href="web_project_tutorial.html"
-					title="Chapter&nbsp;10.&nbsp;Web Application Quickstart">Previous</a><span>|</span><a
-					xmlns:xslthl="http://xslthl.sf.net" href="userguide.html"
-					title="Gradle User Guide">Contents</a><span>|</span><a
-					xmlns:xslthl="http://xslthl.sf.net" href="tutorial_gradle_gui.html"
-					title="Chapter&nbsp;12.&nbsp;Using the Gradle Graphical User Interface">Next</a>
+					href="../ch10/web_project_tutorial.html"
+					title="Chapter&nbsp;10.&nbsp;Web Application Quickstart">上一页</a><span>|</span><a
+					xmlns:xslthl="http://xslthl.sf.net" href="../userguide.html"
+					title="Gradle User Guide">返回目录</a><span>|</span><a
+					xmlns:xslthl="http://xslthl.sf.net" href="../tutorial_gradle_gui.html"
+					title="Chapter&nbsp;12.&nbsp;Using the Gradle Graphical User Interface">下一页</a>
 			</div>
 		</div>
 	</div>

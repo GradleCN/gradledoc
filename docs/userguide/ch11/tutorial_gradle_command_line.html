@@ -788,13 +788,19 @@ Description
 					<div>
 						<div>
 							<h3 class="title">
-								<a name="sec:listing_dependencies"></a>11.6.4.&nbsp;Listing
-								project dependencies
+								<a name="sec:listing_dependencies"></a>11.6.4.&nbsp;获取依赖列表
 							</h3>
+							<h5 class="title">
+                                <a name="sec:listing_dependencies"></a>11.6.4.&nbsp;Listing
+                                project dependencies
+                            </h5>
 						</div>
 					</div>
 				</div>
 				<p>
+				    <a name="para:commandline_dependency_report"></a>执行 <strong
+                        class="userinput"><code>gradle dependencies</code></strong>
+                    会列出项目的依赖列表,所有依赖会根据任务区分,以树型结构展示出来.如下例.<br>
 					<a name="para:commandline_dependency_report"></a>Running <strong
 						class="userinput"><code>gradle dependencies</code></strong> gives
 					you a list of the dependencies of the selected project, broken down
@@ -805,11 +811,16 @@ Description
 				<div class="example">
 					<a name="dependencyListReport"></a>
 					<p class="title">
-						<b>Example&nbsp;11.13.&nbsp;Obtaining information about
+						<b>
+						例&nbsp;11.13.&nbsp;获取依赖信息<br>
+						Example&nbsp;11.13.&nbsp;Obtaining information about
 							dependencies</b>
 					</p>
 					<div class="example-contents">
 						<p>
+							<strong class="userinput"><code>gradle
+                                    -q dependencies api:dependencies webapp:dependencies</code></strong>
+                                    的输出结果<br>
 							Output of <strong class="userinput"><code>gradle
 									-q dependencies api:dependencies webapp:dependencies</code></strong>
 						</p>
@@ -846,7 +857,9 @@ No dependencies</pre>
 				</div>
 				<br class="example-break">
 				<p>
-					Since a dependency report can get large, it can be useful to
+	                   虽然输出结果很多,但这对于了解构建任务十分有用,当然你可以通过	<strong class="userinput"><code>--configuration</code></strong>参数来查看
+	                   指定构建任务的依赖情况.<br>
+   					Since a dependency report can get large, it can be useful to
 					restrict the report to a particular configuration. This is achieved
 					with the optional <strong class="userinput"><code>--configuration</code></strong>
 					parameter:
@@ -854,11 +867,15 @@ No dependencies</pre>
 				<div class="example">
 					<a name="dependencyListReportFiltered"></a>
 					<p class="title">
-						<b>Example&nbsp;11.14.&nbsp;Filtering dependency report by
+						<b>
+						例&nbsp;11.14.&nbsp;过滤依赖信息<br>
+						Example&nbsp;11.14.&nbsp;Filtering dependency report by
 							configuration</b>
 					</p>
 					<div class="example-contents">
 						<p>
+						 <strong class="userinput"><code>gradle
+                                    -q api:dependencies --configuration testCompile</code></strong>的输出结果<br>
 							Output of <strong class="userinput"><code>gradle
 									-q api:dependencies --configuration testCompile</code></strong>
 						</p>
@@ -879,13 +896,19 @@ testCompile
 					<div>
 						<div>
 							<h3 class="title">
-								<a name="sec:dependency_insight"></a>11.6.5.&nbsp;Getting the
-								insight into a particular dependency
+								<a name="sec:dependency_insight"></a>11.6.5.&nbsp;查看特定依赖
 							</h3>
+							 <h5 class="title">
+                                <a name="sec:dependency_insight"></a>11.6.5.&nbsp;Getting the
+                                insight into a particular dependency
+                            </h5>
 						</div>
 					</div>
 				</div>
 				<p>
+				执行<a name="para:commandline_dependency_insight_report"></a>Running <strong
+                        class="userinput"><code>gradle dependencyInsight</code></strong>
+                        可以查看指定的依赖情况.如下例.<br>
 					<a name="para:commandline_dependency_insight_report"></a>Running <strong
 						class="userinput"><code>gradle dependencyInsight</code></strong>
 					gives you an insight into a particular dependency (or dependencies)
@@ -894,11 +917,16 @@ testCompile
 				<div class="example">
 					<a name="dependencyInsightReport"></a>
 					<p class="title">
-						<b>Example&nbsp;11.15.&nbsp;Getting the insight into a
+						<b>
+						例&nbsp;11.15.&nbsp;获取特定依赖<br>
+						Example&nbsp;11.15.&nbsp;Getting the insight into a
 							particular dependency</b>
 					</p>
 					<div class="example-contents">
 						<p>
+						<strong class="userinput"><code>gradle
+                                    -q webapp:dependencyInsight --dependency groovy --configuration
+                                    compile</code></strong>的输出结果<br>
 							Output of <strong class="userinput"><code>gradle
 									-q webapp:dependencyInsight --dependency groovy --configuration
 									compile</code></strong>
@@ -911,6 +939,9 @@ org.codehaus.groovy:groovy-all:2.3.3
 				</div>
 				<br class="example-break">
 				<p>
+				这对于了解依赖关系、了解为何选择此版本作为依赖十分有用.了解更多请参阅 <a class="ulink"
+                        href="../../dsl/org.gradle.api.tasks.diagnostics.DependencyInsightReportTask.html"
+                        target="_top"><code class="classname">依赖检查报告</code></a>.<br>
 					This task is extremely useful for investigating the dependency
 					resolution, finding out where certain dependencies are coming from
 					and why certain versions are selected. For more information please
@@ -919,6 +950,12 @@ org.codehaus.groovy:groovy-all:2.3.3
 						target="_top"><code class="classname">DependencyInsightReportTask</code></a>.
 				</p>
 				<p>
+				    dependencyInsight任务是'Help'任务组中的一个.这项任务需要进行配置才可以.
+				     如果用了Java相关的插件,那么dependencyInsight任务已经预先被配置到'Compile'下了.
+				  你只需要通过'--dependency'参数来制定所需查看的依赖即可.如果你不想用默认配置的参数项你可以通过
+				   '--configuration' 参数来进行指定.了解更多请参阅 <a class="ulink"
+                        href="../../dsl/org.gradle.api.tasks.diagnostics.DependencyInsightReportTask.html"
+                        target="_top"><code class="classname">依赖检查报告</code></a>.<br>
 					The built-in dependencyInsight task is a part of the 'Help' tasks
 					group. The task needs to configured with the dependency and the
 					configuration. The report looks for the dependencies that match the
@@ -939,13 +976,17 @@ org.codehaus.groovy:groovy-all:2.3.3
 					<div>
 						<div>
 							<h3 class="title">
-								<a name="sec:listing_properties"></a>11.6.6.&nbsp;Listing
-								project properties
+								<a name="sec:listing_properties"></a>11.6.6.&nbsp;获取项目属性列表
 							</h3>
+							<h5 class="title">
+                                <a name="sec:listing_properties"></a>11.6.6.&nbsp;Listing
+                                project properties
+                            </h5>
 						</div>
 					</div>
 				</div>
 				<p>
+				执行<strong class="userinput"><code>gradle properties</code></strong>可以获取项目所有属性列表.如下例.<br> 
 					Running <strong class="userinput"><code>gradle
 							properties</code></strong> gives you a list of the properties of the selected
 					project. This is a snippet from the output:
@@ -953,10 +994,14 @@ org.codehaus.groovy:groovy-all:2.3.3
 				<div class="example">
 					<a name="propertyListReport"></a>
 					<p class="title">
-						<b>Example&nbsp;11.16.&nbsp;Information about properties</b>
+						<b>
+						例&nbsp;11.16.&nbsp;属性信息<br>
+						Example&nbsp;11.16.&nbsp;Information about properties</b>
 					</p>
 					<div class="example-contents">
 						<p>
+						<strong class="userinput"><code>gradle
+                                    -q api:properties</code></strong>的输出结果<br>
 							Output of <strong class="userinput"><code>gradle
 									-q api:properties</code></strong>
 						</p>
@@ -982,12 +1027,17 @@ buildFile: /home/user/gradle/samples/userguide/tutorial/projectReports/api/build
 					<div>
 						<div>
 							<h3 class="title">
-								<a name="sec:profiling_build"></a>11.6.7.&nbsp;Profiling a build
+								<a name="sec:profiling_build"></a>11.6.7.&nbsp;构建日志
 							</h3>
+							<h5 class="title">
+                                <a name="sec:profiling_build"></a>11.6.7.&nbsp;Profiling a build
+                            </h5>
 						</div>
 					</div>
 				</div>
 				<p>
+				<strong class="userinput"><code>--profile</code></strong>参数可以收集一些构建期间的信息并保存到
+				<code class="filename">build/reports/profile</code>目录下并且以构建时间命名这些文件.<br>
 					The <strong class="userinput"><code>--profile</code></strong>
 					command line option will record some useful timing information
 					while your build is running and write a report to the
@@ -995,13 +1045,17 @@ buildFile: /home/user/gradle/samples/userguide/tutorial/projectReports/api/build
 					directory. The report will be named using the time when the build
 					was run.
 				</p>
-				<p>This report lists summary times and details for both the
+				<p>
+				下面这份日志记录了总体花费时间以及各过程花费的时间.并以时间大小倒序排列.
+				并且记录了任务的执行情况.<br>
+				This report lists summary times and details for both the
 					configuration phase and task execution. The times for configuration
 					and task execution are sorted with the most expensive operations
 					first. The task execution results also indicate if any tasks were
 					skipped (and the reason) or if tasks that were not skipped did no
 					work.</p>
 				<p>
+				    如果采用了buildSrc,那么在<code class="filename">buildSrc/build</code>下同时也会生成一份日志记录记录<br>
 					Builds which utilize a buildSrc directory will generate a second
 					profile report for buildSrc in the
 					<code class="filename">buildSrc/build</code>
@@ -1010,7 +1064,7 @@ buildFile: /home/user/gradle/samples/userguide/tutorial/projectReports/api/build
 				<table cellpadding="0" cellspacing="0"
 					summary="manufactured viewport for HTML img" border="0" width="903">
 					<tr height="477">
-						<td><img src="img/profile.png" height="477"></td>
+						<td><img src="../img/profile.png" height="477"></td>
 					</tr>
 				</table>
 			</div>
@@ -1022,6 +1076,9 @@ buildFile: /home/user/gradle/samples/userguide/tutorial/projectReports/api/build
 						<h2 class="title">
 							<a name="sec:dry_run"></a>11.7.&nbsp;Dry Run
 						</h2>
+						<h4 class="title">
+                            <a name="sec:dry_run"></a>11.7.&nbsp;Dry Run
+                        </h4>
 					</div>
 				</div>
 			</div>

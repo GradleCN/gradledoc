@@ -56,9 +56,12 @@
 				</div>
 			</div>
 			<p>
-				1.5或更高版本的JDK,需要配置环境变量 JAVA_HOME
-				并将它指向你的JDK安装目录.Gradle会采用你环境变量中设置的JDK目录,可以用java −version进行检查.
-				p.s:Gradle自带了Groovy库,所以无需事先安装Grvoovy,所有已经安装的Grvooy也将被Gradle忽略. <br>
+				Gradle需要1.5或更高版本的JDK.Gradle自带了Groovy库,所以不需要安装Groovy.
+				Gradle会忽略已经安装的Groovy.Gradle会使用ptah
+				<sub>(这里的"path"应该是指PATH环境变量.[Rover12421]译注)</sub>
+				中的JDK(可以使用<strong class="userinput"><code>java -version</code></strong>检查).
+				当然,你可以配置<code class="envar">JAVA_HOME</code>环境变量来指向JDK的安装目录.
+				<br>
 				Gradle requires a Java JDK to be installed. Gradle requires a JDK
 				1.5 or higher. Gradle ships with its own Groovy library, therefore
 				no Groovy needs to be installed. Any existing Groovy installation is
@@ -105,22 +108,24 @@
 				</div>
 			</div>
 			<p>
-			下载的ZIP发行包包括如下内容:<br>
+			Gradle发行包是一个ZIP文件.完整的发行包包括以下内容<sub>(官方发行包有full完整版,也有不带源码和文档的版本,可根据需求下载.[Rover12421]译注)</sub>:<br>
 			The Gradle distribution comes packaged as a ZIP. The full
 				distribution contains:</p>
 			<div class="itemizedlist">
 				<ul class="itemizedlist">
-					<li class="listitem"><p>二进制Gradle文件<br> The Gradle binaries.</p></li>
-					<li class="listitem"><p>用户手册 (PDF 和 HTML 两种版本)<br>The user guide (HTML and PDF).</p></li>
+					<li class="listitem"><p>Gradle可执行文件<br> The Gradle binaries.</p></li>
+					<li class="listitem"><p>用户手册 (有PDF 和 HTML 两种版本)<br>The user guide (HTML and PDF).</p></li>
 					<li class="listitem"><p>DSL参考指南<br>  DSL reference guide.</p></li>
-					<li class="listitem"><p>API手册(javadoc 和 groovy doc)<br>The API documentation (Javadoc and
+					<li class="listitem"><p>API手册(Javadoc 和 Groovydoc)<br>The API documentation (Javadoc and
 							Groovydoc).</p></li>
 					<li class="listitem"><p>样例，包括用户手册中的例子,一些完整的构建样例和更加复杂的构建脚本 <br>Extensive samples, including the
 							examples referenced in the user guide, along with some complete
 							and more complex builds you can use the starting point for your
 							own build.</p></li>
 					<li class="listitem"><p>
-					源代码.仅供参考使用,如果你想要自己来构建Gradle你需要从源代码仓库中检出发行版本源码,具体请查看Gradle官方主页.<br>
+					源代码.仅供参考使用,如果你想要自己来编译Gradle你需要从源代码仓库中检出发行版本源码,具体请查看<a
+						class="ulink" href="http://www.gradle.org/development"
+						target="_top">Gradle官方主页</a>.<br>
 							The binary sources. This is for reference only. If you want to
 							build Gradle you need to download the source distribution or
 							checkout the sources from the source repository. See the <a
@@ -201,9 +206,19 @@
 				</div>
 			</div>
 			<p>
-			Gradle运行时的JVM参数可以通过GRADLE_OPTS或JAVA_OPTS来设置.这些参数将会同时生效.
-            JAVA_OPTS设置的参数将会同其它JAVA应用共享,一个典型的例子是可以在JAVA_OPTS中设置代理和GRADLE_OPTS设置内存参数.
-                                同时这些参数也可以在Gradle或者Gradlew脚本的开头进行设置.<br>
+			Gradle运行时的JVM参数可以通过
+			<code class="envar">GRADLE_OPTS</code>
+			或
+			<code class="envar">JAVA_OPTS</code>
+			来设置.这些参数将会同时生效.
+            <code class="envar">JAVA_OPTS</code>
+			设置的参数将会同其它JAVA应用共享,一个典型的例子是可以在
+			<code class="envar">JAVA_OPTS</code>
+			中设置代理和
+			<code class="envar">GRADLE_OPTS</code>
+			设置内存参数.同时这些参数也可以在<span
+				class="command"><strong>gradle</strong></span>或者<span
+				class="command"><strong>gradlew</strong></span>脚本文件的开头进行设置.<br>
 				JVM options for running Gradle can be set via environment variables.
 				You can use
 				<code class="envar">GRADLE_OPTS</code>

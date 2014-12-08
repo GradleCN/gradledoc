@@ -205,7 +205,7 @@ dependencies {
             </div>
             <p>
                 Gradle中依赖以组的形式来划分不同的<em class="firstterm">配置</em>.
-                每个配置都是一套具体名称组成的依赖. 我们称之为<em class="firstterm">依赖配置</em>
+                每个配置都只是一组指定的依赖. 我们称之为<em class="firstterm">依赖配置</em>
                 你也可以借由此声明外部依赖.后面我们会了解到,这也可用用来声明项目的发布<br>
                 In Gradle dependencies are grouped into <em class="firstterm">configurations</em>.
                 A configuration is simply a named set of dependencies. We will refer
@@ -587,7 +587,7 @@ dependencies {
             </div>
             <br class="example-break">
             <p>
-                                执行<strong class="userinput"><code>gradleuploadArchives</code></strong>,
+                                执行<strong class="userinput"><code>gradle uploadArchives</code></strong>,
                                 Gradle便会构建并上传你的jar包,同时会生成一个 <code class="filename">ivy.xml</code>一起上传到目标仓库.<br> 
                 Now, when you run <strong class="userinput"><code>gradle
                         uploadArchives</code></strong>, Gradle will build and upload your Jar. Gradle will

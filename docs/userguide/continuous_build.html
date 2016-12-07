@@ -1,0 +1,82 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Continuous build - Gradle User Guide Version 3.2</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide Version 3.2"><link rel="up" href="pt02.html" title="Part&nbsp;II.&nbsp;Working with existing builds"><link rel="prev" href="intro_multi_project_builds.html" title="Introduction to multi-project builds - Gradle User Guide Version 3.2"><link rel="next" href="composite_builds.html" title="Composite builds - Gradle User Guide Version 3.2"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="intro_multi_project_builds.html" title="Introduction to multi-project builds - Gradle User Guide Version 3.2">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 3.2">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="composite_builds.html" title="Composite builds - Gradle User Guide Version 3.2">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="continuous_build"></a>Chapter&nbsp;9.&nbsp;Continuous build</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="continuous_build.html#continuous_build_start_stop">9.1. How do I start and stop a continuous build?</a></span></dt><dt><span class="section"><a href="continuous_build.html#continuous_build_causes">9.2. What will cause a subsequent build?</a></span></dt><dt><span class="section"><a href="continuous_build.html#continuous_build_limitations">9.3. Limitations and quirks</a></span></dt></dl></div><div class="note"><p>
+            Continuous build is an <a class="link" href="feature_lifecycle.html">incubating</a> feature.
+            This means that it is incomplete and not yet at regular Gradle production quality.
+            This also means that this Gradle User Guide chapter is a work in progress.
+        </p></div><p>
+        Typically, you ask Gradle to perform a single build by way of specifying tasks that Gradle should execute.
+        Gradle will determine the the actual set of tasks that need to be executed to satisfy the request, execute them all, and then stop doing work until the next request.
+        A continuous build differs in that Gradle will keep satisfying the initial build request (until instructed to stop)
+        by executing the build when it is detected that the result of the previous build is now out of date.
+        For example, if your build compiles Java source files to Java class files, a continuous build would automatically initiate a compile when the source files change.
+        Continuous build is useful for many scenarios.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="continuous_build_start_stop" class="section-anchor" href="#continuous_build_start_stop"></a>9.1.&nbsp;How do I start and stop a continuous build?</h2></div></div></div><p>
+            A continuous build can be started by supplying either the <strong class="userinput"><code>--continuous</code></strong> or <strong class="userinput"><code>-t</code></strong> switches to Gradle,
+            along with the list of tasks, switches and arguments that define the work to do.
+            For example, <strong class="userinput"><code>gradle build --continuous</code></strong>.
+            This will have the same effect as running <strong class="userinput"><code>gradle build</code></strong>, but instead of Gradle exiting when done, it will wait for changes to the build inputs.
+            When a change occurs, <strong class="userinput"><code>gradle build</code></strong> will be automatically executed again and the process repeats.
+        </p><p>
+            If Gradle is attached to an interactive input source, such as a terminal, the continuous build can be exited by pressing <strong class="userinput"><code>CTRL-D</code></strong> (On Microsoft Windows, it is required to also press <strong class="userinput"><code>ENTER</code></strong> or <strong class="userinput"><code>RETURN</code></strong> after <strong class="userinput"><code>CTRL-D</code></strong>).
+            If Gradle is not attached to an interactive input source (e.g. is running as part of a script), the build process must be terminated (e.g. using the <strong class="userinput"><code>kill</code></strong> command or similar).
+            If the build is being executed via the Tooling API, the build can be cancelled using the Tooling API's cancellation mechanism.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="continuous_build_causes" class="section-anchor" href="#continuous_build_causes"></a>9.2.&nbsp;What will cause a subsequent build?</h2></div></div></div><div class="tip"><h3 class="title">Task file inputs</h3><p>
+                Task implementations declare their file system inputs by annotating their properties with
+                <a class="ulink" href="../javadoc/org/gradle/api/tasks/InputFiles.html" target="_top"><code class="classname">InputFiles</code></a> and other similar annotations.
+                Please see <a class="xref" href="more_about_tasks.html#sec:up_to_date_checks">Section&nbsp;18.9, &ldquo;Up-to-date checks (AKA Incremental Build)&rdquo;</a> for more information.
+            </p></div><p>
+            At this time, only changes to task inputs are noticed. Gradle will start watching for changes just before the task starts to execute.
+            No other changes will initiate a build.
+            For example, changes to build scripts and build logic will not initiate build.
+            Likewise, changes to files that are read during the configuration of the build, not the execution, will not initiate a build.
+            In order to incorporate such changes, the continuous build must be restarted manually.
+        </p><p>
+            Consider a typical build using the <a class="link" href="java_plugin.html">Java plugin</a>, using the conventional filesystem layout.
+            The following diagram visualizes the task graph for <strong class="userinput"><code>gradle build</code></strong>:
+        </p><div class="figure"><a xmlns:xslthl="http://xslthl.sf.net" name="N108B2"></a><p class="title"><b>Figure&nbsp;9.1.&nbsp;Java plugin task graph</b></p><div class="figure-contents"><img src="img/javaPluginTasks.png" alt="Java plugin task graph"></div></div><br class="figure-break"><p>
+            The following key tasks of the graph use files in the corresponding directories as inputs:
+        </p><div class="variablelist"><dl><dt><span class="term">compileJava</span></dt><dd><code class="filename">src/main/java</code></dd><dt><span class="term">processResources</span></dt><dd><code class="filename">src/main/resources</code></dd><dt><span class="term">compileTestJava</span></dt><dd><code class="filename">src/test/java</code></dd><dt><span class="term">processTestResources</span></dt><dd><code class="filename">src/test/resources</code></dd></dl></div><p>
+            Assuming that the initial build is successful (i.e. the <code class="literal">build</code> task and its dependencies complete without error),
+            changes to files in, or the addition/remove of files from, the locations listed above will initiate a new build.
+            If a change is made to a Java source file in <code class="filename">src/main/java</code>, the build will fire and all tasks will be scheduled.
+            Gradle's incremental build support ensures that only the tasks that are actually affected by the change are executed.
+        </p><p>
+            If the change to the main Java source causes compilation to fail, subsequent changes to the test source in <code class="filename">src/test/java</code> will not initiate a new build.
+            As the test source depends on the main source, there is no point building until the main source has changed, potentially fixing the compilation error.
+            After each build, only the inputs of the tasks that actually executed will be monitored for changes.
+        </p><p>
+            Continuous build is in no way coupled to compilation.
+            It works for all types of tasks.
+            For example, the <code class="literal">processResources</code> task copies and processes the files from <code class="filename">src/main/resources</code> for inclusion in the built JAR.
+            As such, a change to any file in this directory will also initiate a build.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="continuous_build_limitations" class="section-anchor" href="#continuous_build_limitations"></a>9.3.&nbsp;Limitations and quirks</h2></div></div></div><p>
+            There are several issues to be aware with the current implementation of continuous build.
+            These are likely to be addressed in future Gradle releases.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:build_cycles" class="section-anchor" href="#sec:build_cycles"></a>9.3.1.&nbsp;Build cycles</h3></div></div></div><p>
+                Gradle starts watching for changes just before a task executes.
+
+                If a task modifies its own inputs while executing, Gradle will detect the change and trigger a new build.
+                If every time the task executes, the inputs are modified again, the build will be triggered again.
+                This isn't unique to continuous build. A task that modifies its own inputs will never be considered up-to-date when run "normally" without continuous build.
+            </p><p>
+                If your build enters a build cycle like this, you can track down the task by looking at the list of files reported changed by Gradle.
+                After identifying the file(s) that are changed during each build, you should look for a task that has that file as an input.
+                In some cases, it may be obvious (e.g., a Java file is compiled with <code class="literal">compileJava</code>).
+                In other cases, you can use <code class="literal">--info</code> logging to find the task that is out-of-date due to the identified files.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:continuous_build_limitations_jdk9" class="section-anchor" href="#sec:continuous_build_limitations_jdk9"></a>9.3.2.&nbsp;Restrictions with Java 9</h3></div></div></div><p>
+                Due to class access restrictions related to Java 9, Gradle cannot set some operating system specific options, which means that:
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>On Mac OS X, Gradle will poll for file changes every 10 seconds instead of every 2 seconds.</p></li><li class="listitem"><p>On Windows, Gradle must use individual file watches (like on Linux/Mac OS), which may cause continuous build to no longer work on very large projects.</p></li></ul></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:performance_and_stability" class="section-anchor" href="#sec:performance_and_stability"></a>9.3.3.&nbsp;Performance and stability</h3></div></div></div><p>
+                The JDK file watching facility relies on inefficient file system polling on Mac OS X (see: <a class="ulink" href="https://bugs.openjdk.java.net/browse/JDK-7133447" target="_top">JDK-7133447</a>).
+                This can significantly delay notification of changes on large projects with many source files.
+            </p><p>
+                Additionally, the watching mechanism may deadlock under <span class="emphasis"><em>heavy</em></span> load on Mac OS X (see: <a class="ulink" href="https://bugs.openjdk.java.net/browse/JDK-8079620" target="_top">JDK-8079620</a>).
+                This will manifest as Gradle appearing not to notice file changes.
+                If you suspect this is occurring, exit continuous build and start again.
+            </p><p>
+                On Linux, OpenJDK's implementation of the file watch service can sometimes miss file system events (see: <a class="ulink" href="https://bugs.openjdk.java.net/browse/JDK-8145981" target="_top">JDK-8145981</a>).
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:changes_to_symbolic_links" class="section-anchor" href="#sec:changes_to_symbolic_links"></a>9.3.4.&nbsp;Changes to symbolic links</h3></div></div></div><p>
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Creating or removing symbolic link to files will initiate a build.</p></li><li class="listitem"><p>Modifying the target of a symbolic link will not cause a rebuild.</p></li><li class="listitem"><p>Creating or removing symbolic links to directories will not cause rebuilds.</p></li><li class="listitem"><p>Creating new files in the target directory of a symbolic link will not cause a rebuild.</p></li><li class="listitem"><p>Deleting the target directory will not cause a rebuild.</p></li></ul></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:changes_to_build_logic_are_not_considered" class="section-anchor" href="#sec:changes_to_build_logic_are_not_considered"></a>9.3.5.&nbsp;Changes to build logic are not considered</h3></div></div></div><p>
+                The current implementation does not recalculate the build model on subsequent builds.
+                This means that changes to task configuration, or any other change to the build model, are effectively ignored.
+            </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="intro_multi_project_builds.html" title="Introduction to multi-project builds - Gradle User Guide Version 3.2">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 3.2">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="composite_builds.html" title="Composite builds - Gradle User Guide Version 3.2">Next</a></div></div></div></body></html>

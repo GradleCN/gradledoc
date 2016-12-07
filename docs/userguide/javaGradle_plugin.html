@@ -1,0 +1,38 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>The Java Gradle Plugin Development Plugin - Gradle User Guide Version 3.2</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide Version 3.2"><link rel="up" href="pt04.html" title="Part&nbsp;IV.&nbsp;Extending the build"><link rel="prev" href="custom_plugins.html" title="Writing Custom Plugins - Gradle User Guide Version 3.2"><link rel="next" href="organizing_build_logic.html" title="Organizing Build Logic - Gradle User Guide Version 3.2"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="custom_plugins.html" title="Writing Custom Plugins - Gradle User Guide Version 3.2">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 3.2">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="organizing_build_logic.html" title="Organizing Build Logic - Gradle User Guide Version 3.2">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="javaGradle_plugin"></a>Chapter&nbsp;41.&nbsp;The Java Gradle Plugin Development Plugin</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="javaGradle_plugin.html#sec:gradle_plugin_dev_usage">41.1. Usage</a></span></dt></dl></div><div class="note"><p>
+            The Java Gradle plugin development plugin is currently <a class="link" href="feature_lifecycle.html">incubating</a>.
+            Please be aware that the DSL and other configuration may change in later Gradle versions.
+        </p></div><p>
+        The Java Gradle Plugin development plugin can be used to assist in the development of Gradle plugins.  It automatically applies
+        the <a class="link" href="java_plugin.html">Java</a> plugin, adds the <code class="literal">gradleApi()</code> dependency to the compile configuration
+        and performs validation of plugin metadata during <code class="literal">jar</code> task execution.
+    </p><p>
+        The plugin also integrates with <a class="link" href="test_kit.html">TestKit</a>, a library that aids in writing and executing functional
+        tests for plugin code. It automatically adds the <code class="literal">gradleTestKit()</code> dependency to the test compile configuration
+        and generates a plugin classpath manifest file consumed by a <code class="literal">GradleRunner</code> instance if found. Please refer to
+        <a class="xref" href="test_kit.html#sub:test-kit-automatic-classpath-injection">the section called &ldquo;Automatic injection with the Java Gradle Plugin Development plugin&rdquo;</a> for more on its usage, configuration options and samples.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:gradle_plugin_dev_usage" class="section-anchor" href="#sec:gradle_plugin_dev_usage"></a>41.1.&nbsp;Usage</h2></div></div></div><p>To use the Java Gradle Plugin Development plugin, include the following in your build script:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="useJavaGradlePluginPlugin"></a><p class="title"><b>Example&nbsp;41.1.&nbsp;Using the Java Gradle Plugin Development plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">plugins {
+    id <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"java-gradle-plugin"</span>
+}
+</pre></div></div><br class="example-break"><p>
+            Applying the plugin automatically applies the <a class="link" href="java_plugin.html">Java</a> plugin and adds the
+            <code class="literal">gradleApi()</code> dependency to the compile configuration.  It also adds some validations to the build.
+        </p><p>
+            The following validations are performed:
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">There is a plugin descriptor defined for the plugin.</li><li class="listitem">The plugin descriptor contains an <code class="literal">implementation-class</code> property.</li><li class="listitem">The <code class="literal">implementation-class</code> property references a valid class file in the jar.</li><li class="listitem">Each property getter or the corresponding field must be annotated with a property annotation like <code class="literal">@InputFile</code> and <code class="literal">@OutputDirectory</code>. Properties that don't participate in up-to-date checks should be annotated with <code class="literal">@Internal</code>.</li></ul></div><p>
+            Any failed validations will result in a warning message.
+        </p><p>
+            For each plugin you are developing, add an entry to the <code class="code">gradlePlugin {}</code> script block:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="gradlePluginBlock"></a><p class="title"><b>Example&nbsp;41.2.&nbsp;Using the gradlePlugin {} block.</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">gradlePlugin {
+    plugins {
+        simplePlugin {
+            id = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.gradle.sample.simple-plugin"</span>
+            implementationClass = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.gradle.sample.SimplePlugin"</span>
+        }
+    }
+}
+</pre></div></div><br class="example-break"><p>
+            The <code class="code">gradlePlugin {}</code> block defines the plugins being built by the project including the <code class="code">id</code> and
+            <code class="code">implementationClass</code> of the plugin. From this data about the plugins being developed, Gradle
+            can automatically:
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Generate the plugin descriptor in the <code class="literal">jar</code> file's <code class="literal">META-INF</code> directory.</li><li class="listitem">Configure the <a class="link" href="publishing_maven.html">Maven</a> or <a class="link" href="publishing_ivy.html">Ivy</a> publishing
+                plugins to publish a <a class="link" href="plugins.html#sec:plugin_markers">Plugin Marker Artifact</a> for each plugin.</li></ul></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="custom_plugins.html" title="Writing Custom Plugins - Gradle User Guide Version 3.2">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 3.2">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="organizing_build_logic.html" title="Organizing Build Logic - Gradle User Guide Version 3.2">Next</a></div></div></div></body></html>

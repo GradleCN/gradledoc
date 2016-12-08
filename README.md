@@ -67,7 +67,7 @@
 
 ```
 // 添加 upstream 源，只需执行一次
-git remote add upstream git@github.com:pkaq/gradledoc.git
+git remote add upstream git@github.com:gradlecn/gradledoc.git
 // 拉取远程代码
 git pull upstream master
 // 更新 fork 仓库

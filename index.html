@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>Gradledoc by GradleCN</title>
+    <title>Gradle中文用户手册 by GradleCN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -11,7 +11,7 @@
   </head>
   <body>
     <section class="page-header">
-      <h1 class="project-name">Gradledoc</h1>
+      <h1 class="project-name">Gradle中文用户手册</h1>
       <h2 class="project-tagline">gradle 中文文档</h2>
       <a href="https://github.com/GradleCN/gradledoc" class="btn">View on GitHub</a>
       <a href="https://github.com/GradleCN/gradledoc/zipball/master" class="btn">Download .zip</a>
@@ -20,19 +20,205 @@
 
     <section class="main-content">
       <h1>
-<a id="gradledoc" class="anchor" href="#gradledoc" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>gradledoc</h1>
+<a id="翻译规范" class="anchor" href="#%E7%BF%BB%E8%AF%91%E8%A7%84%E8%8C%83" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>翻译规范</h1>
 
-<p>gradle 中文文档</p>
+<p>非常感谢您的关注，本项目是针对   <code>Gradle</code> 官方<code>docs</code>的翻译项目，旨在为<code>Gradle</code>中文化贡献绵薄微力。
+如果您想参与进来，请仔细阅读以下内容。</p>
 
-<p>目录页面:docs/userguide/userguide.html</p>
+<p>为了提高翻译质量和协同效率，特约定些文档。在参与翻译前，请仔细阅读此文档。</p>
 
-<p>欢迎一起参与:)</p>
+<p><a href="Collaborator.md">成员名单</a></p>
 
-<p>在线浏览地址:
-<a href="http://pkaq.github.io/gradledoc/docs/userguide/userguide.html">http://pkaq.github.io/gradledoc/docs/userguide/userguide.html</a></p>
+<h2>
+<a id="质量保证" class="anchor" href="#%E8%B4%A8%E9%87%8F%E4%BF%9D%E8%AF%81" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>质量保证</h2>
+
+<ul>
+<li><p>使用互相 Review 机制，修改后发 Pull Request（小修改除外），Collaborator 看到后，如果有问题回复指出；如果没有问题，简单回复一下并 Accept 即可；</p></li>
+<li><p>为保证同步性,每个子版本需要结合release note对领取的章节进行一次校对。</p></li>
+<li><p>采用领取停滞取代原则，任务领取后若长期停滞（超过30天）则领取的目标任务回归到无人领取状态。</p></li>
+<li><p>对于历史版本，将会以tag的形式留存下来。 </p></li>
+</ul>
+
+<h2>
+<a id="加入翻译" class="anchor" href="#%E5%8A%A0%E5%85%A5%E7%BF%BB%E8%AF%91" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>加入翻译</h2>
+
+<p>如果想贡献一份力量请加入QQ群:<code>466275646</code></p>
+
+<p>欢迎加入我们一起为 Gradle 在中文推广出一份力，对于有能力且积极的同学会被邀请加入我们 Group。</p>
+
+<p>开始翻译前，你可以通过以下方式认领，确保没有重复工作。</p>
+
+<h2>
+<a id="如何开始" class="anchor" href="#%E5%A6%82%E4%BD%95%E5%BC%80%E5%A7%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>如何开始</h2>
+
+<ul>
+<li>
+<p>领取 </p>
+
+<blockquote>
+<p>按章节领取，对于未被翻译的章节，应在翻译前进行翻译认领来保证没有人和你做重复工作。很简单，请从 repo 的 issue 列表中认领，如果没有对应章节的 issue，自己创建一个即可。</p>
+</blockquote>
+</li>
+<li>
+<p>翻译 </p>
+
+<blockquote>
+<p>认领成功后就代表你已经成功占到一个坑，你可以开始慢慢翻译自己的文章了。为了保证理解的准确性和阅读的方便性，翻译时采用保留原文的方式，以段落为单元，译文在上原文在下
+如果占坑太久你的占位可能被取消，尽量在30天内完成。</p>
+</blockquote>
+</li>
+<li>
+<p>校对  </p>
+
+<blockquote>
+<p>对于已经翻译的章节，欢迎做校验工作，校验不需要认领，fork 后修改并发 Pull Request 即可。校对的内容不限于语言表达的准确性、标点以及排版格式等。</p>
+</blockquote>
+</li>
+</ul>
+
+<h2>
+<a id="翻译流程" class="anchor" href="#%E7%BF%BB%E8%AF%91%E6%B5%81%E7%A8%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>翻译流程</h2>
+
+<p>一、fork 要翻译的 repo</p>
+
+<p>二、如果是新翻译章节，应参照对应的原文进行翻译；如果是校对则直接修改
+   可以使用 OmegaT \ sublime 等提高翻译效率，为增强可读性，建议翻译之前先用你所用编辑器的插件对html源码进行格式化。    </p>
+
+<p>四、翻译结束，提交 Pull Request</p>
+
+<p>五、fork 后的 repo 如何同步本 repo？</p>
+
+<pre><code>// 添加 upstream 源，只需执行一次
+git remote add upstream git@github.com:pkaq/gradledoc.git
+// 拉取远程代码
+git pull upstream master
+// 更新 fork 仓库
+git push origin master
+</code></pre>
+
+<p>更多参考：<a href="https://help.github.com/articles/syncing-a-fork/">https://help.github.com/articles/syncing-a-fork/</a></p>
+
+<h2>
+<a id="翻译约定" class="anchor" href="#%E7%BF%BB%E8%AF%91%E7%BA%A6%E5%AE%9A" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>翻译约定</h2>
+
+<ul>
+<li>不译的英文名词复数改为单数，因为中文没有复数的概念；</li>
+<li>专有名词保持大写：HTML, HAML, SASS, REST... 等等；</li>
+<li>英文和数字与中文之间要留空格。中文标点符号和中文之间不需要留空格；</li>
+<li>使用中文的标点符号。句号是 <code>。</code> 不是 <code>.</code>，破折号是 <code>——</code> 不是 <code>-</code>；</li>
+<li>英文有斜体、中文没有，可用强调取代 <code>**强调**</code>；</li>
+<li>译文和原文行数应保持一致，以便于后期同步更新；</li>
+<li>代码缩进使用两个空格，禁止使用 Tab；</li>
+<li>按照语义把英文逗号改为中文顿号；</li>
+<li>译完自己读一次，看看像不像中文；</li>
+<li>遇到不确定的翻译很正常，请在 Pull Request 里指出，大家一起解决。</li>
+</ul>
+
+<h2>
+<a id="名词约定" class="anchor" href="#%E5%90%8D%E8%AF%8D%E7%BA%A6%E5%AE%9A" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>名词约定</h2>
+
+<p>为了免除误解，这些词第一次出现时可以用 <code>（）</code> 来显示原文。</p>
+
+<table>
+<thead>
+<tr>
+<th>英文</th>
+<th>中文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>this won’t work</td>
+<td>这样做行不通</td>
+</tr>
+<tr>
+<td>this will work</td>
+<td>这样做行得通</td>
+</tr>
+<tr>
+<td>tips</td>
+<td>小贴士</td>
+</tr>
+<tr>
+<td>lifecycle</td>
+<td>生命周期</td>
+</tr>
+<tr>
+<td>Previous</td>
+<td>上一页</td>
+</tr>
+<tr>
+<td>Contents</td>
+<td>目录</td>
+</tr>
+<tr>
+<td>Next</td>
+<td>下一页</td>
+</tr>
+</tbody>
+</table>
+
+<h2>
+<a id="保留名词" class="anchor" href="#%E4%BF%9D%E7%95%99%E5%90%8D%E8%AF%8D" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>保留名词</h2>
+
+<p>专有名词，在不造成读者理解困难的情况下，尽量保持原汁原味。</p>
+
+<table>
+<thead>
+<tr>
+<th>英文</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>project</td>
+<td>项目</td>
+</tr>
+<tr>
+<td>task</td>
+<td>任务</td>
+</tr>
+<tr>
+<td>plugin</td>
+<td>插件</td>
+</tr>
+<tr>
+<td>action</td>
+<td>动作</td>
+</tr>
+</tbody>
+</table>
+
+<h2>
+<a id="协作规范" class="anchor" href="#%E5%8D%8F%E4%BD%9C%E8%A7%84%E8%8C%83" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>协作规范</h2>
+
+<ul>
+<li>成为 Collaborator 说明自己的能力和贡献被肯定，是很光荣的事情。有直接操作代码库和 Accept 别人 Pull Request 的权限，为了避免错误的操作，因此需要一些规范来约束自己。</li>
+<li>Collaborator 应该是活跃的，遇到 Pull Request 主动 Review，主动参与和发起讨论。</li>
+<li>自己发的 Pull Request 虽有合并权限，但需要至少其它一人 Reivew 后才能合并</li>
+</ul>
+
+<h2>
+<a id="建议与反馈" class="anchor" href="#%E5%BB%BA%E8%AE%AE%E4%B8%8E%E5%8F%8D%E9%A6%88" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>建议与反馈</h2>
+
+<p>欢迎任何建议！直接开一个 github issues 就可以了。</p>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+<p>本文档的副本可以免费分发阅读，请勿用作商业用途。</p>
+
+<hr>
+
+<p>交流群:<code>109752483</code></p>
+
+<p>翻译群:<code>466275646</code></p>
+
+<p>娱乐群:<code>576648359</code></p>
 
       <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/GradleCN/gradledoc">Gradledoc</a> is maintained by <a href="https://github.com/GradleCN">GradleCN</a>.</span>
+        <span class="site-footer-owner"><a href="https://github.com/GradleCN/gradledoc">Gradle中文用户手册</a> is maintained by <a href="https://github.com/GradleCN">GradleCN</a>.</span>
 
         <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>

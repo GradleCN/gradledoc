@@ -44,9 +44,8 @@
 一、fork 要翻译的 repo
 
 二、如果是新翻译章节，应参照对应的原文进行翻译；如果是校对则直接修改
-   可以使用 OmegaT 提高翻译效率    
-   [ >>> - 点我下载 - <<< ](https://superb-dca2.dl.sourceforge.net/project/omegat/OmegaT%20-%20Latest/OmegaT%204.0.1/OmegaT_4.0.1_Beta_Windows_without_JRE.exe)
-
+   可以使用 OmegaT \ sublime 等提高翻译效率，为增强可读性，建议翻译之前先用你所用编辑器的插件对html源码进行格式化。    
+   
 四、翻译结束，提交 Pull Request
 
 五、fork 后的 repo 如何同步本 repo？
@@ -86,7 +85,9 @@ this won’t work | 这样做行不通
 this will work | 这样做行得通
 tips | 小贴士 
 lifecycle | 生命周期
-
+Previous | 上一页
+Contents | 目录
+Next | 下一页
 ## 保留名词
 
 专有名词，在不造成读者理解困难的情况下，尽量保持原汁原味。

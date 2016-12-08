@@ -2,7 +2,7 @@
 <html>
  <head> 
   <meta charset="utf-8" /> 
-  <title>Gradle 2.0 Release Notes</title> 
+  <title>Gradle 3.2 Release Notes</title> 
   <style>/* reset.css */
 html {margin:0;padding:0;border:0;}
 body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, code, del, dfn, em, img, q, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, dialog, figure, footer, header, hgroup, nav, section {margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;}
@@ -125,7 +125,7 @@ caption {background:#eee;}
 }
 
 body {
-  font-size: 14px;
+  font-size: 16px;
   font-family: 'Lato', Arial, serif;
   margin: 28px 28px 14px;
   color: #333;
@@ -150,7 +150,10 @@ h3, h4, h5, h6 {
 
 .text-container,
 div.book,
-div.chapter {
+div.chapter,
+div.part,
+div.appendix,
+div.glossary {
   margin-left: 10px;
   margin-right: 10px;
 }
@@ -258,7 +261,8 @@ li em, p em {
 
 code em, tt em {
   text-decoration: none;
-}img.logo {
+}
+img.logo {
   margin-bottom: 1em;
 }
 
@@ -288,10 +292,6 @@ h4 {
 
 section.minor-detail {
   padding: 0 10px;
-}
-
-ul.toc {
-  font-size: 15px
 }
 
 ul.toc-sub {
@@ -378,7 +378,7 @@ section.footer {
 }
 
 #tiptip_content {
-    font-size: 13px;
+    font-size: 14px;
     color: #717171;
     padding: 6px 10px;
     border: 1px solid #8B8B8B;
@@ -444,47 +444,6 @@ section.footer {
  */
 (function($){$.fn.tipTip=function(options){var defaults={activation:"hover",keepAlive:false,maxWidth:"200px",edgeOffset:3,defaultPosition:"bottom",delay:400,fadeIn:200,fadeOut:200,attribute:"title",content:false,enter:function(){},exit:function(){}};var opts=$.extend(defaults,options);if($("#tiptip_holder").length<=0){var tiptip_holder=$('<div id="tiptip_holder" style="max-width:'+opts.maxWidth+';"></div>');var tiptip_content=$('<div id="tiptip_content"></div>');var tiptip_arrow=$('<div id="tiptip_arrow"></div>');$("body").append(tiptip_holder.html(tiptip_content).prepend(tiptip_arrow.html('<div id="tiptip_arrow_inner"></div>')))}else{var tiptip_holder=$("#tiptip_holder");var tiptip_content=$("#tiptip_content");var tiptip_arrow=$("#tiptip_arrow")}return this.each(function(){var org_elem=$(this);if(opts.content){var org_title=opts.content}else{var org_title=org_elem.attr(opts.attribute)}if(org_title!=""){if(!opts.content){org_elem.removeAttr(opts.attribute)}var timeout=false;if(opts.activation=="hover"){org_elem.hover(function(){active_tiptip()},function(){if(!opts.keepAlive){deactive_tiptip()}});if(opts.keepAlive){tiptip_holder.hover(function(){},function(){deactive_tiptip()})}}else if(opts.activation=="focus"){org_elem.focus(function(){active_tiptip()}).blur(function(){deactive_tiptip()})}else if(opts.activation=="click"){org_elem.click(function(){active_tiptip();return false}).hover(function(){},function(){if(!opts.keepAlive){deactive_tiptip()}});if(opts.keepAlive){tiptip_holder.hover(function(){},function(){deactive_tiptip()})}}function active_tiptip(){opts.enter.call(this);tiptip_content.html(org_title);tiptip_holder.hide().removeAttr("class").css("margin","0");tiptip_arrow.removeAttr("style");var top=parseInt(org_elem.offset()['top']);var left=parseInt(org_elem.offset()['left']);var org_width=parseInt(org_elem.outerWidth());var org_height=parseInt(org_elem.outerHeight());var tip_w=tiptip_holder.outerWidth();var tip_h=tiptip_holder.outerHeight();var w_compare=Math.round((org_width-tip_w)/2);var h_compare=Math.round((org_height-tip_h)/2);var marg_left=Math.round(left+w_compare);var marg_top=Math.round(top+org_height+opts.edgeOffset);var t_class="";var arrow_top="";var arrow_left=Math.round(tip_w-12)/2;if(opts.defaultPosition=="bottom"){t_class="_bottom"}else if(opts.defaultPosition=="top"){t_class="_top"}else if(opts.defaultPosition=="left"){t_class="_left"}else if(opts.defaultPosition=="right"){t_class="_right"}var right_compare=(w_compare+left)<parseInt($(window).scrollLeft());var left_compare=(tip_w+left)>parseInt($(window).width());if((right_compare&&w_compare<0)||(t_class=="_right"&&!left_compare)||(t_class=="_left"&&left<(tip_w+opts.edgeOffset+5))){t_class="_right";arrow_top=Math.round(tip_h-13)/2;arrow_left=-12;marg_left=Math.round(left+org_width+opts.edgeOffset);marg_top=Math.round(top+h_compare)}else if((left_compare&&w_compare<0)||(t_class=="_left"&&!right_compare)){t_class="_left";arrow_top=Math.round(tip_h-13)/2;arrow_left=Math.round(tip_w);marg_left=Math.round(left-(tip_w+opts.edgeOffset+5));marg_top=Math.round(top+h_compare)}var top_compare=(top+org_height+opts.edgeOffset+tip_h+8)>parseInt($(window).height()+$(window).scrollTop());var bottom_compare=((top+org_height)-(opts.edgeOffset+tip_h+8))<0;if(top_compare||(t_class=="_bottom"&&top_compare)||(t_class=="_top"&&!bottom_compare)){if(t_class=="_top"||t_class=="_bottom"){t_class="_top"}else{t_class=t_class+"_top"}arrow_top=tip_h;marg_top=Math.round(top-(tip_h+5+opts.edgeOffset))}else if(bottom_compare|(t_class=="_top"&&bottom_compare)||(t_class=="_bottom"&&!top_compare)){if(t_class=="_top"||t_class=="_bottom"){t_class="_bottom"}else{t_class=t_class+"_bottom"}arrow_top=-12;marg_top=Math.round(top+org_height+opts.edgeOffset)}if(t_class=="_right_top"||t_class=="_left_top"){marg_top=marg_top+5}else if(t_class=="_right_bottom"||t_class=="_left_bottom"){marg_top=marg_top-5}if(t_class=="_left_top"||t_class=="_left_bottom"){marg_left=marg_left+5}tiptip_arrow.css({"margin-left":arrow_left+"px","margin-top":arrow_top+"px"});tiptip_holder.css({"margin-left":marg_left+"px","margin-top":marg_top+"px"}).attr("class","tip"+t_class);if(timeout){clearTimeout(timeout)}timeout=setTimeout(function(){tiptip_holder.stop(true,true).fadeIn(opts.fadeIn)},opts.delay)}function deactive_tiptip(){opts.exit.call(this);if(timeout){clearTimeout(timeout)}tiptip_holder.fadeOut(opts.fadeOut)}}})}})(jQuery);</script> 
   <script type="text/javascript">$(function() {
-  function elementInViewport(el) {
-    var rect = el.getBoundingClientRect();
-
-    return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <= window.innerHeight &&
-      rect.right <= window.innerWidth
-    );
-  }
-
-  function addDetailCollapsing(section) {
-    section.hide();
-    var buttonParagraph = $("<p><button class='display-toggle'>More »</button></p>").insertAfter(section);
-    buttonParagraph.find("button").click(function() {
-      var button = $(this);
-      var hiding = section.is(":visible");
-
-      var toggle = function() {
-        section.slideToggle("slow", function() {
-          button.text(hiding ? "More »" : "« Less");
-        });
-      };
-
-      var header = section.prevAll("h3:first");
-
-      if (hiding && !elementInViewport(header.get(0))) {
-        var i = 0;
-        $('html,body').animate({
-          scrollTop: header.offset().top
-        }, "fast", "swing", function() {
-          if (++i == 2) {
-            toggle();
-          }
-        });
-      } else {
-        toggle();
-      }
-    });
-  }
-
   function injectIssues(url, insertAfter, idBase, loadingText, messageFunction) {
     var loadingPara = $("<p class='" + idBase + "-loading'>" + loadingText + " …</p>").insertAfter(insertAfter);
     var animate = true;
@@ -509,7 +468,8 @@ section.footer {
         if (data.length > 0) {
           var list = $("<ul id='" + idBase + "-list'></ul>").hide().insertAfter(para);
           $.each(data, function (i, issue) {
-            $("<li>[<a href='" + issue["link"] + "'>"+ issue["key"] + "</a>] - " + issue["summary"] + "</li>").appendTo(list);
+            var link = $("<a></a>").attr("href", issue["link"]).text(issue["key"]);
+            $("<li></li>").append(document.createTextNode("["), link, document.createTextNode("] - " + issue["summary"])).appendTo(list);
           });
           list.slideDown("slow");
         }
@@ -528,33 +488,28 @@ section.footer {
   });
 
   injectIssues(
-    "http://services.gradle.org/fixed-issues/2.0", 
+    "https://services.gradle.org/fixed-issues/3.2",
     $("h2#fixed-issues"), 
     "fixed-issues", 
-    "Retrieving the fixed issue information for 2.0", 
+    "Retrieving the fixed issue information for 3.2", 
     function(i) {
-      return i + " issues have been fixed in Gradle 2.0.";
+      return i + " issues have been fixed in Gradle 3.2.";
     }
   );
   
   injectIssues(
-    "http://services.gradle.org/known-issues/2.0", 
+    "https://services.gradle.org/known-issues/3.2",
     $("h2#known-issues").next("p"), 
     "known-issues", 
-    "Retrieving the known issue information for 2.0", 
+    "Retrieving the known issue information for 3.2", 
     function(i) {
       if (i > 0) {
-        return i + " issues are known to affect Gradle 2.0.";
+        return i + " issues are known to affect Gradle 3.2.";
       } else {
-        return "There are no known issues of Gradle 2.0 at this time.";
+        return "There are no known issues of Gradle 3.2 at this time.";
       }
     }
   );
-
-  $("section.major-detail").each(function() {
-    addDetailCollapsing($(this));
-  });
-
 });
 
 </script> 
@@ -562,554 +517,218 @@ section.footer {
  <body>
   <div class="text-container"> 
    <h1>Gradle Release Notes</h1> 
-   <h3 class="releaseinfo">Version 2.0</h3> 
-   <p>Gradle 2.0 is an important milestone in the evolution of Gradle. As explained in the <a href="http://forums.gradle.org/gradle/topics/after_1_12_comes_2_0">Gradle 2.0 announcement</a>, the change in major version number signals a new backwards compatibility baseline. Many deprecated features and API have been removed in this release, allowing the development team to simplify the codebase and implement new functionality. The “Potential Breaking Changes” section of these release notes list all of the breaking changes that have been made and all Gradle users are strongly encouraged to read the list.</p> 
-   <p>Gradle has matured considerably in the evolution from 1.0 to 2.0. It is more performant and is more memory efficient, particularly for large builds. Performance optimization is a persistent area of investment and work, with further optimizations to come during the 2.x stream. Performance, in all aspects, is critically important to a build system. </p> 
-   <p>In addition to the breaking changes, it's business as usual with the steady evolution of Gradle via new and refined API and features.</p> 
-   <p>The move to Groovy 2.3.2 from Groovy 1.8 brings with it all of the new features added to Groovy in this time. There is now a public API for resolving “source” and “javadoc” JARs for JVM library components. The exposing of Ivy “Extra Info” attributes enables a new class of advanced dependency management use cases. It is now possible to use the SFTP protocol for dependency consumption without using custom Ivy resolvers. Maven POM profile support has also been improved through support for profile activation through absence of a system property. There are also other refinements and improvements detailed below, including improvements to Gradle's support for building native projects.</p> 
-   <p>We hope you enjoy Gradle 2.0 and the coming releases in the 2.x stream.</p> 
+   <h3 class="releaseinfo">Version 3.2</h3> 
+   <p>The Gradle team is pleased to announce Gradle 3.2.</p> 
+   <p>It's a relatively quiet release this time around, but there are still plenty of reasons to upgrade.</p> 
+   <p>Perhaps the most significant improvements are in the <strong>incremental build support</strong>, which now has <strong>better up-to-date checking</strong> for Java compilation, copying, and archiving. You can also have Gradle treat any task input as a classpath with the new <code>@Classpath</code> annotation.</p> 
+   <p>Users of Gradle's <strong>native build support</strong> gain an important tool in this release. Many of you will be familiar with the <code>buildDependents</code> task for classic multi-project builds. This is now available in native builds as well via new <code>assembleDependents</code> and <code>buildDependents</code> tasks. These are incredibly useful for determining whether your changes have adversely impacted anything that depends on them.</p> 
+   <p>If you use an IDE and have a lot of dependencies in your build—particular dynamic ones—you may have experienced long import times. The underlying issue has been fixed in this release, resulting in significantly improved import times. <a href="https://github.com/gradle/perf-enterprise-large/">One example enterprise build</a> showed <strong>a 100-fold improvement</strong>!</p> 
+   <p>Our users trialling the <strong>Kotlin build script support</strong> will be glad to hear that progress continues apace with support for <strong>multi-project builds</strong>. And it's easier to try this feature on Windows now that a bug in compiling scripts on that platform has been fixed.</p> 
+   <p>Gradle 3.1 fixed the behavior of Ctrl-C for many scenarios, but it would still kill the daemon if you used it during the first build run on that daemon. The situation has now improved with this release so that <strong>Ctrl-C <em>won't</em> always kill the daemon on the first run</strong>. See the dedicated section later for a more complete description of the latest behavior.</p> 
+   <p>The last change we want to bring to your attention has been a long time coming and will affect a large number of builds: the shortcut syntax for declaring tasks (via <code>&lt;&lt;</code>) has <strong>now been deprecated</strong>. The eagle-eyed among you will notice that the user guide examples have been updated to use <code>doLast()</code> and we strongly recommend that you follow suit. This feature will be removed in Gradle 5.0! See the <a href="#deprecations">Deprecations section</a> for more details.</p> 
    <section class="table-of-contents"> 
     <h2>Table Of Contents</h2> 
     <ul class="toc"> 
      <li><a href="#new-and-noteworthy">New and noteworthy</a> 
       <ul class="toc-sub"> 
-       <li><a href="#updated-to-groovy-2.3.2">Updated to Groovy 2.3.2</a></li> 
-       <li><a href="#support-for-java-8">Support for Java 8</a></li> 
-       <li><a href="#new-api-for-resolving-source-and-javadoc-artifacts">New API for resolving source and javadoc artifacts</a></li> 
-       <li><a href="#access-ivy-extra-info-from-component-metadata-rules">Access Ivy extra info from component metadata rules</a></li> 
-       <li><a href="#collaborate-with-plugins-via-plugins.withid()">Collaborate with plugins via <code>plugins.withId()</code></a></li> 
-       <li><a href="#support-for-ivy-and-maven-repositories-with-sftp-scheme">Support for Ivy and Maven repositories with SFTP scheme</a></li> 
-       <li><a href="#apache-maven-pom-profile-activation-based-on-absence-of-system-property">Apache Maven POM profile activation based on absence of system property</a></li> 
-       <li><a href="#fine-grained-control-of-arguments-passed-to-native-tools">Fine grained control of arguments passed to native tools</a></li> 
-       <li><a href="#simplified-support-for-native-cross-compilation-and-custom-platforms-(gcc-based-toolchains)">Simplified support for native cross compilation and custom platforms (GCC based toolchains)</a></li> 
-       <li><a href="#new-'ivy'-layout-support-for-ivy-repositories">New 'ivy' layout support for Ivy repositories</a></li> 
-       <li><a href="#default-versions-of-code-quality-tools-updated">Default versions of code quality tools updated</a></li> 
-       <li><a href="#tooling-api-improvements">Tooling API improvements</a></li> 
+       <li><a href="#incremental-build-improvements">Incremental build improvements</a></li> 
+       <li><a href="#build-dependents-for-native-binaries">Build Dependents for Native Binaries</a></li> 
+       <li><a href="#new-preferprojectmodules()-conflict-resolution-strategy-for-multi-project-builds">New <code>preferProjectModules()</code> conflict resolution strategy for multi-project builds</a></li> 
+       <li><a href="#improved-deprecation-warnings">Improved deprecation warnings</a></li> 
+       <li><a href="#http-basic-authentication-for-wrapper-distributions">HTTP Basic Authentication for wrapper distributions</a></li> 
+       <li><a href="#ctrl-c-no-longer-stops-the-daemon-on-first-run">Ctrl-C no longer stops the Daemon on first run</a></li> 
+       <li><a href="#multi-project-builds-with-kotlin-scripting">Multi-project builds with Kotlin scripting</a></li> 
       </ul></li> 
-     <li><a href="#fixed-issues">Fixed issues</a></li> 
+     <li><a href="#fixed-issues">Fixed issues</a> 
+      <ul class="toc-sub"> 
+       <li><a href="#fixed-a-performance-problem-in-the-tooling-api">Fixed a performance problem in the Tooling API</a></li> 
+      </ul></li> 
+     <li><a href="#deprecations">Deprecations</a> 
+      <ul class="toc-sub"> 
+       <li><a href="#the-left-shift-operator-on-the-task-interface">The left shift operator on the Task interface</a></li> 
+       <li><a href="#modifying-a-child-copy-spec-during-task-execution">Modifying a child copy spec during task execution</a></li> 
+      </ul></li> 
      <li><a href="#potential-breaking-changes">Potential breaking changes</a> 
       <ul class="toc-sub"> 
-       <li><a href="#upgraded-to-groovy-2.3.2">Upgraded to Groovy 2.3.2</a></li> 
-       <li><a href="#can-no-longer-run-gradle-using-java-5">Can no longer run Gradle using Java 5</a></li> 
-       <li><a href="#upgrades-to-code-quality-tool-default-versions">Upgrades to code quality tool default versions</a></li> 
-       <li><a href="#custom-testng-listeners-are-applied-before-gradle's-listeners">Custom TestNG listeners are applied before Gradle's listeners</a></li> 
-       <li><a href="#support-for-reading-or-changing-file-permissions-on-certain-platforms-with-java-6">Support for reading or changing file permissions on certain platforms with Java 6</a></li> 
-       <li><a href="#support-for-terminal-integration-on-certain-platforms">Support for terminal integration on certain platforms</a></li> 
-       <li><a href="#build-script-changes">Build script changes</a></li> 
-       <li><a href="#native-binaries-model-changes">Native binaries model changes</a></li> 
-       <li><a href="#new-java-component-model-changes">New Java component model changes</a></li> 
-       <li><a href="#support-for-the-deprecated-gradle-open-api-removed">Support for the deprecated Gradle Open API removed</a></li> 
-       <li><a href="#properties-are-no-longer-dynamically-created-on-assignment">Properties are no longer dynamically created on assignment</a></li> 
-       <li><a href="#+=-operator-changes-that-typically-affect-configuration-of-eclipse-and-idea-plugin">+= operator changes that typically affect configuration of eclipse and idea plugin</a></li> 
-       <li><a href="#removed-deprecated-plugins">Removed deprecated plugins</a></li> 
-       <li><a href="#changes-to-groovy-and-scala-plugins">Changes to Groovy and Scala plugins</a></li> 
-       <li><a href="#removed-deprecated-command-line-options">Removed deprecated command line options</a></li> 
-       <li><a href="#removed-deprecated-classes">Removed deprecated classes</a></li> 
-       <li><a href="#removed-deprecated-methods">Removed deprecated methods</a></li> 
-       <li><a href="#removed-deprecated-properties">Removed deprecated properties</a></li> 
-       <li><a href="#changes-to-file-dsl">Changes to file DSL</a></li> 
-       <li><a href="#changes-to-dependency-management-dsl">Changes to dependency management DSL</a></li> 
-       <li><a href="#tasks-cannot-be-changed-after-task-has-started-execution">Tasks cannot be changed after task has started execution</a></li> 
-       <li><a href="#removed-incubating-method">Removed incubating method</a></li> 
-       <li><a href="#task-constructor-injection-changes">Task constructor injection changes</a></li> 
-       <li><a href="#task-constructor-changes">Task constructor changes</a></li> 
+       <li><a href="#tooling-api-builders-run-before-buildfinished-listeners">Tooling API builders run before buildFinished listeners</a></li> 
       </ul></li> 
      <li><a href="#external-contributions">External contributions</a></li> 
-     <li><a href="#known-issues">Known issues</a></li> 
+     <li><a href="#known-issues">Known issues</a> 
+      <ul class="toc-sub"> 
+       <li><a href="#usage-of-jansi-library-embedded-with-java-annotation-processor">Usage of Jansi library embedded with Java annotation processor</a></li> 
+      </ul></li> 
     </ul> 
    </section> 
    <section class="topic"> 
     <h2 id="new-and-noteworthy">New and noteworthy</h2> 
     <p>Here are the new features introduced in this Gradle release.</p> 
-    <h3 id="updated-to-groovy-2.3.2">Updated to Groovy 2.3.2</h3> 
-    <p>Gradle now uses Groovy 2.3.2 to compile and run build scripts and plugins. Gradle 1.12 (the last release in the Gradle 1.x stream) used Groovy 1.8.6. This means that build scripts, and plugins/tasks implemented in Groovy can now use the latest Groovy features.</p> 
-    <p>For information on what's new in Groovy, please check the <a href="http://groovy.codehaus.org">Groovy project site</a>.</p> 
-    <h3 id="support-for-java-8">Support for Java 8</h3> 
-    <p>Running Gradle with Java 8 is now tested for and supported. Java 8 is a substantial update with many substantial changes, as such some tools used by your builds may not be fully compatible yet. For example, Scala's support for Java 8 is still experimental.</p> 
-    <p>A regression within the Java 8 JRE has been identified that causes Gradle to appear to hang for a short amount of time at the end of a non-daemon build on Mac OS X and Linux. Windows users, and users using the <a href="http://www.gradle.org/docs/current/userguide/gradle_daemon.html">Gradle Daemon</a> are unaffected. The Java 8 team are aware of this issue and it will be addressed a future release of Java 8.</p> 
-    <p>In order to support executing Gradle with Java 8, support for Java 1.5 had to be removed. For more on the detail of why this was necessary, please see <a href="http://forums.gradle.org/gradle/topics/gradle_2_0_will_drop_support_for_java_5_and_will_fully_support_java_8">this forum post</a>.</p> 
-    <h3 class=" incubating" id="new-api-for-resolving-source-and-javadoc-artifacts">New API for resolving source and javadoc artifacts <a class="incubating-marker" href="userguide/feature_lifecycle.html" title="“incubating” features are not yet guaranteed to be backwards compatible&lt;br /&gt;(click for more information)">incubating feature</a></h3> 
-    <p>Gradle 2.0 introduces a new, incubating, API for resolving component artifacts. With this addition, Gradle now offers separate dedicated APIs for resolving components and artifacts. The entry point to the new 'artifact query' API is <code>dependencies.createArtifactResolutionQuery()</code>.</p> 
-    <p>Presently, this feature is limited to the resolution of <code>SourcesArtifact</code> and <code>JavadocArtifact</code> artifacts for <code>JvmLibrary</code> components. Over time this will be expanded to allow querying of other component and artifact types.</p> 
-    <p>For example, to get the source artifacts for all 'compile' dependencies:</p> 
-    <pre class=" code"><code><span class="java_plain">task&nbsp;resolveSources&nbsp;</span><span class="java_operator">&lt;&lt;</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">def</span><span class="java_plain">&nbsp;componentIds&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;configurations</span><span class="java_separator">.</span><span class="java_plain">compile</span><span class="java_separator">.</span><span class="java_plain">incoming</span><span class="java_separator">.</span><span class="java_plain">resolutionResult</span><span class="java_separator">.</span><span class="java_plain">allDependencies</span><span class="java_separator">.</span><span class="java_plain">collect&nbsp;</span><span class="java_separator">{</span><span class="java_plain">&nbsp;it</span><span class="java_separator">.</span><span class="java_plain">selected</span><span class="java_separator">.</span><span class="java_plain">id&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">def</span><span class="java_plain">&nbsp;result&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;dependencies</span><span class="java_separator">.</span><span class="java_plain">createArtifactResolutionQuery</span><span class="java_separator">()</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">.</span><span class="java_plain">forComponents</span><span class="java_separator">(</span><span class="java_plain">componentIds</span><span class="java_separator">)</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">.</span><span class="java_plain">withArtifacts</span><span class="java_separator">(</span><span class="java_type">JvmLibrary</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_type">SourcesArtifact</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_type">JavadocArtifact</span><span class="java_separator">)</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">.</span><span class="java_plain">execute</span><span class="java_separator">()</span><span class="java_plain"></span>
-<span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">for</span><span class="java_plain">&nbsp;</span><span class="java_separator">(</span><span class="java_plain">component&nbsp;</span><span class="java_keyword">in</span><span class="java_plain">&nbsp;result</span><span class="java_separator">.</span><span class="java_plain">resolvedComponents</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;component</span><span class="java_separator">.</span><span class="java_plain">getArtifacts</span><span class="java_separator">(</span><span class="java_type">SourcesArtifact</span><span class="java_separator">).</span><span class="java_plain">each&nbsp;</span><span class="java_separator">{</span><span class="java_plain">&nbsp;println&nbsp;</span><span class="java_literal">&quot;Source&nbsp;artifact&nbsp;for&nbsp;${component.id}:&nbsp;${it.file}&quot;</span><span class="java_plain">&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
-    <p>For an example usage of the new API, see <a href="dsl/org.gradle.api.artifacts.query.ArtifactResolutionQuery.html">the DSL Reference</a>.</p> 
-    <h3 class=" incubating" id="access-ivy-extra-info-from-component-metadata-rules">Access Ivy extra info from component metadata rules <a class="incubating-marker" href="userguide/feature_lifecycle.html" title="“incubating” features are not yet guaranteed to be backwards compatible&lt;br /&gt;(click for more information)">incubating feature</a></h3> 
-    <p>It's now possible to access Ivy extra info from <a href="dsl/org.gradle.api.artifacts.dsl.ComponentMetadataHandler.html">component metadata rules</a>. Roughly speaking, Ivy extra info is a set of user-defined key-value pairs published in the Ivy module descriptor. Rules wishing to access the extra info need to specify a parameter of type <a href="javadoc/org/gradle/api/artifacts/IvyModuleMetadata.html"><code>IvyModuleMetadata</code></a>. </p> 
-    <p>Here is an example:</p> 
-    <pre class=" code"><code><span class="java_plain">dependencies&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;components&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;eachComponent&nbsp;</span><span class="java_separator">{</span><span class="java_plain">&nbsp;component</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_type">IvyModuleMetadata</span><span class="java_plain">&nbsp;ivyMetadata&nbsp;</span><span class="java_operator">-&gt;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">def</span><span class="java_plain">&nbsp;deprecated&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;ivyMetadata</span><span class="java_separator">.</span><span class="java_plain">extraInfo</span><span class="java_separator">[</span><span class="java_literal">&quot;deprecated&quot;</span><span class="java_separator">]</span><span class="java_operator">?</span><span class="java_separator">.</span><span class="java_plain">asBoolean</span><span class="java_separator">()</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">if</span><span class="java_plain">&nbsp;</span><span class="java_separator">(</span><span class="java_plain">deprecated</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">throw</span><span class="java_plain">&nbsp;</span><span class="java_keyword">new</span><span class="java_plain">&nbsp;</span><span class="java_type">GradleException</span><span class="java_separator">(</span><span class="java_literal">&quot;Component&nbsp;$component&nbsp;is&nbsp;deprecated.&nbsp;This&nbsp;project&nbsp;can&nbsp;not&nbsp;use&nbsp;deprecated&nbsp;components&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
-    <h3 class=" incubating" id="collaborate-with-plugins-via-plugins.withid()">Collaborate with plugins via <code>plugins.withId()</code> <a class="incubating-marker" href="userguide/feature_lifecycle.html" title="“incubating” features are not yet guaranteed to be backwards compatible&lt;br /&gt;(click for more information)">incubating feature</a></h3> 
-    <p>It is common to the need to perform some configuration only if a particular plugin has been applied. The standard approach for doing this to date has been to use the <a href="javadoc/org/gradle/api/plugins/PluginCollection.html#withType(java.lang.Class)"><code>plugins.withType(Class)</code></a> method, which requires the class object of the implementing plugin…</p> 
-    <pre class=" code"><code><span class="java_keyword">import</span><span class="java_plain">&nbsp;com</span><span class="java_separator">.</span><span class="java_plain">my</span><span class="java_separator">.</span><span class="java_plain">custom</span><span class="java_separator">.</span><span class="java_type">InterestingPlugin</span><span class="java_plain"></span>
-<span class="java_plain"></span>
-<span class="java_plain">plugins</span><span class="java_separator">.</span><span class="java_plain">withType</span><span class="java_separator">(</span><span class="java_type">InterestingPlugin</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain">&nbsp;</span>
-<span class="java_plain">&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;perform&nbsp;some&nbsp;configuration&nbsp;after&nbsp;the&nbsp;“interesting”&nbsp;plugin&nbsp;has&nbsp;been&nbsp;applied&nbsp;if&nbsp;it&nbsp;ever&nbsp;is</span>
-<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
-    <p>The new <a href="javadoc/org/gradle/api/plugins/PluginContainer.html#withId(java.lang.String,%20org.gradle.api.Action)"><code>plugins.withId(String)</code></a> method makes this more convenient by allowing the ID of the plugin to be used instead of the implementing class…</p> 
-    <pre class=" code"><code><span class="java_plain">plugins</span><span class="java_separator">.</span><span class="java_plain">withId</span><span class="java_separator">(</span><span class="java_literal">&quot;interesting&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;perform&nbsp;some&nbsp;configuration&nbsp;after&nbsp;the&nbsp;“interesting”&nbsp;plugin&nbsp;has&nbsp;been&nbsp;applied&nbsp;if&nbsp;it&nbsp;ever&nbsp;is</span>
-<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
-    <p>The <code>withId()</code> method is now the preferred mechanism for configuration conditional on the presence of a plugin.</p> 
-    <h3 id="support-for-ivy-and-maven-repositories-with-sftp-scheme">Support for Ivy and Maven repositories with SFTP scheme</h3> 
-    <p>In addition to <code>file</code>, <code>http</code> and <code>https</code>, Ivy and Maven repositories now also support the <code>sftp</code> transport scheme. Currently, authentication with the SFTP server supports only username and password credentials.</p> 
-    <p>Ivy dependencies can be consumed via SFTP by specifying it as the repo protocol…</p> 
-    <pre class=" code"><code><span class="java_plain">apply&nbsp;plugin</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_literal">'java'</span><span class="java_plain"></span>
-<span class="java_plain"></span>
-<span class="java_plain">repositories&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;ivy&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url&nbsp;</span><span class="java_literal">'sftp://127.0.0.1:22/repo'</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;credentials&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;username&nbsp;</span><span class="java_literal">'sftp'</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password&nbsp;</span><span class="java_literal">'sftp'</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain"></span>
-<span class="java_plain">dependencies&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;compile&nbsp;</span><span class="java_literal">'org.apache.commons:commons-lang3:3.3.1'</span><span class="java_plain"></span>
-<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
-    <p>SFTP can also be used when publishing as an Ivy module…</p> 
-    <pre class=" code"><code><span class="java_plain">apply&nbsp;plugin</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_literal">'java'</span><span class="java_plain"></span>
-<span class="java_plain">apply&nbsp;plugin</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_literal">'ivy-publish'</span><span class="java_plain"></span>
-<span class="java_plain"></span>
-<span class="java_plain">version&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">'2'</span><span class="java_plain"></span>
-<span class="java_plain">group&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">'org.group.name'</span><span class="java_plain"></span>
-<span class="java_plain"></span>
-<span class="java_plain">publishing&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;repositories&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ivy&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url&nbsp;</span><span class="java_literal">'sftp://127.0.0.1:22/repo'</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;credentials&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;username&nbsp;</span><span class="java_literal">'sftp'</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password&nbsp;</span><span class="java_literal">'sftp'</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;publications&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ivy</span><span class="java_separator">(</span><span class="java_type">IvyPublication</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;components</span><span class="java_separator">.</span><span class="java_plain">java</span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
-    <p>Resolving dependencies from a SFTP server with Maven works in a similar fashion… </p> 
-    <pre class=" code"><code><span class="java_plain">apply&nbsp;plugin</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_literal">'java'</span><span class="java_plain"></span>
-<span class="java_plain"></span>
-<span class="java_plain">repositories&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;maven&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url&nbsp;</span><span class="java_literal">'sftp://127.0.0.1:22/repo'</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;credentials&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;username&nbsp;</span><span class="java_literal">'sftp'</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password&nbsp;</span><span class="java_literal">'sftp'</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain"></span>
-<span class="java_plain">dependencies&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;compile&nbsp;</span><span class="java_literal">'org.apache.commons:commons-lang3:3.3.1'</span><span class="java_plain"></span>
-<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
-    <p>Publishing via SFTP as a Maven module is not supported at this time.</p> 
-    <p>This feature was contributed by <a href="https://github.com/erdi">Marcin Erdmann</a>.</p> 
-    <h3 id="apache-maven-pom-profile-activation-based-on-absence-of-system-property">Apache Maven POM profile activation based on absence of system property</h3> 
-    <p>Gradle 1.12 improved Maven interoperability by <a href="http://www.gradle.org/docs/1.12/release-notes#support-for-consuming-apache-maven-poms-with-active-profiles">supporting POM profiles that are active by default</a>. In Gradle 2.0, POM profiles that are activated by absence of a system property are now respected.</p> 
-    <pre class=" code"><code><span class="java_operator">&lt;</span><span class="java_plain">project</span><span class="java_operator">&gt;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">...</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_operator">&lt;</span><span class="java_plain">profiles</span><span class="java_operator">&gt;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_operator">&lt;</span><span class="java_plain">profile</span><span class="java_operator">&gt;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_operator">&lt;</span><span class="java_plain">id</span><span class="java_operator">&gt;</span><span class="java_plain">profile</span><span class="java_operator">-</span><span class="java_literal">1</span><span class="java_operator">&lt;/</span><span class="java_plain">id</span><span class="java_operator">&gt;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_operator">&lt;</span><span class="java_plain">property</span><span class="java_operator">&gt;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_operator">&lt;</span><span class="java_plain">name</span><span class="java_operator">&gt;!</span><span class="java_plain">env</span><span class="java_operator">&lt;/</span><span class="java_plain">name</span><span class="java_operator">&gt;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_operator">&lt;/</span><span class="java_plain">property</span><span class="java_operator">&gt;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_operator">&lt;/</span><span class="java_plain">profile</span><span class="java_operator">&gt;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_operator">&lt;/</span><span class="java_plain">profiles</span><span class="java_operator">&gt;</span><span class="java_plain"></span>
-<span class="java_operator">&lt;/</span><span class="java_plain">project</span><span class="java_operator">&gt;</span><span class="java_plain"></span></code></pre> 
-    <h3 class=" incubating" id="fine-grained-control-of-arguments-passed-to-native-tools">Fine grained control of arguments passed to native tools <a class="incubating-marker" href="userguide/feature_lifecycle.html" title="“incubating” features are not yet guaranteed to be backwards compatible&lt;br /&gt;(click for more information)">incubating feature</a></h3> 
-    <p>The new <code>withArguments()</code> method available on the command line tools of a toolchain allows complete control over the arguments passed to the tool, after Gradle has populated the argument list based on the build model.</p> 
-    <pre class=" code"><code><span class="java_plain">apply&nbsp;plugin</span><span class="java_operator">:</span><span class="java_literal">'cpp'</span><span class="java_plain"></span>
-<span class="java_plain"></span>
-<span class="java_plain">model&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;toolChains&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visualCpp</span><span class="java_separator">(</span><span class="java_type">VisualCpp</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cppCompiler</span><span class="java_separator">.</span><span class="java_plain">withArguments&nbsp;</span><span class="java_separator">{</span><span class="java_plain">&nbsp;</span><span class="java_type">List</span><span class="java_operator">&lt;</span><span class="java_type">String</span><span class="java_operator">&gt;</span><span class="java_plain">&nbsp;args&nbsp;</span><span class="java_operator">-&gt;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args&nbsp;</span><span class="java_operator">&lt;&lt;</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;-DFRENCH&quot;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clang</span><span class="java_separator">(</span><span class="java_type">Clang</span><span class="java_separator">){</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cCompiler</span><span class="java_separator">.</span><span class="java_plain">withArguments&nbsp;</span><span class="java_separator">{</span><span class="java_plain">&nbsp;</span><span class="java_type">List</span><span class="java_operator">&lt;</span><span class="java_type">String</span><span class="java_operator">&gt;</span><span class="java_plain">&nbsp;args&nbsp;</span><span class="java_operator">-&gt;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_type">Collections</span><span class="java_separator">.</span><span class="java_plain">replaceAll</span><span class="java_separator">(</span><span class="java_plain">args</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;CUSTOM&quot;</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;-DFRENCH&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;linker</span><span class="java_separator">.</span><span class="java_plain">withArguments&nbsp;</span><span class="java_separator">{</span><span class="java_plain">&nbsp;</span><span class="java_type">List</span><span class="java_operator">&lt;</span><span class="java_type">String</span><span class="java_operator">&gt;</span><span class="java_plain">&nbsp;args&nbsp;</span><span class="java_operator">-&gt;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args</span><span class="java_separator">.</span><span class="java_plain">remove&nbsp;</span><span class="java_literal">&quot;CUSTOM&quot;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;staticLibArchiver</span><span class="java_separator">.</span><span class="java_plain">withArguments&nbsp;</span><span class="java_separator">{</span><span class="java_plain">&nbsp;</span><span class="java_type">List</span><span class="java_operator">&lt;</span><span class="java_type">String</span><span class="java_operator">&gt;</span><span class="java_plain">&nbsp;args&nbsp;</span><span class="java_operator">-&gt;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args</span><span class="java_separator">.</span><span class="java_plain">remove&nbsp;</span><span class="java_literal">&quot;CUSTOM&quot;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
-    <p>This allows for greater flexibility and use of edge tool features.</p> 
-    <h3 class=" incubating" id="simplified-support-for-native-cross-compilation-and-custom-platforms-(gcc-based-toolchains)">Simplified support for native cross compilation and custom platforms (GCC based toolchains) <a class="incubating-marker" href="userguide/feature_lifecycle.html" title="“incubating” features are not yet guaranteed to be backwards compatible&lt;br /&gt;(click for more information)">incubating feature</a></h3> 
-    <p>It's now a lot easier to define a target native platform and how to use GCC to build for it. Instead of implementing an interface you can describe a target platform and its configuration in the Gradle DSL.</p> 
-    <p>When declaring a toolchain, the targeted platforms can be configured directly in the <code>toolChain</code> model. </p> 
-    <pre class=" code"><code><span class="java_plain">model&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;toolChains&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;gcc</span><span class="java_separator">(</span><span class="java_type">Gcc</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;target</span><span class="java_separator">(</span><span class="java_literal">&quot;arm&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cppCompiler</span><span class="java_separator">.</span><span class="java_plain">executable&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;custom-gcc&quot;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cppCompiler</span><span class="java_separator">.</span><span class="java_plain">withArguments&nbsp;</span><span class="java_separator">{</span><span class="java_plain">&nbsp;args&nbsp;</span><span class="java_operator">-&gt;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args&nbsp;</span><span class="java_operator">&lt;&lt;</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;-m32&quot;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;linker</span><span class="java_separator">.</span><span class="java_plain">withArguments&nbsp;</span><span class="java_separator">{</span><span class="java_plain">&nbsp;args&nbsp;</span><span class="java_operator">-&gt;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args&nbsp;</span><span class="java_operator">&lt;&lt;</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;-m32&quot;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;target</span><span class="java_separator">(</span><span class="java_literal">&quot;sparc&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;platforms&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arm&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;architecture&nbsp;</span><span class="java_literal">&quot;arm&quot;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sparc&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;architecture&nbsp;</span><span class="java_literal">&quot;sparc&quot;</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
-    <p>The <a href="userguide/nativeBinaries.html#native_binaries:tool_chain">User Guide</a> contains more details on how to configure Gcc compatible toolchains for cross compilation.</p> 
-    <h3 class=" incubating" id="new-'ivy'-layout-support-for-ivy-repositories">New 'ivy' layout support for Ivy repositories <a class="incubating-marker" href="userguide/feature_lifecycle.html" title="“incubating” features are not yet guaranteed to be backwards compatible&lt;br /&gt;(click for more information)">incubating feature</a></h3> 
-    <p>When consuming from or publishing to an Ivy repository, a layout must be specified that describes how artifacts are organized within that repository.</p> 
-    <p>In addition to the 'gradle' (default) and 'maven' layouts, you can now specify the 'ivy' layout, which is the default ivy artifact and metadata patterns.</p> 
-    <pre class=" code"><code><span class="java_plain">repositories&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;ivy&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;url&nbsp;</span><span class="java_literal">'http://my.server/repo'</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;layout&nbsp;</span><span class="java_literal">'ivy'</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
-<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
-    <p>See the <a href="userguide/dependency_management.html#sec:ivy_repositories">User Guide</a> and the <a href="dsl/org.gradle.api.artifacts.repositories.IvyArtifactRepository.html#org.gradle.api.artifacts.repositories.IvyArtifactRepository:layout(java.lang.String,%20groovy.lang.Closure)">DSL Reference</a> for more detail on how to use named layouts.</p> 
-    <p>This feature was contributed by <a href="https://github.com/benmccann">Ben McCann</a>.</p> 
-    <h3 id="default-versions-of-code-quality-tools-updated">Default versions of code quality tools updated</h3> 
-    <p>The code quality plugins now use the latest version of the corresponding tool as of the Gradle 2.0 release.</p> 
-    <p>The new versions are:</p> 
-    <ul> 
-     <li>Checkstyle: 5.7</li> 
-     <li>CodeNarc: 0.21</li> 
-     <li>PMD: 5.1.1 (note that some rulesets were renamed in PMD 5, e.g. <code>basic</code> -&gt; <code>java-basic</code>)</li> 
-     <li>Findbugs: 2.0.3</li> 
-     <li>JaCoCo: 0.7.1.201405082137</li> 
-    </ul> 
-    <p>To revert back to the old version, or to use any different version, you can use the appropriate <code>toolVersion</code> property.</p> 
-    <pre class=" code"><code><span class="java_plain">pmd&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
-<span class="java_plain">&nbsp;&nbsp;toolVersion&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">'4.3'</span><span class="java_plain"></span>
-<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
-    <h3 id="tooling-api-improvements">Tooling API improvements</h3> 
-    <p>The Gradle tooling API allows you to inspect a Gradle build and extract useful information about that build. The <code>GradleProject</code> tooling API model now has a <code>buildDirectory</code> property to provide access to the project's build output directory.</p> 
+    <h3 id="incremental-build-improvements">Incremental build improvements</h3> 
+    <p>Gradle's incremental build support continues to see improvements, particularly in the area of more accurate up-to-date checks.</p> 
+    <section class="major-detail"> 
+     <h4>Java compilation tracks Java version used</h4> 
+     <section class="minor-detail"> 
+      <p>Gradle's Java plugin has taken account of the <code>sourceCompatibility</code> and <code>targetCompatibility</code> versions for a while now with respect to working out whether compiled class files are up to date or not. But the version of the Java compiler used was ignored.</p> 
+      <p>This release fixes that, which means changing the Java compiler version—say from Java 7 to Java 8—will now result in recompilation.</p> 
+     </section> 
+     <h4>Better change tracking in copy and archive tasks</h4> 
+     <section class="minor-detail"> 
+      <p>A long-standing issue with copy-based tasks has now been fixed: the destination directory is finally taken into account for the tasks' up-to-date checks. So changing the <code>into</code> value will result in the task running again.</p> 
+      <p>In addition, Gradle now tracks changes to case-sensitivity, duplication strategy, file mode and dir mode on child specs, not just the main one.</p> 
+     </section> 
+     <h4>Classpath tracking</h4> 
+     <section class="minor-detail"> 
+      <p>Input properties that should be treated as Java classpaths can now be annotated with <code>@Classpath</code>. This allows the task to ignore irrelevant changes to the property, such as different names for the same files. It is similar to annotating the property with <code>@OrderSensitive</code> and <code>@PathSensitive(RELATIVE)</code>, but it will also ignore the names of JAR files directly added to the classpath.</p> 
+     </section> 
+     <h4>Removing all sources will delete outputs</h4> 
+     <section class="minor-detail"> 
+      <p>For a long time Gradle supported skipping the execution of a task entirely if it didn't have any <em>sources.</em> This feature can be enabled by annotating an input file or file collection property with <code>@SkipWhenEmpty</code>. In previous versions of Gradle, removing all of a task's input files would leave the previous build execution's outputs in place on subsequent runs. This is now fixed: stale outputs are properly removed.</p> 
+     </section> 
+    </section> 
+    <h3 id="build-dependents-for-native-binaries">Build Dependents for Native Binaries</h3> 
+    <p>Sometimes, you may need to <em>assemble</em> (compile and link) or <em>build</em> (compile, link and test) a component or binary and its <em>dependents</em> (things that depend upon the component or binary). The native software model now provides tasks that enable this capability.</p> 
+    <p>First, the <code>dependentComponents</code> task generates a report that gives insight about the relationships between each component.</p> 
+    <p>Second, the <code>buildDependents*</code> and <code>assembleDependents*</code> tasks allow you to assemble or build a component and its dependents in one step.</p> 
+    <p>See the User guide section on “<a href="userguide/native_binaries.html#sec:dependents">Assembling or building dependents</a>“ in the “<a href="userguide/native_binaries.html">Building native software</a>“ chapter for more information.</p> 
+    <h3 id="new-preferprojectmodules()-conflict-resolution-strategy-for-multi-project-builds">New <code>preferProjectModules()</code> conflict resolution strategy for multi-project builds</h3> 
+    <p>The <code>preferProjectModules()</code> configuration option can now be used in multi-project builds.</p> 
+    <pre class=" code"><code><span class="java_plain">configurations</span><span class="java_separator">.</span><span class="java_plain">all</span><span class="java_separator">.</span><span class="java_plain">resolutionStrategy</span><span class="java_separator">.</span><span class="java_plain">preferProjectModules</span><span class="java_separator">()</span><span class="java_plain"></span></code></pre> 
+    <p>With this option it is possible to tell Gradle to always resolve a project dependency to a subproject, if the corresponding subproject exists in the build. Without this option, other dependencies to a higher version of the same module cause the replacement of the subproject by the other version in the dependency tree.</p> 
+    <h3 id="improved-deprecation-warnings">Improved deprecation warnings</h3> 
+    <p>When a line in a build script triggers a deprecation warning, Gradle now prints its location to the console. You can also pass the command line option <code>-s</code> or <code>-S</code> to get the whole stack trace.</p> 
+    <p>The improved log message should make it much easier to spot and fix those warnings, as demonstrated by this sample output:</p> 
+    <pre class=" code"><code><span class="java_operator">&gt;</span><span class="java_plain">&nbsp;gradle&nbsp;tasks</span>
+<span class="java_type">The</span><span class="java_plain">&nbsp;</span><span class="java_type">Jetty</span><span class="java_plain">&nbsp;plugin&nbsp;has&nbsp;been&nbsp;deprecated&nbsp;and&nbsp;is&nbsp;scheduled&nbsp;to&nbsp;be&nbsp;removed&nbsp;</span><span class="java_keyword">in</span><span class="java_plain">&nbsp;</span><span class="java_type">Gradle</span><span class="java_plain">&nbsp;</span><span class="java_literal">4.0</span><span class="java_separator">.</span><span class="java_plain">&nbsp;</span><span class="java_type">Consider</span><span class="java_plain">&nbsp;using&nbsp;the&nbsp;</span><span class="java_type">Gretty</span><span class="java_plain">&nbsp;</span><span class="java_separator">(</span><span class="java_plain">https</span><span class="java_operator">:</span><span class="java_comment">//github.com/akhikhl/gretty)&nbsp;plugin&nbsp;instead.</span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;at&nbsp;build_dhrhtn4oo56t198zc6nkf59c4</span><span class="java_separator">.</span><span class="java_plain">run</span><span class="java_separator">(</span><span class="java_operator">/</span><span class="java_plain">home</span><span class="java_operator">/</span><span class="java_plain">someuser</span><span class="java_operator">/</span><span class="java_plain">project</span><span class="java_operator">-</span><span class="java_plain">dir</span><span class="java_operator">/</span><span class="java_plain">build</span><span class="java_separator">.</span><span class="java_plain">gradle</span><span class="java_operator">:</span><span class="java_literal">3</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_separator">...</span><span class="java_plain"></span></code></pre> 
+    <p>This is particularly important now that the shortcut syntax for task definitions (<code>&lt;&lt;</code>) has been deprecated!</p> 
+    <h3 id="http-basic-authentication-for-wrapper-distributions">HTTP Basic Authentication for wrapper distributions</h3> 
+    <p>The Gradle Wrapper can now download Gradle distributions from a server that requires authentication. This allows you to host the Gradle distribution on a private server protected with HTTP Basic Authentication.</p> 
+    <p>See the User guide section on “<a href="userguide/gradle_wrapper.html#sec:authenticated_download">authenticated distribution download</a>“ for more information.</p> 
+    <p>As stated in the User guide, please note that this shouldn't be used over insecure connections.</p> 
+    <h3 id="ctrl-c-no-longer-stops-the-daemon-on-first-run">Ctrl-C no longer stops the Daemon on first run</h3> 
+    <p>We made a number of improvements in Gradle 3.1 that allow the Daemon to cancel a running build when a client disconnects unexpectedly. This included many scenarios in which the user pressed Ctrl-C, but not all. Pressing Ctrl-C or sending a <code>SIGINT</code> would always result in Gradle killing the daemon during the first build execution on that daemon.</p> 
+    <p>This release fixes the problem so that Gradle will always attempt to cancel the build, even during the first build run. If the build can be successfully canceled, the daemon remains available for subsequent builds. However, if the build is unresponsive and cannot be canceled, then Gradle will kill the daemon to ensure that the system resources are properly reclaimed.</p> 
+    <h3 id="multi-project-builds-with-kotlin-scripting">Multi-project builds with Kotlin scripting</h3> 
+    <p>This release ships with Gradle Script Kotlin v0.4.0.</p> 
+    <p>v0.4.0 improves support for multi-project builds of Kotlin based projects, enables the usage of Gradle Script Kotlin extensions to the Gradle API in <code>buildSrc</code> and fixes Kotlin build script compilation on Windows.</p> 
+    <p>See the <a href="https://github.com/gradle/gradle-script-kotlin/releases/tag/v0.4.0">Gradle Script Kotlin v0.4.0 release notes</a> for the details.</p> 
    </section> 
    <section class="topic"> 
     <h2 id="fixed-issues">Fixed issues</h2> 
+    <h3 id="fixed-a-performance-problem-in-the-tooling-api">Fixed a performance problem in the Tooling API</h3> 
+    <p>The dependency resolution caches were not being filled when building Tooling API models. As a result, IDE import was very slow when the caches were cold. This especially affected builds with many dynamic dependencies and low cache timeouts. One <a href="https://github.com/gradle/perf-enterprise-large/">large enterprise project</a> saw import times drop by a factor of 100.</p> 
+   </section> 
+   <section class="topic"> 
+    <h2 id="deprecations">Deprecations</h2> 
+    <p>Features that have become superseded or irrelevant due to the natural evolution of Gradle become <em>deprecated</em>, and scheduled to be removed in the next major Gradle version (Gradle 4.0). See the User guide section on the “<a href="userguide/feature_lifecycle.html">Feature Lifecycle</a>” for more information.</p> 
+    <p>The following are the newly deprecated items in this Gradle release. If you have concerns about a deprecation, please raise it via the <a href="https://discuss.gradle.org">Gradle Forums</a>.</p> 
+    <h3 id="the-left-shift-operator-on-the-task-interface">The left shift operator on the Task interface</h3> 
+    <p>The left shift (<code>&lt;&lt;</code>) operator acts as an alias for adding a <code>doLast</code> action to an existing task. For newcomers to Gradle, the meaning of the operator is not immediately apparent and leads to mixing configuration code with action code. Such misconfigured tasks lead to unexpected runtime behavior.</p> 
+    <p>Let's consider the following two examples to illustrate some common mistakes:</p> 
+    <ul> 
+     <li> <p>A build configures the <code>description</code> property and defines an action using the left shift operator. As a result, the task would not configure the task's description.</p> <pre class=" code"><code><span class="java_comment">//&nbsp;WRONG:&nbsp;Description&nbsp;assigned&nbsp;in&nbsp;execution&nbsp;phase</span>
+<span class="java_plain">task&nbsp;helloWorld&nbsp;</span><span class="java_operator">&lt;&lt;</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;description&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">'Prints&nbsp;out&nbsp;a&nbsp;message.'</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;println&nbsp;</span><span class="java_literal">'Hello&nbsp;world!'</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_comment">//&nbsp;CORRECT:&nbsp;Description&nbsp;assigned&nbsp;in&nbsp;configuration&nbsp;phase</span>
+<span class="java_plain">task&nbsp;helloWorld&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;description&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">'Prints&nbsp;out&nbsp;a&nbsp;message.'</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;doLast&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;println&nbsp;</span><span class="java_literal">'Hello&nbsp;world!'</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> </li> 
+     <li> <p>A build defines a typed task using the left shift operator. As a result, the task is always <code>UP-TO-DATE</code> as the inputs and outputs of the task are configured during the execution phase.</p> <pre class=" code"><code><span class="java_comment">//&nbsp;WRONG:&nbsp;Configuring&nbsp;task&nbsp;in&nbsp;execution&nbsp;phase</span>
+<span class="java_plain">task&nbsp;copy</span><span class="java_separator">(</span><span class="java_plain">type</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">Copy</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_operator">&lt;&lt;</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;</span><span class="java_literal">'source'</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;into&nbsp;</span><span class="java_literal">&quot;$buildDir/output&quot;</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_comment">//&nbsp;CORRECT:&nbsp;Configuring&nbsp;task&nbsp;in&nbsp;configuration&nbsp;phase</span>
+<span class="java_plain">task&nbsp;copy</span><span class="java_separator">(</span><span class="java_plain">type</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">Copy</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;</span><span class="java_literal">'source'</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;into&nbsp;</span><span class="java_literal">&quot;$buildDir/output&quot;</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> </li> 
+    </ul> 
+    <p>With this version of Gradle, the left shift operator on the <code>Task</code> interface is deprecated and is scheduled to be removed with the next major release. There's no direct replacement for the left shift operation. Please use the existing methods <code>doFirst</code> and <code>doLast</code> to define task actions.</p> 
+    <h3 id="modifying-a-child-copy-spec-during-task-execution">Modifying a child copy spec during task execution</h3> 
+    <p>As a consequence of <a href="#incremental-build-improvements">improved</a> change tracking in copy and archive tasks, we have deprecated the ability to modify a copy spec during the execution phase. These changes are not tracked since Gradle determines the inputs and outputs of a task before executing it.</p> 
+    <p>For example, the following will now create a deprecation warning:</p> 
+    <pre class=" code"><code><span class="java_plain">task&nbsp;myCopy</span><span class="java_separator">(</span><span class="java_plain">type</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">Copy</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;</span><span class="java_separator">(</span><span class="java_literal">&quot;some-dir&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;into&nbsp;</span><span class="java_separator">(</span><span class="java_literal">&quot;build/output&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;doFirst&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;DEPRECATED</span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;</span><span class="java_separator">(</span><span class="java_literal">&quot;some-other-dir&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exclude&nbsp;</span><span class="java_literal">&quot;excluded-file&quot;</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+    <p>The simple solution is to move the <code>from</code> into the configuration phase:</p> 
+    <pre class=" code"><code><span class="java_plain">task&nbsp;myCopy</span><span class="java_separator">(</span><span class="java_plain">type</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">Copy</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;</span><span class="java_separator">(</span><span class="java_literal">&quot;some-dir&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;into&nbsp;</span><span class="java_separator">(</span><span class="java_literal">&quot;build/output&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;</span><span class="java_separator">(</span><span class="java_literal">&quot;some-other-dir&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exclude&nbsp;</span><span class="java_literal">&quot;excluded-file&quot;</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+    <p>If you can't do that because something must be calculated during the build (e.g. dependency resolution), then you can use a configuration task:</p> 
+    <pre class=" code"><code><span class="java_plain">task&nbsp;configureCopy&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;doLast&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myCopy</span><span class="java_separator">.</span><span class="java_plain">from&nbsp;</span><span class="java_separator">(</span><span class="java_literal">&quot;some-other-dir&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exclude&nbsp;</span><span class="java_literal">&quot;excluded-file&quot;</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain">task&nbsp;myCopy</span><span class="java_separator">(</span><span class="java_plain">type</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">Copy</span><span class="java_separator">,</span><span class="java_plain">&nbsp;dependsOn</span><span class="java_operator">:</span><span class="java_plain">&nbsp;configureCopy</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;</span><span class="java_separator">(</span><span class="java_literal">&quot;some-dir&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;into&nbsp;</span><span class="java_separator">(</span><span class="java_literal">&quot;build/output&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
    </section> 
    <section class="topic"> 
     <h2 id="potential-breaking-changes">Potential breaking changes</h2> 
-    <p>The Gradle 2.0 release contains many breaking changes, as it is a major version number change and the setting of a new compatibility baseline.</p> 
-    <h3 id="upgraded-to-groovy-2.3.2">Upgraded to Groovy 2.3.2</h3> 
-    <p>Gradle now uses Groovy 2.3.2 to compile and run scripts and plugins. </p> 
-    <p>Generally, Groovy is backwards compatible. However, this change may require that you recompile some plugins and may also require some source changes. It is not guaranteed that Groovy based plugins built with Gradle 1.x will work with Gradle 2.x, but most will.</p> 
-    <h3 id="can-no-longer-run-gradle-using-java-5">Can no longer run Gradle using Java 5</h3> 
-    <p>Due to the upgrade to Groovy 2.3.2, Gradle can no longer be run using Java 5. It is still possible to build Java projects for Java 5 by running with Java 6 or higher, but configuring compilation and test execution to use a different JDK.</p> 
-    <p>For more on the detail of why this was necessary, please see <a href="http://forums.gradle.org/gradle/topics/gradle_2_0_will_drop_support_for_java_5_and_will_fully_support_java_8">this forum post</a>.</p> 
-    <h3 id="upgrades-to-code-quality-tool-default-versions">Upgrades to code quality tool default versions</h3> 
-    <p>As mentioned in “New and Noteworthy”, the default versions of all code quality tools have been updated. Generally, these tools are backwards compatible.</p> 
-    <h3 id="custom-testng-listeners-are-applied-before-gradle's-listeners">Custom TestNG listeners are applied before Gradle's listeners</h3> 
-    <p>This change is unlikely to affect any custom listeners, but is mentioned for completeness.</p> 
-    <h3 id="support-for-reading-or-changing-file-permissions-on-certain-platforms-with-java-6">Support for reading or changing file permissions on certain platforms with Java 6</h3> 
-    <p>Gradle previously supported file permissions on Solaris and on Linux ia-64 using Java 6. This support has been removed. You will receive a warning when attempting to use file permissions on these platforms.</p> 
-    <p>Note that file permissions are supported on these platforms when you use Java 7 and later, and is supported for all Java versions on Linux, OS X, Windows and FreeBSD for x86 and amd64 architectures.</p> 
-    <p>If you wish to have support for file permissions on other platforms and architectures, please help us port our native integration to these platforms.</p> 
-    <h3 id="support-for-terminal-integration-on-certain-platforms">Support for terminal integration on certain platforms</h3> 
-    <p>Gradle previously supported terminal integration on Solaris and Linux ia-64. This support has been removed. When you use Gradle on these platforms, Gradle will fall back to using plain text output.</p> 
-    <p>Note that terminal integration is supported on Linux, OS X, Windows and FreeBSD for x86 and amd64 architectures.</p> 
-    <p>If you wish to have terminal integration on other platforms and architectures, please help us port our native integration to these platforms.</p> 
-    <h3 id="build-script-changes">Build script changes</h3> 
-    <p>Gradle now assumes that all Gradle scripts are encoded using UTF-8. Previously, Gradle assumed the system encoding. This change affects all build scripts, settings scripts and init scripts.</p> 
-    <p>It is now an error to include a label on a statement in a Gradle script:</p> 
-    <pre class=" code"><code><span class="java_plain">someLabel</span><span class="java_operator">:</span><span class="java_plain"></span>
-<span class="java_plain">group&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">'my.group'</span><span class="java_plain"></span></code></pre> 
-    <h3 id="native-binaries-model-changes">Native binaries model changes</h3> 
-    <p>A bunch of changes and renames have been made to the incubating 'native binaries' support. For certain common usages, a backward-compatible api has been maintained.</p> 
-    <ul> 
-     <li>Package structure has changed, with many public classes being moved.</li> 
-     <li><code>Library</code>, <code>Executable</code> and <code>TestSuite</code> renamed to <code>NativeLibrary</code>, <code>NativeExecutable</code> and <code>NativeTestSuite</code> 
-      <ul> 
-       <li>Related binary types have also been renamed</li> 
-       <li>Kept <code>StaticLibraryBinary</code>, <code>SharedLibraryBinary</code>, <code>ExecutableBinary</code> and <code>TestSuiteExecutableBinary</code> for compatibility</li> 
-      </ul></li> 
-     <li><code>NativeBinariesPlugin</code> has been renamed to <code>NativeComponentPlugin</code> with id <code>'native-component'</code></li> 
-     <li><code>NativeBinariesModelPlugin</code> renamed to <code>NativeComponentModelPlugin</code></li> 
-     <li><code>BuildableModelElement.lifecycleTask</code> renamed to <code>buildTask</code></li> 
-     <li><code>NativeBinaryTasks.getBuilder()</code> renamed to <code>getCreateOrLink()</code></li> 
-     <li><code>NativeBinaryTasks.getLifecycle()</code> renamed to <code>getBuild()</code></li> 
-     <li><code>BuildBinaryTask</code> renamed to <code>ObjectFilesToBinary</code></li> 
-     <li><code>PlatformConfigurableToolChain.addPlatformConfiguration(TargetPlatformConfiguration)</code> has been replaced by <code>PlatformConfigurableToolChain.target(...)</code>.</li> 
-    </ul> 
-    <h3 id="new-java-component-model-changes">New Java component model changes</h3> 
-    <p>A bunch of changes and renames have been made to the new, incubating 'java component' support.</p> 
-    <ul> 
-     <li>Package structure has changed, with many public classes being moved.</li> 
-    </ul> 
-    <h3 id="support-for-the-deprecated-gradle-open-api-removed">Support for the deprecated Gradle Open API removed</h3> 
-    <ul> 
-     <li><code>GradleRunnerFactory</code> removed.</li> 
-     <li><code>UIFactory</code> removed.</li> 
-     <li><code>ExternalUtility</code> removed.</li> 
-    </ul> 
-    <h3 id="properties-are-no-longer-dynamically-created-on-assignment">Properties are no longer dynamically created on assignment</h3> 
-    <p>Previously, Gradle would create a property on a domain object when assigning a value to a property that does not exist:</p> 
-    <pre class=" code"><code><span class="java_plain">project</span><span class="java_separator">.</span><span class="java_plain">myProperty&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">'some&nbsp;value'</span><span class="java_plain"></span>
-<span class="java_keyword">assert</span><span class="java_plain">&nbsp;myProperty&nbsp;</span><span class="java_operator">==</span><span class="java_plain">&nbsp;</span><span class="java_literal">'some&nbsp;value'</span><span class="java_plain"></span></code></pre> 
-    <p>This behavior has been deprecated for 2 years of Gradle releases and is now an error. Instead, you should either use the <code>ext</code> namespace or use a local variable:</p> 
-    <pre class=" code"><code><span class="java_keyword">def</span><span class="java_plain">&nbsp;myProperty&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">'some&nbsp;value'</span><span class="java_plain"></span>
-<span class="java_keyword">assert</span><span class="java_plain">&nbsp;myProperty&nbsp;</span><span class="java_operator">==</span><span class="java_plain">&nbsp;</span><span class="java_literal">'some&nbsp;value'</span><span class="java_plain"></span>
-<span class="java_plain"></span>
-<span class="java_comment">//&nbsp;or</span>
-<span class="java_plain">ext</span><span class="java_separator">.</span><span class="java_plain">myProperty&nbsp;</span><span class="java_operator">==</span><span class="java_plain">&nbsp;</span><span class="java_literal">'some&nbsp;value'</span><span class="java_plain"></span>
-<span class="java_keyword">assert</span><span class="java_plain">&nbsp;myProperty&nbsp;</span><span class="java_operator">==</span><span class="java_plain">&nbsp;</span><span class="java_literal">'some&nbsp;value'</span><span class="java_plain"></span></code></pre> 
-    <h3 id="+=-operator-changes-that-typically-affect-configuration-of-eclipse-and-idea-plugin">+= operator changes that typically affect configuration of eclipse and idea plugin</h3> 
-    <p>Due to the Groovy upgrade, assigning configurations to collections via += works differently.</p> 
-    <pre class=" code"><code><span class="java_comment">//Gradle&nbsp;1.12,&nbsp;the&nbsp;assignments&nbsp;have&nbsp;the&nbsp;same&nbsp;effect,&nbsp;both&nbsp;append&nbsp;configuration&nbsp;instance:</span>
-<span class="java_plain">list&nbsp;</span><span class="java_operator">+=</span><span class="java_plain">&nbsp;configurations</span><span class="java_separator">.</span><span class="java_plain">compile</span>
-<span class="java_plain">list&nbsp;</span><span class="java_operator">+=</span><span class="java_plain">&nbsp;</span><span class="java_separator">[</span><span class="java_plain">configurations</span><span class="java_separator">.</span><span class="java_plain">compile</span><span class="java_separator">]</span><span class="java_plain"></span>
-<span class="java_plain"></span>
-<span class="java_comment">//Gradle&nbsp;2.0:</span>
-<span class="java_plain">list&nbsp;</span><span class="java_operator">+=</span><span class="java_plain">&nbsp;configurations</span><span class="java_separator">.</span><span class="java_plain">compile&nbsp;</span><span class="java_comment">//appends&nbsp;the&nbsp;files&nbsp;of&nbsp;the&nbsp;configuration&nbsp;(triggering&nbsp;dependency&nbsp;resolution!)</span>
-<span class="java_plain">list&nbsp;</span><span class="java_operator">+=</span><span class="java_plain">&nbsp;</span><span class="java_separator">[</span><span class="java_plain">configurations</span><span class="java_separator">.</span><span class="java_plain">compile</span><span class="java_separator">]</span><span class="java_plain">&nbsp;</span><span class="java_comment">//appends&nbsp;the&nbsp;configuration&nbsp;instance</span></code></pre> 
-    <p>Typically, this change may affect the classpath customization for eclipse and idea. It may cause dependency resolution before any dependencies are added to the configuration. In this case, the user can see an exception like: &quot;You can't change configuration 'someConfig' because it is already resolved!&quot;. See below how to resolve this problem:</p> 
-    <pre class=" code"><code><span class="java_comment">//Instead:</span>
-<span class="java_plain">eclipse</span><span class="java_separator">.</span><span class="java_plain">classpath</span><span class="java_separator">.</span><span class="java_plain">plusConfigurations&nbsp;</span><span class="java_operator">+=</span><span class="java_plain">&nbsp;configurations</span><span class="java_separator">.</span><span class="java_plain">someConfig</span>
-<span class="java_plain">idea</span><span class="java_separator">.</span><span class="java_plain">module</span><span class="java_separator">.</span><span class="java_plain">scopes</span><span class="java_separator">.</span><span class="java_plain">COMPILE</span><span class="java_separator">.</span><span class="java_plain">plus&nbsp;</span><span class="java_operator">+=</span><span class="java_plain">&nbsp;configurations</span><span class="java_separator">.</span><span class="java_plain">someConfig</span>
-<span class="java_plain"></span>
-<span class="java_comment">//Prefer&nbsp;below&nbsp;(works&nbsp;with&nbsp;Gradle&nbsp;1.*&nbsp;and&nbsp;2.0):</span>
-<span class="java_plain">eclipse</span><span class="java_separator">.</span><span class="java_plain">classpath</span><span class="java_separator">.</span><span class="java_plain">plusConfigurations&nbsp;</span><span class="java_operator">+=</span><span class="java_plain">&nbsp;</span><span class="java_separator">[</span><span class="java_plain">configurations</span><span class="java_separator">.</span><span class="java_plain">someConfig</span><span class="java_separator">]</span><span class="java_plain"></span>
-<span class="java_plain">idea</span><span class="java_separator">.</span><span class="java_plain">module</span><span class="java_separator">.</span><span class="java_plain">scopes</span><span class="java_separator">.</span><span class="java_plain">COMPILE</span><span class="java_separator">.</span><span class="java_plain">plus&nbsp;</span><span class="java_operator">+=</span><span class="java_plain">&nbsp;</span><span class="java_separator">[</span><span class="java_plain">configurations</span><span class="java_separator">.</span><span class="java_plain">someConfig</span><span class="java_separator">]</span><span class="java_plain"></span></code></pre> 
-    <h3 id="removed-deprecated-plugins">Removed deprecated plugins</h3> 
-    <ul> 
-     <li><code>code-quality</code> plugin replaced by <code>checkstyle</code> and <code>codenarc</code>.</li> 
-    </ul> 
-    <h3 id="changes-to-groovy-and-scala-plugins">Changes to Groovy and Scala plugins</h3> 
-    <ul> 
-     <li>The Groovy plugin no longer defines the <code>groovy</code> configuration.</li> 
-     <li>The Groovy plugin no longer defines the <code>scalaTools</code> configuration.</li> 
-    </ul> 
-    <h3 id="removed-deprecated-command-line-options">Removed deprecated command line options</h3> 
-    <ul> 
-     <li><code>--cache</code> and <code>-C</code> replaced with <code>--refresh-dependencies</code>, <code>--recompile-scripts</code> or <code>--rerun-tasks</code>.</li> 
-     <li><code>--no-opt</code> replaced with <code>--rerun-tasks</code>.</li> 
-     <li><code>--refresh</code> replaced with <code>--refresh-dependencies</code>.</li> 
-    </ul> 
-    <h3 id="removed-deprecated-classes">Removed deprecated classes</h3> 
-    <ul> 
-     <li><code>GradleLauncher</code> replaced by the tooling API.</li> 
-     <li><code>Compile</code> replaced by <code>JavaCompile</code>.</li> 
-     <li><code>org.gradle.api.tasks.Directory</code> with no replacement.</li> 
-     <li><code>CodeQualityPlugin</code> replaced by the <code>checkstyle</code> and <code>codenarc</code> plugins.</li> 
-     <li><code>GroovyCodeQualityPluginConvention</code> with no replacement.</li> 
-     <li><code>JavaCodeQualityPluginConvention</code> with no replacement.</li> 
-     <li><code>IllegalOperationAtExecutionTimeException</code> with no replacement.</li> 
-     <li><code>AntJavadoc</code> with no replacement.</li> 
-     <li><code>org.gradle.RefreshOptions</code> with no replacement.</li> 
-     <li><code>org.gradle.tooling.model.eclipse.EclipseTask</code> with no replacement.</li> 
-     <li><code>org.gradle.CacheUsage</code> with no replacement.</li> 
-     <li><code>org.gradle.api.internal.plugins.ProcessResources</code> replaced by <code>org.gradle.language.jvm.tasks.ProcessResources</code>.</li> 
-     <li><code>org.gradle.api.tasks.testing.TestLogging</code> replaced by <code>org.gradle.api.tasks.testing.logging.TestLogging</code>.</li> 
-     <li><code>org.gradle.api.plugins.ReportingBasePluginConvention</code> replaced by <code>org.gradle.api.reporting.ReportingExtension</code>.</li> 
-     <li><code>org.gradle.plugins.signing.SigningPluginConvention</code> replaced by <code>org.gradle.plugins.signing.SigningExtension</code>.</li> 
-    </ul> 
-    <h3 id="removed-deprecated-methods">Removed deprecated methods</h3> 
-    <ul> 
-     <li><code>Project.dir()</code> replaced with <code>mkdir()</code></li> 
-     <li><code>Project.dependsOn()</code> replaced with task dependencies.</li> 
-     <li><code>Project.childrenDependOnMe()</code> replaced with task dependencies.</li> 
-     <li><code>Project.dependsOnChildren()</code> replaced with task dependencies.</li> 
-     <li><code>Project.getDependsOnProjects()</code> with no replacement.</li> 
-     <li><code>Project.createTask()</code> replaced with <code>task()</code> or <code>getTasks().create()</code>.</li> 
-     <li><code>Project.fileTree(Closure)</code> replaced with <code>fileTree(Object)</code>.</li> 
-     <li><code>Script.fileTree(Closure)</code> replaced with <code>fileTree(Object)</code>.</li> 
-     <li><code>SourceSetContainer.add()</code> replaces with <code>create()</code>.</li> 
-     <li><code>Test.isTestReport()</code> replaced with <code>getReports().getHtml().isEnabled()</code>.</li> 
-     <li><code>Test.disableTestReport()</code> replaced with <code>getReports().getHtml().setEnabled()</code>.</li> 
-     <li><code>Test.enableTestReport()</code> replaced with <code>getReports().getHtml().setEnabled()</code>.</li> 
-     <li><code>Test.setTestReport()</code> replaced with <code>getReports().getHtml().setEnabled()</code>.</li> 
-     <li><code>Test.getTestResultsDir()</code> replaced with <code>getReports().getJunitXml().getDestination()</code>.</li> 
-     <li><code>Test.setTestResultsDir()</code> replaced with <code>getReports().getJunitXml().setDestination()</code>.</li> 
-     <li><code>Test.getTestReportDir()</code> replaced with <code>getReports().getHtml().getDestination()</code>.</li> 
-     <li><code>Test.setTestReportDir()</code> replaced with <code>getReports().getHtml().setDestination()</code>.</li> 
-     <li><code>CompileOptions.getFailOnError()</code> replaced with <code>isFailOnError()</code></li> 
-     <li><code>CompileOptions.getDebug()</code> replaced with <code>isDebug()</code></li> 
-     <li><code>StartParameter.getCacheUsage()</code> replaced with <code>isRecompileScripts()</code> and <code>isRerunTasks()</code> and <code>isRefreshDependencies()</code>.</li> 
-     <li><code>StartParameter.setCacheUsage()</code> replaced with <code>setRecompileScripts()</code> and <code>setRerunTasks()</code> and <code>setRefreshDependencies()</code>.</li> 
-     <li><code>StartParameter.isNoOpt()</code> replaced with <code>isRerunTasks()</code>.</li> 
-     <li><code>StartParameter.setNoOpt()</code> replaced with <code>setRerunTasks()</code>.</li> 
-     <li><code>StartParameter.getRefreshOptions()</code> replaced with <code>getRefreshDependencies()</code>.</li> 
-     <li><code>StartParameter.setRefreshOptions()</code> replaced with <code>setRefreshDependencies()</code>.</li> 
-     <li><code>StartParameter.useEmptySettingsScript()</code> replaced with <code>useEmptySettings()</code>.</li> 
-     <li><code>StartParameter.getMergedSystemProperties()</code> with no replacement.</li> 
-     <li><code>Specs.filterIterable()</code> with no replacement.</li> 
-     <li><code>ExcludeRule.getExcludeArgs()</code> replaced by <code>getModule()</code> and <code>getGroup()</code>.</li> 
-     <li><code>ExtensionContainer.add(String, Class&lt;?&gt;, Object...)</code> replaced by <code>create()</code></li> 
-     <li><code>TaskContainer.add()</code> replaced by <code>create()</code>.</li> 
-     <li><code>ConfigurationContainer.add()</code> replaced by <code>create()</code>.</li> 
-     <li><code>RepositoryHandler.mavenRepo()</code> replaced by <code>maven()</code>.</li> 
-     <li><code>ArtifactRepositoryContainer.add(DependencyResolver)</code> replaced with <code>add(ArtifactRepository)</code>.</li> 
-     <li><code>ArtifactRepositoryContainer.addLast(Object)</code> replaced with <code>add(ArtifactRepository)</code> or <code>maven()</code>.</li> 
-     <li><code>ArtifactRepositoryContainer.addFirst()</code> with no replacement.</li> 
-     <li><code>ArtifactRepositoryContainer.addBefore()</code> with no replacement.</li> 
-     <li><code>ArtifactRepositoryContainer.addAfter()</code> with no replacement.</li> 
-     <li><code>ArtifactRepositoryContainer.getResolvers()</code> with no replacement.</li> 
-     <li><code>GenerateEclipseClasspath.containers()</code> replaced with <code>eclipse.classpath.containers()</code>.</li> 
-     <li><code>GenerateEclipseClasspath.variables()</code> replaced with <code>eclipse.pathVariables()</code>.</li> 
-     <li><code>GenerateEclipseWtpComponent.resources()</code> replaced with <code>eclipse.wtp.component.resource()</code>.</li> 
-     <li><code>GenerateEclipseWtpComponent.properties()</code> replaced with <code>eclipse.wtp.component.property()</code>.</li> 
-     <li><code>GenerateEclipseWtpComponent.variables()</code> replaced with <code>eclipse.pathVariables()</code>.</li> 
-    </ul> 
-    <h3 id="removed-deprecated-properties">Removed deprecated properties</h3> 
-    <ul> 
-     <li><code>UnresolvedDependency.id</code> replaced with <code>selector</code>.</li> 
-     <li><code>AbstractCopyTask.defaultSource</code> replaced with <code>source</code>.</li> 
-     <li><code>SourceTask.defaultSource</code> replaced with <code>source</code>.</li> 
-     <li><code>JavaPluginConvention.metaInf</code> replaced with <code>Jar.metaInf</code>.</li> 
-     <li><code>JavaPluginConvention.manifest</code> replaced with <code>Jar.manifest</code>.</li> 
-     <li><code>Compression.extension</code> replaced with <code>defaultExtension</code>.</li> 
-     <li><code>CompileOptions.compiler</code> replaced with <code>CompileOptions.fork</code> and <code>CompileOptions.forkOptions.executable</code></li> 
-     <li><code>CompileOptions.useAnt</code> with no replacement.</li> 
-     <li><code>CompileOptions.optimize</code> with no replacement.</li> 
-     <li><code>CompileOptions.includeJavaRuntime</code> with no replacement.</li> 
-     <li><code>GroovyCompileOptions.useAnt</code> with no replacement.</li> 
-     <li><code>GroovyCompileOptions.stacktrace</code> with no replacement.</li> 
-     <li><code>GroovyCompileOptions.includeJavaRuntime</code> with no replacement.</li> 
-     <li><code>Checkstyle.properties</code> replaced with <code>Checkstyle.configProperties</code>.</li> 
-     <li><code>Checkstyle.resultFile</code> replaced with <code>Checkstyle.reports.xml.destination</code>.</li> 
-     <li><code>CodeNarc.reportFormat</code> replaced with <code>CodeNarc.reports.&lt;type&gt;.enabled</code>.</li> 
-     <li><code>CodeNarc.reportFile</code> replaced with <code>CodeNarc.reports.&lt;type&gt;.destination</code>.</li> 
-     <li><code>ResolvedArtifact.resolvedDependency</code> with <code>ResolvedArtifact.moduleVersion</code> as a partial replacement.</li> 
-     <li><code>ArtifactsRepositoryContainer</code> constants with no replacement.</li> 
-     <li><code>GenerateEclipseClasspath.sourceSets</code> replaced with <code>eclipse.classpath.sourceSets</code>.</li> 
-     <li><code>GenerateEclipseClasspath.plusConfigurations</code> replaced with <code>eclipse.classpath.plusConfigurations</code>.</li> 
-     <li><code>GenerateEclipseClasspath.minusConfigurations</code> replaced with <code>eclipse.classpath.minusConfigurations</code>.</li> 
-     <li><code>GenerateEclipseClasspath.containers</code> replaced with <code>eclipse.classpath.containers</code>.</li> 
-     <li><code>GenerateEclipseClasspath.defaultOutputDir</code> replaced with <code>eclipse.classpath.defaultOutputDir</code>.</li> 
-     <li><code>GenerateEclipseClasspath.downloadSources</code> replaced with <code>eclipse.classpath.downloadSources</code>.</li> 
-     <li><code>GenerateEclipseClasspath.downloadJavadoc</code> replaced with <code>eclipse.classpath.downloadJavadoc</code>.</li> 
-     <li><code>GenerateEclipseClasspath.variables</code> replaced with <code>eclipse.pathVariables</code>.</li> 
-     <li><code>GenerateEclipseWtpComponent.contextPath</code> replaced with <code>eclipse.wtp.component.contextPath</code>.</li> 
-     <li><code>GenerateEclipseWtpComponent.deployName</code> replaced with <code>eclipse.wtp.component.deployName</code>.</li> 
-     <li><code>GenerateEclipseWtpComponent.sourceDirs</code> replaced with <code>eclipse.wtp.component.sourceDirs</code>.</li> 
-     <li><code>GenerateEclipseWtpComponent.plusConfigurations</code> replaced with <code>eclipse.wtp.component.plusConfigurations</code>.</li> 
-     <li><code>GenerateEclipseWtpComponent.minusConfigurations</code> replaced with <code>eclipse.wtp.component.minusConfigurations</code>.</li> 
-     <li><code>GenerateEclipseWtpComponent.resources</code> replaced with <code>eclipse.wtp.component.resources</code>.</li> 
-     <li><code>GenerateEclipseWtpComponent.properties</code> replaced with <code>eclipse.wtp.component.properties</code>.</li> 
-     <li><code>GenerateEclipseWtpComponent.variables</code> replaced with <code>eclipse.pathVariables</code>.</li> 
-     <li><code>Module.javaVersion</code> replaced with <code>jdkName</code>.</li> 
-     <li><code>ScalaCompileOptions.targetCompatibility</code> replaced with <code>ScalaCompile.targetCompatibility</code>.</li> 
-    </ul> 
-    <p>Convention properties on <code>Project</code> added by the reporting base plugin:</p> 
-    <ul> 
-     <li><code>reportsDirName</code> replaced by <code>reporting.baseDir</code>.</li> 
-     <li><code>reportsDir</code> replaced by <code>reporting.baseDir</code>.</li> 
-     <li><code>apiDocTitle</code> replaced by <code>reporting.apiDocTitle</code>.</li> 
-    </ul> 
-    <p>Convention methods on <code>Project</code> added by the signing plugin:</p> 
-    <ul> 
-     <li><code>sign()</code> replaced by <code>signing.sign()</code>.</li> 
-     <li><code>signPom()</code> replaced by <code>signing.signPom()</code>.</li> 
-    </ul> 
-    <h3 id="changes-to-file-dsl">Changes to file DSL</h3> 
-    <p>The <code>Project.file()</code> method no longer accepts arbitrary inputs. Previously, this method would attempt to convert the result of calling <code>toString()</code> on its parameter, if the parameter type was not recognized. This is now an error.</p> 
-    <p>This method is used indirectly in many places in the Gradle DSL.</p> 
-    <p>The <code>CopySpec.into()</code> method also no longer accepts arbitrary inputs. Previously, this method would attempt to conver the result of calling <code>toString()</code> on its parameter, if the parameter type was not recognized. This is now an error.</p> 
-    <p>The <code>Project.tarTree()</code> and <code>zipTree()</code> methods no longer ignores missing files. This is now an error.</p> 
-    <h3 id="changes-to-dependency-management-dsl">Changes to dependency management DSL</h3> 
-    <p>The repository DSL has changed:</p> 
-    <ul> 
-     <li>The <code>RepositoryHandler.mavenCentral()</code> method no longer handles the <code>urls</code> option. You should use the <code>artifactUrls</code> instead.</li> 
-     <li>It is now an error to change the name of an <code>ArtifactRepository</code> after it has been added to a repository container.</li> 
-     <li>The <code>RepositoryHandler.mavenLocal()</code> method no longer supports the <code>M2_HOME</code> system properties. You should use the <code>M2_HOME</code> environment variable instead.</li> 
-    </ul> 
-    <p>The <code>Upload</code> task now fails when an artifact does not exist. Previously, this task would ignore the missing artifact.</p> 
-    <h3 id="tasks-cannot-be-changed-after-task-has-started-execution">Tasks cannot be changed after task has started execution</h3> 
-    <p>Certain operations on a task are no longer possible once the task has started execution:</p> 
-    <ul> 
-     <li>Changing the actions of the task, such as calling <code>doLast { // some action }</code></li> 
-     <li>Changing the dependencies of the task, such as calling <code>dependsOn 'someTask'</code></li> 
-     <li>Changing the inputs and outputs of the task, such as calling <code>inputs.file('build/some-file.txt')</code></li> 
-    </ul> 
-    <p>This behavior was deprecated and now fails with an exception.</p> 
-    <h3 id="removed-incubating-method">Removed incubating method</h3> 
-    <ul> 
-     <li><code>StartParameter.setProjectPath</code> and <code>StartParameter.getProjectPath</code> were replaced with <code>TaskParameter</code>.</li> 
-    </ul> 
-    <h3 id="task-constructor-injection-changes">Task constructor injection changes</h3> 
-    <p>Tasks are now constructed according to JSR-330. This means that a task type must either have a single public zero-args constructor, or annotate one constructor with <code>@Inject</code>.</p> 
-    <p>Previously, Gradle would accept a class with a single constructor with multiple parameters that was not annotated with <code>@Inject</code>. This was deprecated in Gradle 1.2 and is now an error.</p> 
-    <h3 id="task-constructor-changes">Task constructor changes</h3> 
-    <p>All core Gradle task types now have a zero args constructor. The following types are affected:</p> 
-    <ul> 
-     <li><code>org.gradle.api.tasks.testing.Test</code></li> 
-     <li><code>org.gradle.api.tasks.Upload</code></li> 
-     <li><code>org.gradle.api.plugins.quality.Checkstyle</code></li> 
-     <li><code>org.gradle.api.plugins.quality.CodeNarc</code></li> 
-     <li><code>org.gradle.api.plugins.quality.FindBugs</code></li> 
-     <li><code>org.gradle.api.plugins.quality.Pmd</code></li> 
-     <li><code>org.gradle.api.plugins.quality.JDepend</code></li> 
-     <li><code>org.gradle.testing.jacoco.tasks.JacocoReport</code></li> 
-     <li><code>org.gradle.api.tasks.GradleBuild</code></li> 
-     <li><code>org.gradle.api.tasks.diagnostics.DependencyInsightReportTask</code></li> 
-     <li><code>org.gradle.api.reporting.GenerateBuildDashboard</code></li> 
-     <li><code>org.gradle.api.publish.ivy.tasks.GenerateIvyDescriptor</code></li> 
-     <li><code>org.gradle.api.publish.maven.tasks.GenerateMavenPom</code></li> 
-     <li><code>org.gradle.api.publish.maven.tasks.PublishToMavenRepository</code></li> 
-     <li><code>org.gradle.api.publish.maven.tasks.PublishToMavenLocal</code></li> 
-     <li><code>org.gradle.nativebinaries.tasks.InstallExecutable</code></li> 
-     <li><code>org.gradle.api.plugins.buildcomparison.gradle.CompareGradleBuilds</code></li> 
-    </ul> 
+    <h3 id="tooling-api-builders-run-before-buildfinished-listeners">Tooling API builders run before buildFinished listeners</h3> 
+    <p>Tooling API model builders are now executed before any <code>buildFinished</code> listeners have been notified.</p> 
    </section> 
    <section class="topic"> 
     <h2 id="external-contributions">External contributions</h2> 
     <p>We would like to thank the following community members for making contributions to this release of Gradle.</p> 
     <ul> 
-     <li><a href="https://github.com/erdi">Marcin Erdmann</a> - Support an ivy repository declared with 'sftp' as the URL scheme</li> 
-     <li><a href="https://github.com/kryger">Lukasz Kryger</a> - Documentation improvements</li> 
-     <li><a href="https://github.com/benmccann">Ben McCann</a> - Added named 'ivy' layout to 'ivy' repositories</li> 
-     <li><a href="https://github.com/selesse">Alex Selesse</a> - Fixed announce plugin in headless mode on OS X</li> 
+     <li><a href="https://github.com/hotchemi">Shintaro Katafuchi</a> - Fixed typo in <code>ShadedJar.java</code> under <code>buildSrc</code></li> 
+     <li><a href="https://github.com/huxi">J&ouml;rn Huxhorn</a> - Show location in build file for deprecation warning, remove output files when task loses all its source files</li> 
+     <li><a href="https://github.com/jbaranski">Jeff Baranski</a> - Fix doc bug with turning off daemon in a .bat file</li> 
+     <li><a href="https://github.com/jsievenpiper">Justin Sievenpiper</a> - Prevent navigating down to JDK classes when detecting the parent test class</li> 
+     <li><a href="https://github.com/alexproca">Alex Proca</a> - Limit Unix Start Scripts to use POSIX standard sh</li> 
+     <li><a href="https://github.com/merscwog">Spencer Allain</a> - Do not require a password when using custom <code>javax.net.ssl.trustStore</code> for HTTP resource access over TLS</li> 
+     <li><a href="https://github.com/idlsoft">Sandu Turcan</a> - Added <code>preferProjectModules()</code> option to dependency resolution strategy</li> 
+     <li><a href="https://github.com/otrosien">Oliver Trosien</a> - Wrong location of test resources in documentation</li> 
+     <li><a href="https://github.com/remigius42">Andreas Schmidt</a> - Fixed grammatical errors in documentation</li> 
+     <li><a href="https://github.com/jvff">Janito Vaqueiro Ferreira Filho</a> - Describe relationship between sources and binaries in native build documentation</li> 
+     <li><a href="https://github.com/DanielThomas">Daniel Thomas</a> - Added ability to revalidate external resource requests</li> 
     </ul> 
-    <p>We love getting contributions from the Gradle community. For information on contributing, please see <a href="http://gradle.org/contribute">gradle.org/contribute</a>.</p> 
+    <p>We love getting contributions from the Gradle community. For information on contributing, please see <a href="https://gradle.org/contribute">gradle.org/contribute</a>.</p> 
    </section> 
    <section class="topic"> 
     <h2 id="known-issues">Known issues</h2> 
     <p>Known issues are problems that were discovered post release that are directly related to changes made in this release.</p> 
+    <h3 id="usage-of-jansi-library-embedded-with-java-annotation-processor">Usage of Jansi library embedded with Java annotation processor</h3> 
+    <p><a href="https://github.com/gradle/gradle/issues/778">Issue #778</a> reported a failed build with a crashed daemon JVM if a Java annotation processor is used that embeds an older version of Jansi than the one bundled with Gradle. As a workaround you can execute the Java compiler in a forked process.</p> 
+    <pre class=" code"><code><span class="java_plain">tasks</span><span class="java_separator">.</span><span class="java_plain">withType</span><span class="java_separator">(</span><span class="java_type">JavaCompile</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain">&nbsp;</span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;options</span><span class="java_separator">.</span><span class="java_plain">fork&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">true</span><span class="java_plain">&nbsp;</span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
    </section> 
    <section class="footer">
-     Gradle 2.0 Release Notes 
+     Gradle 3.2 Release Notes 
     <br /> 
    </section> 
-  </div>
+  </div> 
+  <!--
+IMPORTANT: if this is a patch release, ensure that a prominent link is included in the foreword to all releases of the same minor stream.
+Add--> 
+  <!--
+### Example new and noteworthy
+-->
  </body>
 </html>

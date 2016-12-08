@@ -1,0 +1,583 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Building Java Libraries - Gradle User Guide Version 3.2</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide Version 3.2"><link rel="up" href="pt06.html" title="Part&nbsp;VI.&nbsp;The Software model"><link rel="prev" href="implement_rule_source.html" title="Implementing model rules in a plugin - Gradle User Guide Version 3.2"><link rel="next" href="play_plugin.html" title="Building Play applications - Gradle User Guide Version 3.2"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="implement_rule_source.html" title="Implementing model rules in a plugin - Gradle User Guide Version 3.2">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 3.2">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="play_plugin.html" title="Building Play applications - Gradle User Guide Version 3.2">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="java_software"></a>Chapter&nbsp;69.&nbsp;Building Java Libraries</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="java_software.html#sec:java_libraries_features">69.1. Features</a></span></dt><dt><span class="section"><a href="java_software.html#sec:java_software_model">69.2. Java Software Model</a></span></dt><dt><span class="section"><a href="java_software.html#sec:java_libraries_usage">69.3. Usage</a></span></dt><dt><span class="section"><a href="java_software.html#sec:creating_a_library">69.4. Creating a library</a></span></dt><dt><span class="section"><a href="java_software.html#source_sets">69.5. Source Sets</a></span></dt><dt><span class="section"><a href="java_software.html#sec:java_libraries_tasks">69.6. Tasks</a></span></dt><dt><span class="section"><a href="java_software.html#sec:java_libraries_finding_out_more_about_your_project">69.7. Finding out more about your project</a></span></dt><dt><span class="section"><a href="java_software.html#dependencies">69.8. Dependencies</a></span></dt><dt><span class="section"><a href="java_software.html#defining_api">69.9. Defining a Library API</a></span></dt><dt><span class="section"><a href="java_software.html#sec:platform_aware_dependency_management">69.10. Platform aware dependency management</a></span></dt><dt><span class="section"><a href="java_software.html#sec:custom_variant_resolution">69.11. Custom variant resolution</a></span></dt><dt><span class="section"><a href="java_software.html#sec:testing_java_libraries">69.12. Testing Java libraries</a></span></dt><dt><span class="section"><a href="java_software.html#declaring_java_toolchains">69.13. Declaring Java toolchains</a></span></dt></dl></div><div class="note"><p>
+            Support for building Java libraries using the software model is currently <a class="link" href="feature_lifecycle.html">incubating</a>. Please be aware that the DSL, APIs and other configuration may change in later Gradle versions.
+        </p></div><p>The Java software plugins are intended to replace the <a class="link" href="java_plugin.html">Java plugin</a>, and
+        leverage the Gradle <a class="link" href="software_model.html">software model</a> to achieve the best performance, improved expressiveness
+        and support for variant-aware dependency management.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:java_libraries_features" class="section-anchor" href="#sec:java_libraries_features"></a>69.1.&nbsp;Features</h2></div></div></div><p>The Java software plugins provide:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Support for building Java libraries and other components that run on the JVM.</p></li><li class="listitem"><p>Support for several source languages.</p></li><li class="listitem"><p>Support for building different variants of the same software, for different Java versions, or for any purpose.</p></li><li class="listitem"><p>Build time definition and enforcement of Java library API.</p></li><li class="listitem"><p>Compile avoidance.</p></li><li class="listitem"><p>Dependency management between Java software components.</p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:java_software_model" class="section-anchor" href="#sec:java_software_model"></a>69.2.&nbsp;Java Software Model</h2></div></div></div><p>The Java software plugins provide a <em class="firstterm">software model</em> that describes Java based software and how it should be built.
+            This Java software model extends the base Gradle <a class="link" href="software_model_concepts.html">software model</a>, to add support for building JVM libraries.
+            A <em class="firstterm">JVM library</em> is a kind of <a class="link" href="software_model_concepts.html#library_definition">library</a> that is built for and runs on the JVM.
+            It may be built from Java source, or from various other languages. All JVM libraries provide an API of some kind.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:java_libraries_usage" class="section-anchor" href="#sec:java_libraries_usage"></a>69.3.&nbsp;Usage</h2></div></div></div><p>To use the Java software plugins, include the following in your build script:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="javaLibraryQuickstart"></a><p class="title"><b>Example&nbsp;69.1.&nbsp;Using the Java software plugins</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">plugins {
+    id <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'jvm-component'</span>
+    id <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java-lang'</span>
+}
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:creating_a_library" class="section-anchor" href="#sec:creating_a_library"></a>69.4.&nbsp;Creating a library</h2></div></div></div><p>A library is created by declaring a <a class="ulink" href="../javadoc/org/gradle/jvm/JvmLibrarySpec.html" target="_top"><code class="classname">JvmLibrarySpec</code></a> under the <code class="literal">components</code>
+            element of the <code class="literal">model</code>:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="javaLibraryQuickstart"></a><p class="title"><b>Example&nbsp;69.2.&nbsp;Creating a java library</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    components {
+        main(JvmLibrarySpec)
+    }
+}
+</pre><p>Output of <strong class="userinput"><code>gradle build</code></strong></p><pre class="screen">&gt; gradle build
+:compileMainJarMainJava
+:processMainJarMainResources
+:createMainJar
+:mainApiJar
+:mainJar
+:assemble
+:check UP-TO-DATE
+:build
+
+BUILD SUCCESSFUL
+</pre></div></div><br class="example-break"><p>This example creates a library named <code class="literal">main</code>, which will implicitly create a <a class="ulink" href="../javadoc/org/gradle/language/java/JavaSourceSet.html" target="_top"><code class="classname">JavaSourceSet</code></a>
+            named <code class="literal">java</code>.
+            The conventions of the <a class="link" href="java_plugin.html">legacy Java plugin</a> are observed, where Java sources
+            are expected to be found in <code class="filename">src/main/java</code>,
+            while resources are expected to be found in <code class="filename">src/main/resources</code>.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="source_sets" class="section-anchor" href="#source_sets"></a>69.5.&nbsp;Source Sets</h2></div></div></div><p>Source sets represent logical groupings of source files in a library.  A library can define multiple source sets and all
+            sources will be compiled and included in the resulting binaries.  When a library is added to a build, the following
+            source sets are added by default.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;69.1.&nbsp;Java plugin - default source sets</b></p><div class="table-contents"><table id="N1862C"><thead><tr>
+                    <td>Source Set</td>
+                    <td>Type</td>
+                    <td>Directory</td>
+                </tr></thead><tr>
+                <td>java</td>
+                <td><a class="ulink" href="../javadoc/org/gradle/language/java/JavaSourceSet.html" target="_top"><code class="classname">JavaSourceSet</code></a></td>
+                <td>src/${library.name}/java</td>
+            </tr><tr>
+                <td>resources</td>
+                <td><a class="ulink" href="../javadoc/org/gradle/language/jvm/JvmResourceSet.html" target="_top"><code class="classname">JvmResourceSet</code></a></td>
+                <td>src/${library.name}/resources</td>
+            </tr></table></div></div><p>It is possible to configure an existing <em class="firstterm">source set</em>
+            through the <code class="literal">sources</code> container:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="javaLibraryQuickstart"></a><p class="title"><b>Example&nbsp;69.3.&nbsp;Configuring a source set</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">components {
+    main {
+        sources {
+            java {
+                <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// configure the "java" source set</span>
+            }
+        }
+    }
+}
+</pre></div></div><br class="example-break"><p>It is also possible to create an additional source set, using the
+            <a class="ulink" href="../javadoc/org/gradle/language/java/JavaSourceSet.html" target="_top"><code class="classname">JavaSourceSet</code></a>
+            type:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="javaLibraryQuickstart"></a><p class="title"><b>Example&nbsp;69.4.&nbsp;Creating a new source set</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">components {
+    main {
+        sources {
+            mySourceSet(JavaSourceSet) {
+                <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// configure the "mySourceSet" source set</span>
+            }
+        }
+    }
+}
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:java_libraries_tasks" class="section-anchor" href="#sec:java_libraries_tasks"></a>69.6.&nbsp;Tasks</h2></div></div></div><p>By default, when the plugins above are applied, no new tasks are added to the build.  However, when libraries are defined,
+            conventional tasks are added which build and package each binary of the library.</p><p>For each binary of a library, a single lifecycle task is created which executes all tasks associated with building the binary.
+            To build all binaries, the standard <strong class="userinput"><code>build</code></strong> lifecycle task can be used.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;69.2.&nbsp;Java plugin - lifecycle tasks</b></p><div class="table-contents"><table id="java_lifecycle_tasks"><thead><tr>
+                    <td>Component Type</td>
+                    <td>Binary Type</td>
+                    <td>Lifecycle Task</td>
+                </tr></thead><tr>
+                <td><a class="ulink" href="../javadoc/org/gradle/jvm/JvmLibrarySpec.html" target="_top"><code class="classname">JvmLibrarySpec</code></a></td>
+                <td><a class="ulink" href="../javadoc/org/gradle/jvm/JvmBinarySpec.html" target="_top"><code class="classname">JvmBinarySpec</code></a></td>
+                <td>${library.name}${binary.name}</td>
+            </tr></table></div></div><p>For each source set added to a library, tasks are added to compile or process the source files for each binary.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;69.3.&nbsp;Java plugin - source set tasks</b></p><div class="table-contents"><table id="java_sourceset_tasks"><thead><tr>
+                    <td>Source Set Type</td>
+                    <td>Task name</td>
+                    <td>Type</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td><a class="ulink" href="../javadoc/org/gradle/language/java/JavaSourceSet.html" target="_top"><code class="classname">JavaSourceSet</code></a></td>
+                <td>compile${library.name}${binary.name}${library.name}${sourceset.name}</td>
+                <td><a class="ulink" href="../javadoc/org/gradle/language/java/tasks/PlatformJavaCompile.html" target="_top"><code class="classname">PlatformJavaCompile</code></a></td>
+                <td>Compiles the sources of a given source set.</td>
+            </tr><tr>
+                <td><a class="ulink" href="../javadoc/org/gradle/language/jvm/JvmResourceSet.html" target="_top"><code class="classname">JvmResourceSet</code></a></td>
+                <td>process${library.name}${binary.name}${library.name}${sourceset.name}</td>
+                <td><a class="ulink" href="../javadoc/org/gradle/language/jvm/tasks/ProcessResources.html" target="_top"><code class="classname">ProcessResources</code></a></td>
+                <td>Copies the resources in the given source set to the classes output directory.</td>
+            </tr></table></div></div><p>For each binary in a library, a packaging task is added to create the jar for that binary.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;69.4.&nbsp;Java plugin - packaging tasks</b></p><div class="table-contents"><table id="java_packaging_tasks"><thead><tr>
+                    <td>Binary Type</td>
+                    <td>Task name</td>
+                    <td>Depends on</td>
+                    <td>Type</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td><a class="ulink" href="../javadoc/org/gradle/jvm/JvmBinarySpec.html" target="_top"><code class="classname">JvmBinarySpec</code></a></td>
+                <td>create${library.name}${binary.name}</td>
+                <td>all <a class="ulink" href="../javadoc/org/gradle/language/java/tasks/PlatformJavaCompile.html" target="_top"><code class="classname">PlatformJavaCompile</code></a> and <a class="ulink" href="../javadoc/org/gradle/language/jvm/tasks/ProcessResources.html" target="_top"><code class="classname">ProcessResources</code></a>
+                tasks associated with the binary</td>
+                <td><a class="ulink" href="../dsl/org.gradle.jvm.tasks.Jar.html" target="_top"><code class="classname">Jar</code></a></td>
+                <td>Packages the compiled classes and processed resources of the binary.</td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:java_libraries_finding_out_more_about_your_project" class="section-anchor" href="#sec:java_libraries_finding_out_more_about_your_project"></a>69.7.&nbsp;Finding out more about your project</h2></div></div></div><p>
+            Gradle provides a report that you can run from the command-line that shows details about the components and binaries that your
+            project produces. To use this report, just run <strong class="userinput"><code>gradle components</code></strong>. Below is an example of running this report for
+            one of the sample projects:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="javaLibraryComponentReport"></a><p class="title"><b>Example&nbsp;69.5.&nbsp;The components report</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle components</code></strong></p><pre class="screen">&gt; gradle components
+:components
+
+------------------------------------------------------------
+Root project
+------------------------------------------------------------
+
+JVM library 'main'
+------------------
+
+Source sets
+    Java source 'main:java'
+        srcDir: src/main/java
+    Java source 'main:mySourceSet'
+        srcDir: src/main/mySourceSet
+    JVM resources 'main:resources'
+        srcDir: src/main/resources
+
+Binaries
+    Jar 'main:jar'
+        build using task: :mainJar
+        target platform: java7
+        tool chain: JDK 7 (1.7)
+        classes dir: build/classes/main/jar
+        resources dir: build/resources/main/jar
+        API Jar file: build/jars/main/jar/api/main.jar
+        Jar file: build/jars/main/jar/main.jar
+
+Note: currently not all plugins register their components, so some components may not be visible here.
+
+BUILD SUCCESSFUL
+
+Total time: 1 secs
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="dependencies" class="section-anchor" href="#dependencies"></a>69.8.&nbsp;Dependencies</h2></div></div></div><p>A component in the Java software model can declare dependencies on other Java libraries.
+            If component <code class="literal">main</code> depends on library <code class="literal">util</code>, this means that the <em class="firstterm">API</em> of <code class="literal">util</code>
+            is required when compiling the sources of <code class="literal">main</code>, and the <em class="firstterm">runtime</em> of <code class="literal">util</code> is required
+            when running or testing <code class="literal">main</code>. The terms 'API' and 'runtime' are examples of <em class="firstterm">usages</em> of a Java library.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:library_usage" class="section-anchor" href="#sec:library_usage"></a>69.8.1.&nbsp;Library usage</h3></div></div></div><p>
+                The 'API' usage of a Java library consists of:
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Artifact(s): the Jar file(s) containing the public classes of that library</li><li class="listitem">Dependencies: the set of other libraries that are required to compile against that library</li></ul></div><p>
+                When library <code class="literal">main</code> is compiled with a dependency on <code class="literal">util</code>,
+                the 'API' dependencies of 'util' are resolved transitively, resulting in the complete set of libraries required to compile.
+                For each of these libraries (including 'util'), the 'API' artifacts will be included in the compile classpath.
+            </p><p>
+                Similarly, the 'runtime' usage of a Java library consists of artifacts and dependencies.
+                When a Java component is tested or bundled into an application, the runtime usage of any runtime dependencies will be resolved
+                transitively into the set of libraries required at runtime. The runtime artifacts of these libraries will then be included
+                in the testing or runtime classpath.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:dependency_types" class="section-anchor" href="#sec:dependency_types"></a>69.8.2.&nbsp;Dependency types</h3></div></div></div><p>
+                Two types of Java library dependencies can be declared:
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Dependencies on a library defined in a local Gradle project</li><li class="listitem">Dependencies on a library published to a Maven repository</li></ul></div><p>
+                Dependencies onto libraries published to an Ivy repository are not yet supported.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:declaring_dependencies" class="section-anchor" href="#sec:declaring_dependencies"></a>69.8.3.&nbsp;Declaring dependencies</h3></div></div></div><p>
+                Dependencies may be declared for a specific <a class="ulink" href="../javadoc/org/gradle/language/java/JavaSourceSet.html" target="_top"><code class="classname">JavaSourceSet</code></a>,
+                for an entire <a class="ulink" href="../javadoc/org/gradle/jvm/JvmLibrarySpec.html" target="_top"><code class="classname">JvmLibrarySpec</code></a> or
+                as part of the
+                <a class="ulink" href="../javadoc/org/gradle/jvm/JvmApiSpec.html" target="_top"><code class="classname">JvmApiSpec</code></a>
+                of a component:
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="javaLibraryMultiComponents"></a><p class="title"><b>Example&nbsp;69.6.&nbsp;Declaring a dependency onto a library</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    components {
+        server(JvmLibrarySpec) {
+            sources {
+                java {
+                    dependencies {
+                        library <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'core'</span>
+                    }
+                }
+            }
+        }
+
+        core(JvmLibrarySpec) {
+            dependencies {
+                library <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'commons'</span>
+            }
+        }
+
+        commons(JvmLibrarySpec) {
+            api {
+                dependencies {
+                    library <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'collections'</span>
+                }
+            }
+        }
+
+        collections(JvmLibrarySpec)
+    }
+}
+</pre><p>Output of <strong class="userinput"><code>gradle serverJar</code></strong></p><pre class="screen">&gt; gradle serverJar
+:compileCollectionsJarCollectionsJava
+:collectionsApiJar
+:compileCommonsJarCommonsJava
+:commonsApiJar
+:compileCoreJarCoreJava
+:processCoreJarCoreResources
+:coreApiJar
+:compileServerJarServerJava
+:createServerJar
+:serverApiJar
+:serverJar
+
+BUILD SUCCESSFUL
+</pre></div></div><br class="example-break"><p>
+                Dependencies declared for a source set will only be used for compiling that particular source set.
+            </p><p>
+                Dependencies declared for a component will be used when compiling all source sets for the component.
+            </p><p>
+                Dependencies declared for the component <code class="literal">api</code> are used for compiling all source sets for the component,
+                and are also exported as part of the component's API.
+                See <a class="link" href="">Enforcing API boundaries at compile time</a> for more details.
+            </p><p>
+                The previous example declares a dependency for the <code class="literal">java</code> source set of the <code class="literal">server</code> library
+            onto the <code class="literal">core</code> library of the same project. However, it is possible to create a dependency on a library in a different
+            project as well:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="javaLibraryMultiComponents"></a><p class="title"><b>Example&nbsp;69.7.&nbsp;Declaring a dependency onto a project with an explicit library</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">client(JvmLibrarySpec) {
+    sources {
+        java {
+            dependencies {
+                project <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':util'</span> library <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'main'</span>
+            }
+        }
+    }
+}
+</pre><p>Output of <strong class="userinput"><code>gradle clientJar</code></strong></p><pre class="screen">&gt; gradle clientJar
+:util:compileMainJarMainJava
+:util:mainApiJar
+:compileClientJarClientJava
+:clientApiJar
+:createClientJar
+:clientJar
+
+BUILD SUCCESSFUL
+</pre></div></div><br class="example-break"><p>When the target project defines a single library, the <code class="literal">library</code> selector can be omitted altogether:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="javaLibraryMultiComponents"></a><p class="title"><b>Example&nbsp;69.8.&nbsp;Declaring a dependency onto a project with an implicit library</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
+    project <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':util'</span>
+}
+</pre></div></div><br class="example-break"><p>Dependencies onto libraries published to Maven repositories can be declared via <code class="literal">module identifiers</code> consisting of a <code class="literal">group name</code>,
+            a <code class="literal">module name</code> plus an optional <code class="literal">version selector</code>:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="javaLibraryMultiComponents"></a><p class="title"><b>Example&nbsp;69.9.&nbsp;Declaring a dependency onto a library published to a Maven repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">verifier(JvmLibrarySpec) {
+    dependencies {
+        module <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'asm'</span>          group <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.ow2.asm'</span> version <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'5.0.4'</span>
+        module <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'asm-analysis'</span> group <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.ow2.asm'</span>
+    }
+}
+</pre><p>Output of <strong class="userinput"><code>gradle verifierJar</code></strong></p><pre class="screen">&gt; gradle verifierJar
+:compileVerifierJarVerifierJava
+:createVerifierJar
+:verifierApiJar
+:verifierJar
+
+BUILD SUCCESSFUL
+</pre></div></div><br class="example-break"><p>A shorthand notation for module identifiers can also be used:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="javaLibraryMultiComponents"></a><p class="title"><b>Example&nbsp;69.10.&nbsp;Declaring a module dependency using shorthand notation</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
+    module <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.ow2.asm:asm:5.0.4'</span>
+    module <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.ow2.asm:asm-analysis'</span>
+}
+</pre></div></div><br class="example-break"><p>Module dependencies will be resolved against the configured repositories as usual:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="javaLibraryMultiComponents"></a><p class="title"><b>Example&nbsp;69.11.&nbsp;Configuring repositories for dependency resolution</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+    mavenCentral()
+}
+</pre></div></div><br class="example-break"><p>The <a class="ulink" href="../javadoc/org/gradle/platform/base/DependencySpecContainer.html" target="_top"><code class="classname">DependencySpecContainer</code></a> class provides a complete reference of the dependencies DSL.</p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="defining_api" class="section-anchor" href="#defining_api"></a>69.9.&nbsp;Defining a Library API</h2></div></div></div><p>
+            Every library has an API, which consists of artifacts and dependencies that are required to compile against the library.
+            The library may be explicitly declared for a component, or may be implied based on other component metadata.
+        </p><p>
+            By default, all <code class="literal">public</code> types of a library are considered to be part of its API. In many cases this is not ideal; a library will contain many public types that intended for internal use  within that library.
+            By explicitly declaring an API for a Java library, Gradle can provide compile-time encapsulation of these internal-but-public types. The types to include in a library API are declared at the package level. Packages containing API types are considered to be <span class="emphasis"><em>exported</em></span>.
+        </p><p>
+            By default, dependencies of a library are <span class="emphasis"><em>not</em></span> considered to be part of its API. By explicitly declaring a dependency as part of the library API, this dependency will then be made available to consumers when compiling. Dependencies declared this way are considered to be <span class="emphasis"><em>exported</em></span>, and are known as 'API dependencies'.
+        </p><div class="note"><p>
+                JDK 9 will introduce <span class="emphasis"><em>Jigsaw</em></span>, the reference implementation of the <span class="emphasis"><em>Java Module System</em></span>. Jigsaw will provide both compile-time and run-time enforcement of API encapsulation.
+            </p><p>
+                Gradle anticipates the arrival of JDK 9 and the Java Module System with an approach to specifying and enforcing API encapsulation at compile-time. This allows Gradle users to leverage the many benefits of strong encapsulation, and prepare their software projects for migration to JDK 9.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:some_terminology" class="section-anchor" href="#sec:some_terminology"></a>69.9.1.&nbsp;Some terminology</h3></div></div></div><p>
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">An <em class="firstterm">API</em> is a set of classes, interfaces, methods that are exposed to a consumer.</li><li class="listitem">An <em class="firstterm">API specification</em> is the specification of classes, interfaces or methods that belong to an API, together with the set of dependencies that are part of the API. It can be found in various forms, like <code class="literal">module-info.java</code> in Jigsaw, or the <code class="literal">api { ... }</code> block that Gradle defines as part of those stories. Usually, we can simplify this to a list of packages, called <em class="firstterm">exported packages</em>.</li><li class="listitem">A <em class="firstterm">runtime jar</em> consists of <em class="firstterm">API classes</em> and <em class="firstterm">non-API classes</em> used at execution time. There can be multiple runtime jars depending on combinations of the variant dimensions: target platform, hardware infrastructure, target application server, ...</li><li class="listitem"><em class="firstterm">API classes</em> are classes of a <em class="firstterm">variant</em> which match the <em class="firstterm">API specification</em></li><li class="listitem"><em class="firstterm">Non-API classes</em> are classes of a <em class="firstterm">variant</em> which do not match the <em class="firstterm">API specification</em>.</li><li class="listitem">A <em class="firstterm">stubbed API class</em> is an <em class="firstterm">API class</em> for which its implementation and non public members have been removed. It is meant to be used when a consumer is going to be compiled against an <em class="firstterm">API</em>.</li><li class="listitem">An <em class="firstterm">API jar</em> is a collection of <em class="firstterm">API classes</em>. There can be multiple API jars depending on the combinations of variant dimensions.</li><li class="listitem">A <em class="firstterm">stubbed API jar</em> is a collection of <em class="firstterm">stubbed API classes</em>. There can be multiple stubbed API jars depending on the combinations of variant dimensions.</li><li class="listitem">An <em class="firstterm">ABI (application binary interface)</em> corresponds to the public signature of an API, that is to say the set of stubbed API classes that it exposes (and their API visible members).</li></ul></div><p>
+                </p><p>
+                    We avoid the use of the term <em class="firstterm">implementation</em> because it is too vague: both <em class="firstterm">API classes</em> and <em class="firstterm">Non-API classes</em> can have an implementation.
+                    For example, an <em class="firstterm">API class</em> can be an interface, but also a concrete class. Implementation is an overloaded term in the Java ecosystem, and often
+                    refers to a class implementing an interface. This is not the case here: a concrete class can be member of an API, but to compile against an API, you don't
+                    need the implementation of the class: all you need is the signatures.
+                </p><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:specifying_api_classes" class="section-anchor" href="#sec:specifying_api_classes"></a>69.9.2.&nbsp;Specifying API classes</h3></div></div></div></div><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="apiSpecification"></a><p class="title"><b>Example&nbsp;69.12.&nbsp;Specifying api packages</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    components {
+        main(JvmLibrarySpec) {
+            api {
+                exports <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle'</span>
+                exports <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle.utils'</span>
+            }
+        }
+    }
+}
+</pre></div></div><br class="example-break"><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:specifying_api_dependencies" class="section-anchor" href="#sec:specifying_api_dependencies"></a>69.9.3.&nbsp;Specifying API dependencies</h3></div></div></div></div><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="apiDependencies"></a><p class="title"><b>Example&nbsp;69.13.&nbsp;Specifying api dependencies</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">commons(JvmLibrarySpec) {
+    api {
+        dependencies {
+            library <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'collections'</span>
+        }
+    }
+}
+</pre></div></div><br class="example-break"><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:compile_avoidance" class="section-anchor" href="#sec:compile_avoidance"></a>69.9.4.&nbsp;Compile avoidance</h3></div></div></div><p>When you define an API for your library, Gradle enforces the usage of that API at compile-time. This comes with 3 direct consequences:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Trying to use a non-API class in a dependency will now result in a compilation error.</li><li class="listitem">Changing the implementation of an API class will not result in recompilation of consumers if the ABI doesn't change (that is to say, all public methods have the same signature but not necessarily the same body).</li><li class="listitem">Changing the implementation of a non-API class will not result in recompilation of consumers. This means that changes to non-API classes will not trigger recompilation of downstream dependencies, because the ABI of the component doesn't change.</li></ul></div><p>
+            </p><p>Given a <span class="emphasis"><em>main</em></span> component that exports <code class="literal">org.gradle</code>, <code class="literal">org.gradle.utils</code> and defines those classes:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="apiSpecification-main-classes"></a><p class="title"><b>Example&nbsp;69.14.&nbsp;Main sources</b></p><div class="example-contents"><p><code class="filename">src/main/java/org/gradle/Person.java</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">package</span> org.gradle;
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> Person {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">private</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">final</span> String name;
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> Person(String name) {
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">this</span>.name = name;
+    }
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> String getName() {
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">return</span> name;
+    }
+}
+</pre><p><code class="filename">src/main/java/org/gradle/internal/PersonInternal.java</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">package</span> org.gradle.internal;
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.gradle.Person;
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> PersonInternal <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> Person {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> PersonInternal(String name) {
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">super</span>(name);
+    }
+}
+</pre><p><code class="filename">src/main/java/org/gradle/utils/StringUtils.java</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">package</span> org.gradle.utils;
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">abstract</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> StringUtils {
+
+}
+</pre></div></div><br class="example-break"><p>Compiling a component <span class="emphasis"><em>client</em></span> that declares a dependency onto <span class="emphasis"><em>main</em></span> will succeed:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="apiSpecification-client"></a><p class="title"><b>Example&nbsp;69.15.&nbsp;Client component</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    components {
+        client(JvmLibrarySpec) {
+            sources {
+                java {
+                    dependencies {
+                        library <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'main'</span>
+                    }
+                }
+            }
+        }
+    }
+}
+</pre><p><code class="filename">src/client/java/org/gradle/Client.java</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">package</span> org.gradle;
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> Client {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">private</span> Person person;
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setPerson(Person p) { <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">this</span>.person = p; }
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> Person getPerson() { <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">return</span> person; }
+}
+</pre><p>Output of <strong class="userinput"><code>gradle :clientJar</code></strong></p><pre class="screen">&gt; gradle :clientJar
+:compileMainJarMainJava
+:processMainJarMainResources
+:mainApiJar
+:compileClientJarClientJava
+:clientApiJar
+:createClientJar
+:clientJar
+
+BUILD SUCCESSFUL
+</pre></div></div><br class="example-break"><p>But trying to compile a component <span class="emphasis"><em>brokenclient</em></span> that declares a dependency onto <span class="emphasis"><em>main</em></span> but uses an non-API class of <span class="emphasis"><em>main</em></span> will result in a compile-time error:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="apiSpecification-brokenclient"></a><p class="title"><b>Example&nbsp;69.16.&nbsp;Broken client component</b></p><div class="example-contents"><p><code class="filename">src/brokenclient/java/org/gradle/Client.java</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">package</span> org.gradle;
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.gradle.internal.PersonInternal;
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> Client {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">private</span> PersonInternal person;
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setPerson(PersonInternal p) { <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">this</span>.person = p; }
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> PersonInternal getPerson() { <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">return</span> person; }
+}
+</pre><p>Output of <strong class="userinput"><code>gradle :brokenclientJar</code></strong></p><pre class="screen">&gt; gradle :brokenclientJar
+:compileMainJarMainJava
+:processMainJarMainResources
+:mainApiJar
+:compileBrokenclientJarBrokenclientJava FAILED
+
+BUILD FAILED
+</pre></div></div><br class="example-break"><p>On the other hand, if <span class="emphasis"><em>Person.java</em></span> in <span class="emphasis"><em>client</em></span> is updated and its API hasn't changed, <span class="emphasis"><em>client</em></span> will not be recompiled. This is in particular important for incremental builds of large projects, where we can avoid the compilation of dependencies in chain, and then dramatically reduce build duration:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="apiSpecification-client"></a><p class="title"><b>Example&nbsp;69.17.&nbsp;Recompiling the client</b></p><div class="example-contents"><p><code class="filename">src/main/java/org/gradle/Person.java</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">package</span> org.gradle;
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> Person {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">private</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">final</span> String name;
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> Person(String name) {
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// we updated the body if this method</span>
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// but the signature doesn't change</span>
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// so we will not recompile components</span>
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// that depend on this class</span>
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">this</span>.name = name.toUpperCase();
+    }
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> String getName() {
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">return</span> name;
+    }
+}
+</pre><p>Output of <strong class="userinput"><code>gradle :clientJar</code></strong></p><pre class="screen">&gt; gradle :clientJar
+:compileMainJarMainJava
+:processMainJarMainResources UP-TO-DATE
+:mainApiJar
+:compileClientJarClientJava UP-TO-DATE
+:clientApiJar UP-TO-DATE
+:createClientJar UP-TO-DATE
+:clientJar UP-TO-DATE
+
+BUILD SUCCESSFUL
+</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:platform_aware_dependency_management" class="section-anchor" href="#sec:platform_aware_dependency_management"></a>69.10.&nbsp;Platform aware dependency management</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:specifying_the_target_platform" class="section-anchor" href="#sec:specifying_the_target_platform"></a>69.10.1.&nbsp;Specifying the target platform</h3></div></div></div><p>The software model extracts the target platform as a core concept. In the Java world, this means that a library can be built, or resolved,
+            against a specific version of Java. For example, if you compile a library for Java 5, we know that such a library can be consumed by a library
+            built for Java 6, but the opposite is not true. Gradle lets you define which platforms a library targets, and will take care of:</p><p>
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">generating a binary for each target platform (eg, a Java 5 jar as well as a Java 6 jar)</li><li class="listitem">resolving dependencies against a matching platform</li></ul></div><p>
+            </p><p>The <code class="literal">targetPlatform</code> DSL defines which platforms a library should be built against:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="javaLibraryTargetPlatforms"></a><p class="title"><b>Example&nbsp;69.18.&nbsp;Declaring target platforms</b></p><div class="example-contents"><p><code class="filename">core/build.gradle</code></p><pre class="programlisting">model {
+    components {
+        main(JvmLibrarySpec) {
+            targetPlatform <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java5'</span>
+            targetPlatform <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java6'</span>
+        }
+   }
+}
+</pre><p>Output of <strong class="userinput"><code>gradle :core:build</code></strong></p><pre class="screen">&gt; gradle :core:build
+:core:compileMainJava5JarMainJava
+:core:processMainJava5JarMainResources
+:core:createMainJava5Jar
+:core:mainJava5ApiJar
+:core:mainJava5Jar
+:core:compileMainJava6JarMainJava
+:core:compileMainJava6JarMainJava6JarJava
+:core:processMainJava6JarMainResources
+:core:createMainJava6Jar
+:core:mainJava6ApiJar
+:core:mainJava6Jar
+:core:assemble
+:core:check UP-TO-DATE
+:core:build
+
+BUILD SUCCESSFUL
+</pre></div></div><br class="example-break"><p>When building the application, Gradle generates two binaries: <code class="literal">java5MainJar</code> and <code class="literal">java6MainJar</code>
+                corresponding to the target versions of Java. These artifacts will participate in dependency resolution as described
+                <a class="link" href="java_software.html#java_dependency_resolution">here</a>.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:binary_specific_source_sets" class="section-anchor" href="#sec:binary_specific_source_sets"></a>69.10.2.&nbsp;Binary specific source sets</h3></div></div></div><p>For each <a class="ulink" href="../javadoc/org/gradle/jvm/JvmLibrarySpec.html" target="_top"><code class="classname">JvmLibrarySpec</code></a> it is possible to define additional source sets for each binary. A common use case for this
+            is having specific dependencies for each variant and source sets that conform to those dependencies. The example below configures a <code class="literal">java6</code> source set on the <code class="literal">main.java6Jar</code>
+            binary:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="javaLibraryTargetPlatforms-java6MainJar"></a><p class="title"><b>Example&nbsp;69.19.&nbsp;Declaring binary specific sources</b></p><div class="example-contents"><p><code class="filename">core/build.gradle</code></p><pre class="programlisting">main {
+    binaries.java6Jar {
+        sources {
+            java(JavaSourceSet) {
+                source.srcDir <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/main/java6'</span>
+            }
+        }
+    }
+}
+</pre><p>Output of <strong class="userinput"><code>gradle clean :core:mainJava6Jar</code></strong></p><pre class="screen">&gt; gradle clean :core:mainJava6Jar
+:core:clean
+:server:clean UP-TO-DATE
+:core:compileMainJava6JarMainJava
+:core:compileMainJava6JarMainJava6JarJava
+:core:processMainJava6JarMainResources
+:core:createMainJava6Jar
+:core:mainJava6ApiJar
+:core:mainJava6Jar
+
+BUILD SUCCESSFUL
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="java_dependency_resolution" class="section-anchor" href="#java_dependency_resolution"></a>69.10.3.&nbsp;Dependency resolution</h3></div></div></div><p>When a library targets multiple versions of Java and depends on another library, Gradle will make its best effort to
+                resolve the dependency to the most appropriate version of the dependency library.  In practice, this means that Gradle chooses
+                the <span class="emphasis"><em>highest compatible</em></span> version:</p><p>
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">for a binary <code class="literal">B</code> built for Java <code class="literal">n</code></li><li class="listitem">for a dependency binary <code class="literal">D</code> built for Java <code class="literal">m</code></li><li class="listitem"><code class="literal">D</code> is compatible with <code class="literal">B</code> if <code class="literal">m&lt;=n</code></li><li class="listitem">for multiple compatible binaries <code class="literal">D(java 5), D(java 6), ...D(java m)</code>, choose the compatible D binary with the highest Java version</li></ul></div><p>
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="javaLibraryTargetPlatforms-server"></a><p class="title"><b>Example&nbsp;69.20.&nbsp;Declaring target platforms</b></p><div class="example-contents"><p><code class="filename">server/build.gradle</code></p><pre class="programlisting">model {
+    components {
+        main(JvmLibrarySpec) {
+            targetPlatform <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java5'</span>
+            targetPlatform <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java6'</span>
+            sources {
+                java {
+                    dependencies {
+                        project <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':core'</span> library <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'main'</span>
+                    }
+                }
+            }
+        }
+    }
+}
+</pre><p>Output of <strong class="userinput"><code>gradle clean :server:build</code></strong></p><pre class="screen">&gt; gradle clean :server:build
+:core:clean
+:server:clean UP-TO-DATE
+:core:compileMainJava5JarMainJava
+:core:processMainJava5JarMainResources
+:core:mainJava5ApiJar
+:server:compileMainJava5JarMainJava
+:server:createMainJava5Jar
+:server:mainJava5ApiJar
+:server:mainJava5Jar
+:core:compileMainJava6JarMainJava
+:core:compileMainJava6JarMainJava6JarJava
+:core:processMainJava6JarMainResources
+:core:mainJava6ApiJar
+:server:compileMainJava6JarMainJava
+:server:createMainJava6Jar
+:server:mainJava6ApiJar
+:server:mainJava6Jar
+:server:assemble
+:server:check UP-TO-DATE
+:server:build
+
+BUILD SUCCESSFUL
+</pre></div></div><br class="example-break"><p>In the example above, Gradle automatically chooses the Java 6 variant of the dependency for the Java 6 variant of the <code class="literal">server</code> component,
+            and chooses the Java 5 version of the dependency for the Java 5 variant of the <code class="literal">server</code> component.
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:custom_variant_resolution" class="section-anchor" href="#sec:custom_variant_resolution"></a>69.11.&nbsp;Custom variant resolution</h2></div></div></div><p>The Java plugin, in addition to the target platform resolution, supports resolution of custom variants. Custom variants
+            can be defined on custom binary types, as long as they extend <a class="ulink" href="../javadoc/org/gradle/jvm/JarBinarySpec.html" target="_top"><code class="classname">JarBinarySpec</code></a>. Users interested
+            in testing this incubating feature can check out the documentation of the <a class="ulink" href="../javadoc/org/gradle/platform/base/Variant.html" target="_top"><code class="classname">Variant</code></a>
+            annotation.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:testing_java_libraries" class="section-anchor" href="#sec:testing_java_libraries"></a>69.12.&nbsp;Testing Java libraries</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:standalone_junit_test_suites" class="section-anchor" href="#sec:standalone_junit_test_suites"></a>69.12.1.&nbsp;Standalone JUnit test suites</h3></div></div></div><p>The Java software model supports defining standalone JUnit test suites as components of the model. Standalone test suite are components that are self contained, in the sense that there is no component under test: everything being tested must belong to the test suite sources.</p><p>A test suite is declared by creating a component of type <a class="ulink" href="../javadoc/org/gradle/jvm/test/JUnitTestSuiteSpec.html" target="_top"><code class="classname">JUnitTestSuiteSpec</code></a>, which is available when you apply the <code class="literal">junit-test-suite</code> plugin:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="testing-junit-standalone"></a><p class="title"><b>Example&nbsp;69.21.&nbsp;Using the JUnit plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">plugins {
+    id <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'jvm-component'</span>
+    id <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java-lang'</span>
+    id <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'junit-test-suite'</span>
+}
+
+model {
+    testSuites {
+        test(JUnitTestSuiteSpec) {
+            jUnitVersion <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'4.12'</span>
+        }
+    }
+}
+</pre></div></div><br class="example-break"><p>In the example above, <code class="literal">test</code> is the name of our test suite. By convention, Gradle will create two source sets for the test suite, based on the name of the component: one for Java sources, and the other for resources: <code class="filename">src/test/java</code> and <code class="filename">src/test/resources</code>. If the component was named <code class="literal">integTest</code>, then sources and resources would have been found respectively in <code class="filename">src/integTest/java</code> and <code class="filename">src/integTest/resources</code>.</p><p>Once the component is created, the test suite can be executed running the <code class="literal">&lt;&lt;test suite name&gt;&gt;BinaryTest</code> task:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="testing-junit-standalone-run"></a><p class="title"><b>Example&nbsp;69.22.&nbsp;Executing the test suite</b></p><div class="example-contents"><p><code class="filename">src/test/java/org/gradle/MyTest.java</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">package</span> org.gradle;
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.junit.Test;
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">static</span> org.junit.Assert.*;
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> MyTest {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Test</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> myTestMethod() {
+        assertEquals(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">4</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"test"</span>.length());
+    }
+}
+</pre><p>Output of <strong class="userinput"><code>gradle testBinaryTest</code></strong></p><pre class="screen">&gt; gradle testBinaryTest
+:compileTestBinaryTestJava
+:processTestBinaryTestResources
+:testBinaryTest
+
+BUILD SUCCESSFUL
+</pre></div></div><br class="example-break"><p>It is possible to configure source sets in a <a class="link" href="java_software.html#source_sets">similar way as libraries</a>.</p><p>A test suite being a component can also <a class="link" href="java_software.html#dependencies">declare dependencies onto other components</a>.</p><p>A test suite can also contain resources, in which case it is possible to configure the resource processing task:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="testing-junit-standalone-resources"></a><p class="title"><b>Example&nbsp;69.23.&nbsp;Executing the test suite</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    tasks.processTestBinaryTestResources {
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// uncomment lines</span>
+        filter { String line -&gt;
+            line.replaceAll(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'&lt;!-- (.+?) --&gt;'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'$1'</span>)
+        }
+    }
+}
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:testing_jvm_libraries_with_junit" class="section-anchor" href="#sec:testing_jvm_libraries_with_junit"></a>69.12.2.&nbsp;Testing JVM libraries with JUnit</h3></div></div></div><p>It is likely that you will want to test another JVM component. The Java software model supports it exactly like standalone test suites, by just declaring an additional component under test:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="testing-junit-component-under-test"></a><p class="title"><b>Example&nbsp;69.24.&nbsp;Declaring a component under test</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    components {
+        main(JvmLibrarySpec)
+    }
+    testSuites {
+        test(JUnitTestSuiteSpec) {
+            jUnitVersion <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'4.12'</span>
+            testing $.components.main
+        }
+    }
+}
+</pre><p>Output of <strong class="userinput"><code>gradle testMainJarBinaryTest</code></strong></p><pre class="screen">&gt; gradle testMainJarBinaryTest
+:compileMainJarMainJava
+:processMainJarMainResources
+:compileTestMainJarBinaryTestJava
+:testMainJarBinaryTest
+
+BUILD SUCCESSFUL
+</pre></div></div><br class="example-break"><p>Note that the syntax to choose the component under test is a reference (<code class="literal">$.</code>). You can select any <code class="literal">JvmComponentSpec</code> as the component under test. It's also worth noting that when you declare a component under test, a test suite is created for each binary of the component under test (for example, if the component under test has a Java 7 and Java 8 version, 2 different test suite binaries would be automatically created).</p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="declaring_java_toolchains" class="section-anchor" href="#declaring_java_toolchains"></a>69.13.&nbsp;Declaring Java toolchains</h2></div></div></div><p>You can declare the list of local JVM installations using the <code class="literal">javaInstallations</code> model block. Gradle will use this information
+        to locate your JVMs and probe their versions. Please note that this information is not yet used by Gradle to select the appropriate JDK or JRE when
+        compiling your Java sources, or when executing Java applications. A local Java installation can be declared using the <code class="literal">LocalJava</code> type,
+        independently of the fact they are a JDK or a JRE:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="javaLibraryPlugin/toolchains"></a><p class="title"><b>Example&nbsp;69.25.&nbsp;Declaring local Java installations</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    javaInstallations {
+        openJdk6(LocalJava) {
+            path <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'/usr/lib/jvm/jdk1.6.0-amd64'</span>
+        }
+        oracleJre7(LocalJava) {
+            path <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'/usr/lib/jvm/jre1.7.0'</span>
+        }
+        ibmJdk8(LocalJava) {
+            path <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'/usr/lib/jvm/jdk1.8.0'</span>
+        }
+    }
+}
+</pre></div></div><br class="example-break"></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="implement_rule_source.html" title="Implementing model rules in a plugin - Gradle User Guide Version 3.2">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 3.2">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="play_plugin.html" title="Building Play applications - Gradle User Guide Version 3.2">Next</a></div></div></div></body></html>

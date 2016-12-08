@@ -1,0 +1,865 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Rule based model configuration - Gradle User Guide Version 3.2</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide Version 3.2"><link rel="up" href="pt06.html" title="Part&nbsp;VI.&nbsp;The Software model"><link rel="prev" href="pt06.html" title="Part&nbsp;VI.&nbsp;The Software model"><link rel="next" href="software_model_concepts.html" title="Software model concepts - Gradle User Guide Version 3.2"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="pt06.html" title="Part&nbsp;VI.&nbsp;The Software model">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 3.2">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="software_model_concepts.html" title="Software model concepts - Gradle User Guide Version 3.2">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="software_model"></a>Chapter&nbsp;66.&nbsp;Rule based model configuration</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="software_model.html#sec:background">66.1. Background</a></span></dt><dt><span class="section"><a href="software_model.html#sec:motivations_for_change">66.2. Motivations for change</a></span></dt><dt><span class="section"><a href="software_model.html#sec:basic_concepts">66.3. Basic Concepts</a></span></dt><dt><span class="section"><a href="software_model.html#sec:rule_sources">66.4. Rule sources</a></span></dt><dt><span class="section"><a href="software_model.html#sec:advanced_concepts">66.5. Advanced Concepts</a></span></dt><dt><span class="section"><a href="software_model.html#model-dsl">66.6. The model DSL</a></span></dt><dt><span class="section"><a href="software_model.html#model-report">66.7. The model report</a></span></dt><dt><span class="section"><a href="software_model.html#sec:limitations_and_future_direction">66.8. Limitations and future direction</a></span></dt></dl></div><div class="note"><p>
+            Support for rule based configuration is currently <a class="link" href="feature_lifecycle.html">incubating</a>. Please be aware that the DSL, APIs and other configuration may change in later Gradle versions.
+        </p></div><p>
+        Rule based model configuration enables <span class="emphasis"><em>configuration logic to itself have dependencies</em></span> on other elements of configuration, and to make use of the resolved states of those other elements of configuration while performing its own configuration.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:background" class="section-anchor" href="#sec:background"></a>66.1.&nbsp;Background</h2></div></div></div><p>
+            Rule based model configuration facilitates easier domain modelling: communicating intent (i.e. the what) over mechanics (i.e. the how).
+            Domain modelling is a core tenet of Gradle and provides Gradle with several advantages over prior generation build tools such as Apache Ant that focus on the execution model.
+            It allows humans to understand builds at a level that is meaningful to them.
+        </p><p>
+            As well as helping humans, a strong domain model also helps the dutiful machines.
+            Plugins can more effectively collaborate around a strong domain model (e.g. plugins can say something about Java applications, such as providing conventions).
+            Very importantly, by having a model of the <span class="emphasis"><em>what</em></span> instead of the <span class="emphasis"><em>how</em></span> Gradle can make intelligent choices on just how to do the how.
+        </p><p>
+            Gradle's support for building <a class="link" href="native_software.html">native software</a> and
+            <a class="link" href="play_plugin.html">Play Framework applications</a> already uses this configuration model.
+            Gradle also includes some initial support for building <a class="link" href="java_software.html">Java libraries</a> using this configuration model.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:motivations_for_change" class="section-anchor" href="#sec:motivations_for_change"></a>66.2.&nbsp;Motivations for change</h2></div></div></div><p>
+            Domain modelling in Gradle isn't new.
+            The Java plugin's <a class="ulink" href="../dsl/org.gradle.api.tasks.SourceSet.html" target="_top"><code class="classname">SourceSet</code></a> concept is an example of domain modelling,
+            as is the modelling of <a class="ulink" href="../dsl/org.gradle.nativeplatform.NativeBinary.html" target="_top"><code class="classname">NativeBinary</code></a> in the native plugin suite.
+        </p><p>
+            A distinguishing characteristic of Gradle compared to other build tools that also embrace modelling is that Gradle's model is open and collaborative.
+            Gradle is fundamentally a tool for modelling software construction and then realizing the model, via tasks such as compilation etc.
+            Different domain plugins (e.g. Java, C++, Android) provide models that other plugins can collaborate with and build upon.
+        </p><p>
+            While Gradle has long employed sophisticated techniques when it comes to realizing the model (i.e. what we know as building code),
+            the next generation of Gradle builds will employ some of the same techniques to creation of the model itself.
+            By defining build tasks as effectively a graph of dependent functions with explicit inputs and outputs,
+            Gradle is able to order, cache, parallelize and apply other optimizations to the work.
+            Using a &ldquo;graph of tasks&rdquo; for the production of software is a long established idea, and necessary given the complexity of software production.
+            The task graph effectively defines the <span class="emphasis"><em>rules</em></span> of execution that Gradle must follow.
+            The term &ldquo;Rule based model configuration&rdquo; refers to applying the same concepts to building the model that builds the task graph.
+        </p><p>
+            Another key motivation is performance and scale.
+            Aspects of the current approach that Gradle takes to modelling the build reduce parallelism opportunities and limit scalability.
+            The software model is being designed with the requirements of modern software delivery in mind, where immediate responsiveness is critical for projects large and small.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:basic_concepts" class="section-anchor" href="#sec:basic_concepts"></a>66.3.&nbsp;Basic Concepts</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:the_model_space" class="section-anchor" href="#sec:the_model_space"></a>66.3.1.&nbsp;The &ldquo;model space&rdquo;</h3></div></div></div><p>
+                The term &ldquo;model space&rdquo;&nbsp;is used to refer to the formal model, which can be read and modified by rules.
+            </p><p>
+                A counterpart to the model space is the &ldquo;project space&rdquo;, which should be familiar to readers. The &ldquo;project space&rdquo; is a graph of objects (e.g <code class="literal">project.repositories</code>, <code class="literal">project.tasks</code> etc.) having a <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> as its root.
+                A build script is effectively adding and configuring objects of this graph.
+                For the most part, the &ldquo;project space&rdquo; is opaque to Gradle.
+                It is an arbitrary graph of objects that Gradle only partially understands.
+            </p><p>
+                Each project also has its own model space, which is distinct from the project space.
+                A key characteristic of the &ldquo;model space&rdquo; is that Gradle knows much more about it (which is knowledge that can be put to good use).
+                The objects in the model space are &ldquo;managed&rdquo;, to a greater extent than objects in the project space.
+                The origin, structure, state, collaborators and relationships of objects in the model space are first class constructs.
+                This is effectively the characteristic that functionally distinguishes the model space from the project space:
+                the objects of the model space are defined in ways that Gradle can understand them intimately, as opposed to an object that is the result of running relatively opaque code.
+                A &ldquo;rule&rdquo;&nbsp;is effectively a building block of this definition.
+            </p><p>
+                The model space will eventually replace the project space, becoming the only &ldquo;space&rdquo;.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:rules" class="section-anchor" href="#sec:rules"></a>66.3.2.&nbsp;Rules</h3></div></div></div><p>
+                The model space is defined by &ldquo;rules&rdquo;.
+                A rule is just a function (in the abstract sense) that either produces a model element, or acts upon a model element.
+                Every rule has a single subject and zero or more inputs.
+                Only the subject can be changed by a rule, while the inputs are effectively immutable.
+            </p><p>
+                Gradle guarantees that all inputs are fully &ldquo;realized&ldquo; before the rule executes.
+                The process of &ldquo;realizing&rdquo; a model element is effectively executing all the rules for which it is the subject, transitioning it to its final state.
+                There is a strong analogy here to Gradle's task graph and task execution model.
+                Just as tasks depend on each other and Gradle ensures that dependencies are satisfied before executing a task,
+                rules effectively depend on each other (i.e. a rule depends on all rules whose subject is one of the inputs) and Gradle ensures that all dependencies are satisfied
+                before executing the rule.
+            </p><p>
+                Model elements are very often defined in terms of other model elements.
+                For example, a compile task's configuration can be defined in terms of the configuration of the source set that it is compiling.
+                In this scenario, the compile task would be the subject of a rule and the source set an input.
+                Such a rule could configure the task subject based on the source set input without concern for how it was configured, who it was configured by or when the configuration was specified.
+            </p><p>
+                There are several ways to declare rules, and in several forms.
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:rule_sources" class="section-anchor" href="#sec:rule_sources"></a>66.4.&nbsp;Rule sources</h2></div></div></div><p>
+            One way to define rules is via a <a class="ulink" href="../javadoc/org/gradle/model/RuleSource.html" target="_top"><code class="classname">RuleSource</code></a> subclass.
+            If an object extends RuleSource and contains any methods annotated by '@Mutate', then each such method defines a rule. For each such method, the first argument is the subject, and zero or more subsequent arguments may follow and are inputs of the rule.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="basicRuleSourcePlugin-all"></a><p class="title"><b>Example&nbsp;66.1.&nbsp;applying a rule source plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Managed</span>
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">interface</span> Person {
+  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setFirstName(String name)
+  String getFirstName()
+
+  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setLastName(String name)
+  String getLastName()
+}
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> PersonRules <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> RuleSource {
+  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Model</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> person(Person p) {}
+
+  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//Create a rule that modifies a Person and takes no other inputs</span>
+  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Mutate</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setFirstName(Person p) {
+    p.firstName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"John"</span>
+  }
+
+  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//Create a rule that modifies a ModelMap&lt;Task&gt; and takes as input a Person</span>
+  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Mutate</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> createHelloTask(ModelMap&lt;Task&gt; tasks, Person p) {
+    tasks.create(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"hello"</span>) {
+      doLast {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Hello $p.firstName $p.lastName!"</span>
+      }
+    }
+  }
+}
+
+apply plugin: PersonRules
+</pre><p>Output of <strong class="userinput"><code>gradle hello</code></strong></p><pre class="screen">&gt; gradle hello
+:hello
+Hello John Smith!
+
+BUILD SUCCESSFUL
+
+Total time: 1 secs
+</pre></div></div><br class="example-break"><p>
+            Each of the different methods of the rule source are discrete, independent rules.
+            Their order, or the fact that they belong to the same class, do not affect their behavior.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="basicRuleSourcePlugin"></a><p class="title"><b>Example&nbsp;66.2.&nbsp;a model creation rule</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Model</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> person(Person p) {}
+</pre></div></div><br class="example-break"><p>
+            This rule declares that there is a model element at path <code class="literal">"person"</code> (defined by the method name), of type <code class="literal">Person</code>.
+            This is the form of the <a class="ulink" href="../javadoc/org/gradle/model/Model.html" target="_top"><code class="classname">Model</code></a> type rule for <a class="ulink" href="../javadoc/org/gradle/model/Managed.html" target="_top"><code class="classname">Managed</code></a> types.
+            Here, the person object is the rule subject.
+            The method could potentially have a body, that mutated the person instance.
+            It could also potentially have more parameters, which would be the rule inputs.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="basicRuleSourcePlugin"></a><p class="title"><b>Example&nbsp;66.3.&nbsp;a model mutation rule</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//Create a rule that modifies a Person and takes no other inputs</span>
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Mutate</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setFirstName(Person p) {
+  p.firstName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"John"</span>
+}
+</pre></div></div><br class="example-break"><p>
+            This <a class="ulink" href="../javadoc/org/gradle/model/Mutate.html" target="_top"><code class="classname">Mutate</code></a> rule mutates the person object.
+            The first parameter to the method is the subject.
+            Here, a by-type reference is used as no <a class="ulink" href="../javadoc/org/gradle/model/Path.html" target="_top"><code class="classname">Path</code></a> annotation is present on the parameter.
+            It could also potentially have more parameters, that would be the rule inputs.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="basicRuleSourcePlugin"></a><p class="title"><b>Example&nbsp;66.4.&nbsp;creating a task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//Create a rule that modifies a ModelMap&lt;Task&gt; and takes as input a Person</span>
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Mutate</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> createHelloTask(ModelMap&lt;Task&gt; tasks, Person p) {
+  tasks.create(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"hello"</span>) {
+    doLast {
+      println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Hello $p.firstName $p.lastName!"</span>
+    }
+  }
+}
+</pre></div></div><br class="example-break"><p>
+            This <a class="ulink" href="../javadoc/org/gradle/model/Mutate.html" target="_top"><code class="classname">Mutate</code></a> rule effectively adds a task, by mutating the tasks collection.
+            The subject here is the <code class="literal">"tasks"</code> node, which is available as a <a class="ulink" href="../javadoc/org/gradle/model/ModelMap.html" target="_top"><code class="classname">ModelMap</code></a> of <a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a>.
+            The only input is our person element.
+            As the person is being used as an input here, it will have been realised before executing this rule.
+            That is, the task container effectively <span class="emphasis"><em>depends on</em></span> the person element.
+            If there are other configuration rules for the person element, potentially specified in a build script or other plugin, they will also be guaranteed to have been executed.
+        </p><p>
+            As <code class="literal">Person</code> is a <a class="ulink" href="../javadoc/org/gradle/model/Managed.html" target="_top"><code class="classname">Managed</code></a> type in this example, any attempt to modify the person parameter in this method would result in an exception being thrown.
+            Managed objects enforce immutability at the appropriate point in their lifecycle.
+        </p><p>
+            Rule source plugins can be packaged and distributed in the same manner as other types of plugins (see <a class="xref" href="custom_plugins.html">Chapter&nbsp;40, <i>Writing Custom Plugins</i></a>).
+            They also may be applied in the same manner (to project objects) as <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a> implementations (i.e. via <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:apply(java.util.Map)" target="_top"><code class="classname">Project.apply(java.util.Map)</code></a>).
+        </p><p>
+            Please see the documentation for <a class="ulink" href="../javadoc/org/gradle/model/RuleSource.html" target="_top"><code class="classname">RuleSource</code></a> for more information on constraints on how rule sources must be implemented and for more types of rules.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:advanced_concepts" class="section-anchor" href="#sec:advanced_concepts"></a>66.5.&nbsp;Advanced Concepts</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:model_paths" class="section-anchor" href="#sec:model_paths"></a>66.5.1.&nbsp;Model paths</h3></div></div></div><p>
+                A model path identifies the location of an element relative to the root of its model space.
+                A common representation is a period-delimited set of names.
+                For example, the model path <code class="literal">"tasks"</code> is the path to the element that is the task container.
+                Assuming a task whose name is <code class="literal">hello</code>, the path <code class="literal">"tasks.hello"</code> is the path to this task.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:managed_model_elements" class="section-anchor" href="#sec:managed_model_elements"></a>66.5.2.&nbsp;Managed model elements</h3></div></div></div><p>
+                Currently, any kind of Java object can be part of the model space.
+                However, there is a difference between &ldquo;managed&rdquo; and &ldquo;unmanaged&rdquo;&nbsp;objects.
+            </p><p>
+                A &ldquo;managed&rdquo; object is transparent and enforces immutability once realized.
+                Being transparent means that its structure is understood by the rule infrastructure and as such each of its properties are also individual elements in the model space.
+            </p><p>
+                An &ldquo;unmanaged&rdquo;&nbsp;object is opaque to the the model space and does not enforce immutability.
+                Over time, more mechanisms will be available for defining managed model elements culminating in all model elements being managed in some way.
+            </p><p>Managed models can be defined by attaching the <code class="literal">@Managed</code> annotation to an interface:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="basicRuleSourcePlugin"></a><p class="title"><b>Example&nbsp;66.5.&nbsp;a managed type</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Managed</span>
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">interface</span> Person {
+  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setFirstName(String name)
+  String getFirstName()
+
+  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setLastName(String name)
+  String getLastName()
+}
+</pre></div></div><br class="example-break"><p>By defining a getter/setter pair, you are effectively declaring a managed property. A managed property is a property for which Gradle
+            will enforce semantics such as immutability when a node of the model is not the subject of a rule. Therefore, this example declares properties
+            named <span class="emphasis"><em>firstName</em></span> and <span class="emphasis"><em>lastName</em></span> on the managed type <span class="emphasis"><em>Person</em></span>. These properties will
+            only be writable when the view is mutable, that is to say when the <span class="emphasis"><em>Person</em></span> is the subject of a <code class="literal">Rule</code>
+            (see below the explanation for rules).</p><p>
+                Managed properties can be of any scalar type.
+                In addition, properties can also be of any type which is itself managed:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><div class="table-contents"><table id="N180EE"><thead><td>Property type</td><td>Nullable</td><td>Example</td></thead><tbody><tr>
+                        <td>
+                            <code class="literal">String</code>
+                        </td>
+                        <td>Yes</td>
+                        <td>
+                            <div class="example"><a name="basicRuleSourcePlugin"></a><p class="title"><b>Example&nbsp;66.6.&nbsp;a String property</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span class="hl-keyword">void</span> setFirstName(String name)
+String getFirstName()
+</pre></div></div><br class="example-break">
+                        </td>
+                    </tr><tr>
+                        <td>
+                            <code class="literal">File</code>
+                        </td>
+                        <td>Yes</td>
+                        <td>
+                            <div class="example"><a name="basicRuleSourcePlugin"></a><p class="title"><b>Example&nbsp;66.7.&nbsp;a File property</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span class="hl-keyword">void</span> setHomeDirectory(File homeDir)
+File getHomeDirectory()
+</pre></div></div><br class="example-break">
+                        </td>
+                    </tr><tr>
+                        <td>
+                            <code class="literal">Integer</code>, <code class="literal">Boolean</code>, <code class="literal">Byte</code>, <code class="literal">Short</code>,
+                            <code class="literal">Float</code>, <code class="literal">Long</code>, <code class="literal">Double</code>
+                        </td>
+                        <td>Yes</td>
+                        <td>
+                            <div class="example"><a name="basicRuleSourcePlugin"></a><p class="title"><b>Example&nbsp;66.8.&nbsp;a Long property</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span class="hl-keyword">void</span> setId(Long id)
+Long getId()
+</pre></div></div><br class="example-break">
+                        </td>
+                    </tr><tr>
+                        <td>
+                            <code class="literal">int</code>, <code class="literal">boolean</code>, <code class="literal">byte</code>, <code class="literal">short</code>,
+                            <code class="literal">float</code>, <code class="literal">long</code>, <code class="literal">double</code>
+                        </td>
+                        <td>No</td>
+                        <td>
+                            <div class="example"><a name="basicRuleSourcePlugin"></a><p class="title"><b>Example&nbsp;66.9.&nbsp;a boolean property</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span class="hl-keyword">void</span> setEmployed(<span class="hl-keyword">boolean</span> isEmployed)
+<span class="hl-keyword">boolean</span> isEmployed()
+</pre></div></div><br class="example-break">
+                            <div class="example"><a name="basicRuleSourcePlugin"></a><p class="title"><b>Example&nbsp;66.10.&nbsp;an int property</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span class="hl-keyword">void</span> setAge(<span class="hl-keyword">int</span> age)
+<span class="hl-keyword">int</span> getAge()
+</pre></div></div><br class="example-break">
+                        </td>
+                    </tr><tr>
+                        <td>
+                            Another <span class="emphasis"><em>managed</em></span> type.
+                        </td>
+                        <td>Only if read/write</td>
+                        <td>
+                            <div class="example"><a name="basicRuleSourcePlugin"></a><p class="title"><b>Example&nbsp;66.11.&nbsp;a managed property</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span class="hl-keyword">void</span> setMother(Person mother)
+Person getMother()
+</pre></div></div><br class="example-break">
+                        </td>
+                    </tr><tr>
+                        <td>
+                            An <span class="emphasis"><em>enumeration</em></span> type.
+                        </td>
+                        <td>Yes</td>
+                        <td>
+                            <div class="example"><a name="basicRuleSourcePlugin"></a><p class="title"><b>Example&nbsp;66.12.&nbsp;an enumeration type property</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span class="hl-keyword">void</span> setMaritalStatus(MaritalStatus status)
+MaritalStatus getMaritalStatus()
+</pre></div></div><br class="example-break">
+                        </td>
+                    </tr><tr>
+                        <td>
+                            A <code class="literal">ManagedSet</code>. A managed set supports the creation of new named model elements, but not their removal.
+                        </td>
+                        <td>Only if read/write</td>
+                        <td>
+                            
+                        </td>
+                    </tr><tr>
+                        <td>
+                            A <code class="literal">Set</code> or <code class="literal">List</code> of scalar types. All classic operations on collections are supported: add, remove, clear...
+                        </td>
+                        <td>Only if read/write</td>
+                        <td>
+                            <div class="example"><a name="basicRuleSourcePlugin"></a><p class="title"><b>Example&nbsp;66.13.&nbsp;a managed set</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">ModelSet&lt;Person&gt; getChildren()
+</pre><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span class="hl-keyword">void</span> setUserGroups(List&lt;String&gt; groups)
+List&lt;String&gt; getUserGroups()
+</pre></div></div><br class="example-break">
+                        </td>
+                    </tr></tbody></table></div></div><p>
+                If the type of a property is itself a managed type, it is possible to declare only a getter, in which case you are declaring a
+                read-only property. A read-only property will be instantiated by Gradle, and cannot be replaced with another object of the same type
+                (for example calling a setter). However, the properties of that property can potentially be changed, if, and only if, the property
+                is the subject of a rule. If it's not the case, the property is immutable, like any classic read/write managed property, and
+                properties of the property cannot be changed at all.
+            </p><p>Managed types can be defined out of interfaces or abstract classes and are usually defined in plugins, which are written either in Java or Groovy.
+                Please see the <a class="ulink" href="../javadoc/org/gradle/model/Managed.html" target="_top"><code class="classname">Managed</code></a> annotation
+                for more information on creating managed model objects.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:model_element_types" class="section-anchor" href="#sec:model_element_types"></a>66.5.3.&nbsp;Model element types</h3></div></div></div><p>
+                There are particular types (language types) supported by the model space and can be generalised as follows:
+            </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;66.2.&nbsp;Type definitions</b></p><div class="table-contents"><table id="N181FB"><thead><th>Type</th><th>Definition</th></thead><tbody><tr>
+                        <td>Scalar</td>
+                        <td>
+                            A scalar type is one of the following:
+                            <div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">a primitive type (e.g. <code class="literal">int</code>) or its boxed type (e.g <code class="literal">Integer</code>)</li><li class="listitem">a <code class="literal">BigInteger</code> or <code class="literal">BigDecimal</code></li><li class="listitem">a <code class="literal">String</code></li><li class="listitem">a <code class="literal">File</code></li><li class="listitem">an enumeration type</li></ul></div>
+                        </td>
+                    </tr><tr>
+                        <td>Scalar Collection</td>
+                        <td>A java.util.List or java.util.Set containing one of the scalar types</td>
+                    </tr><tr>
+                        <td>Managed type</td>
+                        <td>Any class which is a valid managed model (i.e.annotated with @<a class="ulink" href="../javadoc/org/gradle/model/Managed.html" target="_top"><code class="classname">Managed</code></a>)</td>
+                    </tr><tr>
+                        <td>Managed collection</td>
+                        <td>A <a class="ulink" href="../javadoc/org/gradle/model/ModelMap.html" target="_top"><code class="classname">ModelMap</code></a> or <a class="ulink" href="../javadoc/org/gradle/model/ModelSet.html" target="_top"><code class="classname">ModelSet</code></a></td>
+                    </tr></tbody></table></div></div><p>
+                There are various contexts in which these types can be used:
+            </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;66.3.&nbsp;Model type support</b></p><div class="table-contents"><table id="N1824F"><thead><th>Context</th><th>Supported types</th></thead><tbody><tr>
+                            <td>Creating top level model elements</td>
+                            <td>
+                                <div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Any managed type</li><li class="listitem"><a class="ulink" href="../javadoc/org/gradle/language/base/FunctionalSourceSet.html" target="_top"><code class="classname">FunctionalSourceSet</code></a> (when the <a class="ulink" href="../javadoc/org/gradle/language/base/plugins/LanguageBasePlugin.html" target="_top"><code class="classname">LanguageBasePlugin</code></a> plugin has been applied)</li><li class="listitem">Subtypes of <a class="ulink" href="../dsl/org.gradle.language.base.LanguageSourceSet.html" target="_top"><code class="classname">LanguageSourceSet</code></a> which have been registered via <a class="ulink" href="../javadoc/org/gradle/platform/base/ComponentType.html" target="_top"><code class="classname">ComponentType</code></a></li></ul></div>
+                            </td>
+                        </tr><tr>
+                            <td>Properties of managed model elements</td>
+                            <td>
+                                The properties (attributes) of a managed model elements may be one or more of the following:
+                                <div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">A managed type</li><li class="listitem">A type which is annotated with @<a class="ulink" href="../javadoc/org/gradle/model/Unmanaged.html" target="_top"><code class="classname">Unmanaged</code></a></li><li class="listitem">A Scalar Collection</li><li class="listitem">A Managed collection containing managed types</li><li class="listitem">A Managed collection containing <a class="ulink" href="../javadoc/org/gradle/language/base/FunctionalSourceSet.html" target="_top"><code class="classname">FunctionalSourceSet</code></a>'s (when the <a class="ulink" href="../javadoc/org/gradle/language/base/plugins/LanguageBasePlugin.html" target="_top"><code class="classname">LanguageBasePlugin</code></a> plugin has been applied)</li><li class="listitem">Subtypes of <a class="ulink" href="../dsl/org.gradle.language.base.LanguageSourceSet.html" target="_top"><code class="classname">LanguageSourceSet</code></a> which have been registered via <a class="ulink" href="../javadoc/org/gradle/platform/base/ComponentType.html" target="_top"><code class="classname">ComponentType</code></a></li></ul></div>
+                            </td>
+                        </tr></tbody></table></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:language_source_sets" class="section-anchor" href="#sec:language_source_sets"></a>66.5.4.&nbsp;Language source sets</h3></div></div></div><p>
+                <a class="ulink" href="../javadoc/org/gradle/language/base/FunctionalSourceSet.html" target="_top"><code class="classname">FunctionalSourceSet</code></a>s and subtypes of <a class="ulink" href="../dsl/org.gradle.language.base.LanguageSourceSet.html" target="_top"><code class="classname">LanguageSourceSet</code></a> (which have been
+                registered via <a class="ulink" href="../javadoc/org/gradle/platform/base/ComponentType.html" target="_top"><code class="classname">ComponentType</code></a>) can be added to the model space via rules or via the model DSL.
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="model-language-support-all"></a><p class="title"><b>Example&nbsp;66.14.&nbsp;strongly modelling sources sets</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java-lang'</span>
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//Creating LanguageSourceSets via rules</span>
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> LanguageSourceSetRules <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> RuleSource {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Model</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> mySourceSet(JavaSourceSet javaSource) {
+        javaSource.source.srcDir(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"src/main/my"</span>)
+    }
+}
+apply plugin: LanguageSourceSetRules
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//Creating LanguageSourceSets via the model DSL</span>
+model {
+    another(JavaSourceSet) {
+        source {
+            srcDir <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"src/main/another"</span>
+        }
+    }
+}
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//Using FunctionalSourceSets</span>
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Managed</span>
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">interface</span> SourceBundle {
+    FunctionalSourceSet getFreeSources()
+    FunctionalSourceSet getPaidSources()
+}
+model {
+    sourceBundle(SourceBundle) {
+        freeSources.create(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"main"</span>, JavaSourceSet)
+        freeSources.create(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"resources"</span>, JvmResourceSet)
+        paidSources.create(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"main"</span>, JavaSourceSet)
+        paidSources.create(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"resources"</span>, JvmResourceSet)
+    }
+}
+</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/modelRules/language-support</code> in the &lsquo;-all&rsquo; distribution of Gradle.</p></div><p>Output of <strong class="userinput"><code>gradle help</code></strong></p><pre class="screen">&gt; gradle help
+:help
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:references_binding_and_scopes" class="section-anchor" href="#sec:references_binding_and_scopes"></a>66.5.5.&nbsp;References, binding and scopes</h3></div></div></div><p>
+                As previously mentioned, a rule has a subject and zero or more inputs.
+                The rule's subject and inputs are declared as &ldquo;references&rdquo; and are &ldquo;bound&rdquo;&nbsp;to model elements before execution by Gradle.
+                Each rule must effectively forward declare the subject and inputs as references.
+                Precisely how this is done depends on the form of the rule.
+                For example, the rules provided by a <a class="ulink" href="../javadoc/org/gradle/model/RuleSource.html" target="_top"><code class="classname">RuleSource</code></a> declare references as method parameters.
+            </p><p>
+                A reference is either &ldquo;by-path&rdquo; or &ldquo;by-type&rdquo;.
+            </p><p>
+                A &ldquo;by-type&rdquo; reference identifies a particular model element by its type.
+                For example, a reference to the <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskContainer.html" target="_top"><code class="classname">TaskContainer</code></a> effectively identifies the <code class="literal">"tasks"</code> element in the project model space.
+                The model space is not exhaustively searched for candidates for by-type binding; rather, a rule is given a scope (discussed later) that determines the search space for a
+                by-type binding.
+            </p><p>
+                A &ldquo;by-path&rdquo;&nbsp;reference identifies a particular model element by its path in model space.
+                By-path references are always relative to the rule scope; there is currently no way to path &ldquo;out&rdquo; of the scope.
+                All by-path references also have an associated type, but this does not influence what the reference binds to.
+                The element identified by the path must however by type compatible with the reference, or a fatal &ldquo;binding failure&rdquo; will occur.
+            </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:binding_scope" class="section-anchor" href="#sec:binding_scope"></a>Binding scope</h4></div></div></div><p>
+                    Rules are bound within a &ldquo;scope&rdquo;, which determines how references bind.
+                    Most rules are bound at the project scope (i.e. the root of the model graph for the project).
+                    However, rules can be scoped to a node within the graph.
+                    The <a class="ulink" href="../javadoc/org/gradle/model/ModelMap.html#named(java.lang.String, java.lang.Class)" target="_top"><code class="classname">ModelMap.named(java.lang.String, java.lang.Class)</code></a> method is an example
+                    of a mechanism for applying scoped rules.
+                    Rules declared in the build script using the <code class="literal">model {}</code> block, or via a <code class="literal">RuleSource</code> applied as a plugin use the root of the model space as the scope.
+                    This can be considered the default scope.
+                </p><p>
+                    By-path references are always relative to the rule scope.
+                    When the scope is the root, this effectively allows binding to any element in the graph.
+                    When it is not, then only the children of the scope can be referenced using "by-path" notation.
+                </p><p>
+                    When binding by-type references, the following elements are considered:
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">The scope element itself.</li><li class="listitem">The immediate children of the scope element.</li><li class="listitem">The immediate children of the model space (i.e. project space) root.</li></ul></div><p>
+                    For the common case, where the rule is effectively scoped to the root, only the immediate children of the root need to be considered.
+                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="binding_all_elements_in_scope" class="section-anchor" href="#binding_all_elements_in_scope"></a>Binding to all elements in a scope matching type</h4></div></div></div><p>
+                    Mutating or validating all elements of a given type in some scope is a common use-case.
+                    To accommodate this, rules can be applied via the <code class="literal">@Each</code> annotation.
+                </p><p>
+                    In the example below, a <code class="literal">@Defaults</code> rule is applied to each <code class="code">FileItem</code>
+                    in the model setting a default file size of "1024". Another rule applies a
+                    <a class="ulink" href="../javadoc/org/gradle/model/RuleSource.html" target="_top"><code class="classname">RuleSource</code></a> to every <code class="code">DirectoryItem</code> that makes sure
+                    all file sizes are positive and divisible by "16".
+                </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="ruleSourcePluginEach"></a><p class="title"><b>Example&nbsp;66.15.&nbsp;a DSL example applying a rule to every element in a scope</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Managed</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">interface</span> Item <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> Named {}
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Managed</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">interface</span> FileItem <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> Item {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setSize(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">int</span> size)
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">int</span> getSize()
+}
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Managed</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">interface</span> DirectoryItem <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> Item {
+    ModelMap&lt;Item&gt; getChildren()
+}
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> PluginRules <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> RuleSource {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Defaults</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setDefaultFileSize(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Each</span> FileItem file) {
+        file.size = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">1024</span>
+    }
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Rules</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> applyValidateRules(ValidateRules rules, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Each</span> DirectoryItem directory)  {}
+}
+apply plugin: PluginRules
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">abstract</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> ValidateRules <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> RuleSource {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Validate</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> validateSizeIsPositive(ModelMap&lt;FileItem&gt; files) {
+        files.each { file -&gt;
+            assert file.size &gt; <span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">0</span>
+        }
+    }
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Validate</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> validateSizeDivisibleBySixteen(ModelMap&lt;FileItem&gt; files) {
+        files.each { file -&gt;
+            assert file.size % <span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">16</span> == <span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">0</span>
+        }
+    }
+}
+
+model {
+    root(DirectoryItem) {
+        children {
+            dir(DirectoryItem) {
+                children {
+                    file1(FileItem)
+                    file2(FileItem) { size = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">2048</span> }
+                }
+            }
+            file3(FileItem)
+        }
+    }
+}
+</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/modelRules/ruleSourcePluginEach</code> in the &lsquo;-all&rsquo; distribution of Gradle.</p></div></div></div><br class="example-break"></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="model-dsl" class="section-anchor" href="#model-dsl"></a>66.6.&nbsp;The model DSL</h2></div></div></div><p>
+            In addition to using a RuleSource, it is also possible to declare a model and rules directly in a build script using the &ldquo;model DSL&rdquo;.
+        </p><div class="tip"><p>The model DSL makes heavy use of various Groovy DSL features. Please have a read of <a class="xref" href="writing_build_scripts.html#groovy-dsl-basics">Section&nbsp;17.7, &ldquo;Some Groovy basics&rdquo;</a> for an introduction to these Groovy features.</p></div><p>
+            The general form of the model DSL is:
+        </p><pre class="programlisting">model {
+    &laquo;rule-definitions&raquo;
+}</pre><p>
+            All rules are nested inside a <code class="code">model </code> block. There may be any number of rule definitions inside each <code class="code">model</code> block,
+            and there may be any number of <code class="code">model</code> blocks in a build script. You can also use a <code class="code">model</code> block in build scripts that are applied using <code class="code">apply from: $uri</code>.
+        </p><p>There are currently 2 kinds of rule that you can define using the model DSL: configuration rules, and creation rules.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:configuration_rules" class="section-anchor" href="#sec:configuration_rules"></a>66.6.1.&nbsp;Configuration rules</h3></div></div></div><p>You can define a rule that configures a particular model element. A configuration rule has the following form:</p><pre class="programlisting">
+model {
+    &laquo;model-path-to-subject&raquo; {
+        &laquo;configuration code&raquo;
+    }
+}</pre><p>
+                Continuing with the example so far of the model element <code class="literal">"person"</code> of type <code class="literal">Person</code> being present,
+                the following DSL snippet adds a configuration rule for the person that sets its <code class="literal">lastName</code> property.
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="modelDslConfigure"></a><p class="title"><b>Example&nbsp;66.16.&nbsp;DSL configuration rule</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    person {
+        lastName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Smith"</span>
+    }
+}
+</pre></div></div><br class="example-break"><p>A configuration rule specifies a path to the subject that should be configured and a closure containing the code to run when the subject is
+                configured. The closure is executed with the subject passed as the closure delegate.
+                Exactly what code you can provide in the closure depends on the type of the subject. This is discussed below.
+            </p><p>You should note that the configuration code is not executed immediately but is instead executed only when the subject is required.
+                This is an important behaviour of model rules and allows Gradle to configure only those elements that are required for the build, which helps
+                reduce build time.
+                For example, let's run a task that uses the "person" object:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="modelDslConfigureRuleRunWhenRequired"></a><p class="title"><b>Example&nbsp;66.17.&nbsp;Configuration run when required</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    person {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"configuring person"</span>
+        lastName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Smith"</span>
+    }
+}
+</pre><p>Output of <strong class="userinput"><code>gradle showPerson</code></strong></p><pre class="screen">&gt; gradle showPerson
+configuring person
+:showPerson
+Hello John Smith!
+
+BUILD SUCCESSFUL
+
+Total time: 1 secs
+</pre></div></div><br class="example-break"><p>You can see that before the task is run, the "person" element is configured by running the rule closure. Now let's run a task that does not require the "person" element:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="modelDslConfigureRuleNotRunWhenNotRequired"></a><p class="title"><b>Example&nbsp;66.18.&nbsp;Configuration not run when not required</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle somethingElse</code></strong></p><pre class="screen">&gt; gradle somethingElse
+:somethingElse
+Not using person
+
+BUILD SUCCESSFUL
+
+Total time: 1 secs
+</pre></div></div><br class="example-break"><p>In this instance, you can see that the "person" element is not configured at all.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:creation_rules" class="section-anchor" href="#sec:creation_rules"></a>66.6.2.&nbsp;Creation rules</h3></div></div></div><p>
+                It is also possible to create model elements at the root level. The general form of a creation rule is:
+            </p><pre class="programlisting">
+model {
+    &laquo;element-name&raquo;(&laquo;element-type&raquo;) {
+        &laquo;initialization code&raquo;
+    }
+}</pre><p>
+                The following model rule creates the  <code class="literal">"person"</code> element:
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="modelDslCreate"></a><p class="title"><b>Example&nbsp;66.19.&nbsp;DSL creation rule</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    person(Person) {
+        firstName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"John"</span>
+    }
+}
+</pre></div></div><br class="example-break"><p>A creation rule definition specifies the path of the element to create, plus its public type, represented as a Java interface or class. Only certain types of model elements can be created.</p><p>A creation rule may also provide a closure containing the initialization code to run when the element is created. The closure is executed with the element passed as
+                the closure delegate. Exactly what code you can provide in the closure depends on the type of the subject. This is discussed below.
+            </p><p>The initialization closure is optional and can be omitted, for example:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="modelDslCreateNoConfig"></a><p class="title"><b>Example&nbsp;66.20.&nbsp;DSL creation rule without initialization</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    barry(Person)
+}
+</pre></div></div><br class="example-break"><p>You should note that the initialization code is not executed immediately but is instead executed only when the element is required.
+                The initialization code is executed before any configuration rules are run. For example:
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="modelDslInitializationRuleRunsBeforeConfigurationRule"></a><p class="title"><b>Example&nbsp;66.21.&nbsp;Initialization before configuration</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    person {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"configuring person"</span>
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"last name is $lastName, should be Smythe"</span>
+        lastName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Smythe"</span>
+    }
+    person(Person) {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"creating person"</span>
+        firstName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"John"</span>
+        lastName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Smith"</span>
+    }
+}
+</pre><p>Output of <strong class="userinput"><code>gradle showPerson</code></strong></p><pre class="screen">&gt; gradle showPerson
+creating person
+configuring person
+last name is Smith, should be Smythe
+:showPerson
+Hello John Smythe!
+
+BUILD SUCCESSFUL
+
+Total time: 1 secs
+</pre></div></div><br class="example-break"><p>Notice that the creation rule appears in the build script <span class="emphasis"><em>after</em></span> the configuration rule, but its code runs before the code of the configuration rule.
+                Gradle collects up all the rules for a particular subject before running any of them, then runs the rules in the appropriate order.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:model_rule_closures" class="section-anchor" href="#sec:model_rule_closures"></a>66.6.3.&nbsp;Model rule closures</h3></div></div></div><p>Most DSL rules take a closure containing some code to run to configure the subject. The code you can use in this closure depends on the type of the subject of the rule.</p><div class="tip"><p>You can use the <a class="link" href="software_model.html#model-report">model report</a> to determine the type of a particular model element.</p></div><p>In general, a rule closure may contain arbitrary code, mixed with some type specific DSL syntax.</p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:modelmap_subject" class="section-anchor" href="#sec:modelmap_subject"></a><code class="classname">ModelMap&lt;T&gt;</code> subject</h4></div></div></div><p>A <a class="ulink" href="../javadoc/org/gradle/model/ModelMap.html" target="_top"><code class="classname">ModelMap</code></a> is basically a map of model elements, indexed by some name.
+                    When a <code class="classname">ModelMap</code> is used as the subject of a DSL rule, the rule closure can use any of the methods defined on the
+                    <a class="ulink" href="../javadoc/org/gradle/model/ModelMap.html" target="_top"><code class="classname">ModelMap</code></a> interface.
+                </p><p>A rule closure with <code class="classname">ModelMap</code> as a subject can also include nested creation or configuration rules. These behave in a similar way
+                    to the creation and configuration rules that appear directly under the <code class="literal">model</code> block.
+                </p><p>Here is an example of a nested creation rule:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="modelDslModelMapNestedCreate"></a><p class="title"><b>Example&nbsp;66.22.&nbsp;Nested DSL creation rule</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    people {
+        john(Person) {
+            firstName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"John"</span>
+        }
+    }
+}
+</pre></div></div><br class="example-break"><p>As before, a nested creation rule defines a name and public type for the element, and optionally, a closure containing code to use to initialize the element.
+                    The code is run only when the element is required in the build.
+                </p><p>Here is an example of a nested configuration rule:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="modelDslModelMapNestedConfig"></a><p class="title"><b>Example&nbsp;66.23.&nbsp;Nested DSL configuration rule</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    people {
+        john {
+            lastName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Smith"</span>
+        }
+    }
+}
+</pre></div></div><br class="example-break"><p>As before, a nested configuration rule defines the name of the element to configure and a closure containing code to use to configure the element.
+                    The code is run only when the element is required in the build.
+                </p><p><code class="classname">ModelMap</code> introduces several other kinds of rules. For example, you can define a rule that targets each of the elements in the map.
+                    The code in the rule closure is executed once for each element in the map, when that element is required. Let's run a task that requires
+                    all of the children of the "people" element:
+                </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="modelDslModelMapNestedAll"></a><p class="title"><b>Example&nbsp;66.24.&nbsp;DSL configuration rule for each element in a map</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    people {
+        john(Person) {
+            println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"creating $it"</span>
+            firstName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"John"</span>
+            lastName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Smith"</span>
+        }
+        all {
+            println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"configuring $it"</span>
+        }
+        barry(Person) {
+            println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"creating $it"</span>
+            firstName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Barry"</span>
+            lastName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Barry"</span>
+        }
+    }
+}
+</pre><p>Output of <strong class="userinput"><code>gradle listPeople</code></strong></p><pre class="screen">&gt; gradle listPeople
+creating Person 'people.barry'
+configuring Person 'people.barry'
+creating Person 'people.john'
+configuring Person 'people.john'
+:listPeople
+Hello Barry Barry!
+Hello John Smith!
+
+BUILD SUCCESSFUL
+
+Total time: 1 secs
+</pre></div></div><br class="example-break"><p>Any method on <a class="ulink" href="../javadoc/org/gradle/model/ModelMap.html" target="_top"><code class="classname">ModelMap</code></a> that accepts an <a class="ulink" href="../javadoc/org/gradle/api/Action.html" target="_top"><code class="classname">Action</code></a> as its last parameter can also be used to define a nested rule.</p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:managed_type_subject" class="section-anchor" href="#sec:managed_type_subject"></a><code class="classname">@Managed</code> type subject</h4></div></div></div><p>When a managed type is used as the subject of a DSL rule, the rule closure can use any of the methods defined on the managed type interface.</p><p>A rule closure can also configure the properties of the element using nested closures. For example:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="modelDslManagedTypeNestedConfigure"></a><p class="title"><b>Example&nbsp;66.25.&nbsp;Nested DSL property configuration</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    person {
+        address {
+            city = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Melbourne"</span>
+        }
+    }
+}
+</pre></div></div><br class="example-break"><div class="note"><p>Currently, the nested closures do not define rules and are executed immediately. Please be aware that this behaviour will change in a future Gradle release.</p></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:all_other_subjects" class="section-anchor" href="#sec:all_other_subjects"></a>All other subjects</h4></div></div></div><p>For all other types, the rule closure can use any of the methods defined by the type. There is no special DSL defined for these elements.</p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="dsl-type-coercion" class="section-anchor" href="#dsl-type-coercion"></a>66.6.4.&nbsp;Automatic type coercion</h3></div></div></div><p>
+                Scalar properties in managed types can be assigned <code class="literal">CharSequence</code> values (e.g. <code class="literal">String</code>,
+                <code class="literal">GString</code>, etc.) and they will be converted to the actual property type for you. This works for all scalar
+                types including <code class="literal">File</code>s, which will be resolved relative to the current project.
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="modelDslConversions"></a><p class="title"><b>Example&nbsp;66.26.&nbsp;a DSL example showing type conversions</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">enum Temperature {
+   TOO_HOT,
+   TOO_COLD,
+   JUST_RIGHT
+}
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Managed</span>
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">interface</span> Item {
+   <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setName(String n); String getName()
+
+   <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setQuantity(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">int</span> q); <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">int</span> getQuantity()
+
+   <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setPrice(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">float</span> p); <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">float</span> getPrice()
+
+   <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setTemperature(Temperature t)
+   Temperature getTemperature()
+
+   <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setDataFile(File f); File getDataFile()
+}
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> ItemRules <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> RuleSource {
+   <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Model</span>
+   <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> item(Item item) {
+      def data = item.dataFile.text.trim()
+      def (name, quantity, price, temp) = data.split(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">','</span>)
+      item.name = name
+      item.quantity = quantity
+      item.price = price
+      item.temperature = temp
+   }
+
+   <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Defaults</span>
+   <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setDefaults(Item item) {
+      item.dataFile = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'data.csv'</span>
+   }
+
+   <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Mutate</span>
+   <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> createDataTask(ModelMap&lt;Task&gt; tasks, Item item) {
+      tasks.create(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'showData'</span>) {
+         doLast {
+            println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">""</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"
+</span>Item <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'$item.name'</span>
+   quantity:    $item.quantity
+   price:       $item.price
+   temperature: $item.temperature<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">""</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"
+</span>         }
+      }
+   }
+}
+
+apply plugin: ItemRules
+
+model {
+   item {
+      price = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"${price * (quantity &lt; 10 ? 2 : 0.5)}"</span>
+   }
+}
+</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/modelRules/modelDslCoercion</code> in the &lsquo;-all&rsquo; distribution of Gradle.</p></div></div></div><br class="example-break"><p>
+                In the above example, an <code class="literal">Item</code> is created and is initialized in <code class="literal">setDefaults()</code> by providing
+                the path to the data file. In the <code class="literal">item()</code> method the resolved <code class="literal">File</code> is parsed to extract
+                and set the data. In the DSL block at the end, the price is adjusted based on the quantity; if there are fewer than 10 remaining
+                the price is doubled, otherwise it is reduced by 50%. The <code class="literal">GString</code> expression is a valid value since it
+                resolves to a <code class="literal">float</code> value in string form.
+            </p><p>
+                Finally, in <code class="literal">createDataTask()</code> we add the <code class="literal">showData</code> task to display all of the configured values.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="dsl-rule-input-dependencies" class="section-anchor" href="#dsl-rule-input-dependencies"></a>66.6.5.&nbsp;Declaring input dependencies</h3></div></div></div><p>
+                Rules declared in the DSL may <span class="emphasis"><em>depend</em></span> on other model elements through the use of a special syntax, which is of the form:
+            </p><pre class="programlisting">
+$.&laquo;path-to-model-element&raquo;
+</pre><p>
+                Paths are a period separated list of identifiers.
+                To directly depend on the <code class="literal">firstName</code> of the person, the following could be used:
+            </p><pre class="programlisting">
+$.person.firstName
+</pre><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="modelDslRuleInputs"></a><p class="title"><b>Example&nbsp;66.27.&nbsp;a DSL rule using inputs</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    tasks {
+        hello(Task) {
+            def p = $.person
+            doLast {
+                println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Hello $p.firstName $p.lastName!"</span>
+            }
+        }
+    }
+}
+</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/modelRules/modelDsl</code> in the &lsquo;-all&rsquo; distribution of Gradle.</p></div></div></div><br class="example-break"><p>
+                In the above snippet, the <code class="literal">$.person</code> construct is an input reference.
+                The construct returns the value of the model element at the specified path, as its default type (i.e. the type advertised by the <a class="link" href="software_model.html#model-report">Model Report</a>).
+                It may appear anywhere in the rule that an expression may normally appear.
+                It is not limited to the right hand side of variable assignments.
+            </p><p>
+                The input element is guaranteed to be fully configured before the rule executes.
+                That is, all of the rules that mutate the element are guaranteed to have been previously executed,
+                leaving the target element in its final, immutable, state.
+            </p><p>
+                Most model elements enforce immutability when being used as inputs.
+                Any attempt to mutate such an element will result in a runtime error.
+                However, some legacy type objects do not currently implement such checks.
+                Regardless, it is always invalid to attempt to mutate an input to a rule.
+            </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:using_modelmap_as_an_input" class="section-anchor" href="#sec:using_modelmap_as_an_input"></a>Using <code class="classname">ModelMap&lt;T&gt;</code> as an input</h4></div></div></div><p>When you use a <a class="ulink" href="../javadoc/org/gradle/model/ModelMap.html" target="_top"><code class="classname">ModelMap</code></a> as input, each item in the map is made available as a property.</p></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="model-report" class="section-anchor" href="#model-report"></a>66.7.&nbsp;The model report</h2></div></div></div><p>
+            The built-in <a class="ulink" href="../dsl/org.gradle.api.reporting.model.ModelReport.html" target="_top"><code class="classname">ModelReport</code></a> task displays a hierarchical view of the elements in the model space.
+            Each item prefixed with a <code class="literal">+</code> on the model report is a model element and the visual nesting of these elements correlates to the model
+            path (e.g. <code class="literal">tasks.help</code>). The model report displays the following details about each model element:
+        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;66.4.&nbsp;Model report - model element details</b></p><div class="table-contents"><table id="N184EF"><thead><td>Detail</td><td>Description</td></thead><tbody><tr>
+                    <td>Type</td>
+                    <td>This is the underlying type of the model element and is typically a fully qualified class name.</td>
+                </tr><tr>
+                    <td>Value</td>
+                    <td>Is conditionally displayed on the report when a model element can be represented as a string.</td>
+                </tr><tr>
+                    <td>Creator</td>
+                    <td>Every model element has a creator. A creator signifies the origin of the model element (i.e. what created the model element).</td>
+                </tr><tr>
+                    <td>Rules</td>
+                    <td>Is a listing of the rules, excluding the creator rule, which are executed for a given model element. The order in which the rules are displayed reflects
+                        the order in which they are executed.
+                    </td>
+                </tr></tbody></table></div></div><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="basicRuleSourcePlugin-model-task"></a><p class="title"><b>Example&nbsp;66.28.&nbsp;model task output</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle model</code></strong></p><pre class="screen">&gt; gradle model
+:model
+
+------------------------------------------------------------
+Root project
+------------------------------------------------------------
+
++ person
+      | Type:       Person
+      | Creator:     PersonRules#person(Person)
+      | Rules:
+         ⤷ person { ... } @ build.gradle line 59, column 3
+         ⤷ PersonRules#setFirstName(Person)
+    + age
+          | Type:       int
+          | Value:      0
+          | Creator:     PersonRules#person(Person)
+    + children
+          | Type:       org.gradle.model.ModelSet&lt;Person&gt;
+          | Creator:     PersonRules#person(Person)
+    + employed
+          | Type:       boolean
+          | Value:      false
+          | Creator:     PersonRules#person(Person)
+    + father
+          | Type:       Person
+          | Value:      null
+          | Creator:     PersonRules#person(Person)
+    + firstName
+          | Type:       java.lang.String
+          | Value:      John
+          | Creator:     PersonRules#person(Person)
+    + homeDirectory
+          | Type:       java.io.File
+          | Value:      null
+          | Creator:     PersonRules#person(Person)
+    + id
+          | Type:       java.lang.Long
+          | Value:      null
+          | Creator:     PersonRules#person(Person)
+    + lastName
+          | Type:       java.lang.String
+          | Value:      Smith
+          | Creator:     PersonRules#person(Person)
+    + maritalStatus
+          | Type:       MaritalStatus
+          | Creator:     PersonRules#person(Person)
+    + mother
+          | Type:       Person
+          | Value:      null
+          | Creator:     PersonRules#person(Person)
+    + userGroups
+          | Type:       java.util.List&lt;java.lang.String&gt;
+          | Value:      null
+          | Creator:     PersonRules#person(Person)
++ tasks
+      | Type:       org.gradle.model.ModelMap&lt;org.gradle.api.Task&gt;
+      | Creator:     Project.&lt;init&gt;.tasks()
+      | Rules:
+         ⤷ PersonRules#createHelloTask(ModelMap&lt;Task&gt;, Person)
+    + buildEnvironment
+          | Type:       org.gradle.api.tasks.diagnostics.BuildEnvironmentReportTask
+          | Value:      task ':buildEnvironment'
+          | Creator:     tasks.addPlaceholderAction(buildEnvironment)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + components
+          | Type:       org.gradle.api.reporting.components.ComponentReport
+          | Value:      task ':components'
+          | Creator:     tasks.addPlaceholderAction(components)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + dependencies
+          | Type:       org.gradle.api.tasks.diagnostics.DependencyReportTask
+          | Value:      task ':dependencies'
+          | Creator:     tasks.addPlaceholderAction(dependencies)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + dependencyInsight
+          | Type:       org.gradle.api.tasks.diagnostics.DependencyInsightReportTask
+          | Value:      task ':dependencyInsight'
+          | Creator:     tasks.addPlaceholderAction(dependencyInsight)
+          | Rules:
+             ⤷ HelpTasksPlugin.Rules#addDefaultDependenciesReportConfiguration(DependencyInsightReportTask, ServiceRegistry)
+             ⤷ copyToTaskContainer
+    + dependentComponents
+          | Type:       org.gradle.api.reporting.dependents.DependentComponentsReport
+          | Value:      task ':dependentComponents'
+          | Creator:     tasks.addPlaceholderAction(dependentComponents)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + hello
+          | Type:       org.gradle.api.Task
+          | Value:      task ':hello'
+          | Creator:     PersonRules#createHelloTask(ModelMap&lt;Task&gt;, Person) &gt; create(hello)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + help
+          | Type:       org.gradle.configuration.Help
+          | Value:      task ':help'
+          | Creator:     tasks.addPlaceholderAction(help)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + init
+          | Type:       org.gradle.buildinit.tasks.InitBuild
+          | Value:      task ':init'
+          | Creator:     tasks.addPlaceholderAction(init)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + model
+          | Type:       org.gradle.api.reporting.model.ModelReport
+          | Value:      task ':model'
+          | Creator:     tasks.addPlaceholderAction(model)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + projects
+          | Type:       org.gradle.api.tasks.diagnostics.ProjectReportTask
+          | Value:      task ':projects'
+          | Creator:     tasks.addPlaceholderAction(projects)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + properties
+          | Type:       org.gradle.api.tasks.diagnostics.PropertyReportTask
+          | Value:      task ':properties'
+          | Creator:     tasks.addPlaceholderAction(properties)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + tasks
+          | Type:       org.gradle.api.tasks.diagnostics.TaskReportTask
+          | Value:      task ':tasks'
+          | Creator:     tasks.addPlaceholderAction(tasks)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + wrapper
+          | Type:       org.gradle.api.tasks.wrapper.Wrapper
+          | Value:      task ':wrapper'
+          | Creator:     tasks.addPlaceholderAction(wrapper)
+          | Rules:
+             ⤷ copyToTaskContainer
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:limitations_and_future_direction" class="section-anchor" href="#sec:limitations_and_future_direction"></a>66.8.&nbsp;Limitations and future direction</h2></div></div></div><p>
+            Rule based model configuration is the future of Gradle.
+            This area is fledgling, but under very active development.
+            Early experiments have demonstrated that this approach is more efficient, able to provide richer diagnostics and authoring assistance and is more extensible.
+            However, there are currently many limitations.
+        </p><p>
+            The majority of the development to date has been focused on proving the efficacy of the approach, and building the internal rule execution engine and model graph mechanics.
+            The user facing aspects (e.g the DSL, rule source classes) are yet to be optimized for conciseness and general usability.
+            Likewise, many necessary configuration patterns and constructs are not yet able to be expressed via the API.
+        </p><p>
+            In conjunction with the addition of better syntax, a richer toolkit of configuration constructs and generally more expressive power, more tooling will be added that will enable
+            build engineers and users alike to comprehend, modify and extend builds in new ways.
+        </p><p>
+            Due to the inherent nature of the rule based approach, it is more efficient at constructing the build model than today's Gradle.
+            However, in the future Gradle will also leverage the parallelism that this approach enables both at configuration and execution time.
+            Moreover, due to increased transparency of the model Gradle will be able to further reduce build times by caching and pre-computing the build model.
+            Beyond improved general build performance, this will greatly improve the experience when using Gradle from tools such as IDEs.
+        </p><p>
+            As this area of Gradle is under active development, it will be changing rapidly.
+            Please be sure to consult the documentation of Gradle corresponding to the version you are using and to watch for changes announced in the release notes for future versions.
+        </p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="pt06.html" title="Part&nbsp;VI.&nbsp;The Software model">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 3.2">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="software_model_concepts.html" title="Software model concepts - Gradle User Guide Version 3.2">Next</a></div></div></div></body></html>

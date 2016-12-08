@@ -1,10 +1,7 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;38.&nbsp;The Eclipse Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="./css/base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="./css/docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="./css/userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="osgi_plugin.html" title="Chapter&nbsp;37.&nbsp;The OSGi Plugin"><link rel="next" href="idea_plugin.html" title="Chapter&nbsp;39.&nbsp;The IDEA Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="osgi_plugin.html" title="Chapter&nbsp;37.&nbsp;The OSGi Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="idea_plugin.html" title="Chapter&nbsp;39.&nbsp;The IDEA Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="eclipse_plugin"></a>Chapter&nbsp;38.&nbsp;The Eclipse Plugin</h1></div></div></div><p>The Eclipse plugin generates files that are used by the <a class="ulink" href="http://eclipse.org" target="_top">Eclipse IDE</a>, thus
-        making it possible to import the project into Eclipse (<span class="guimenuitem">File</span> - <span class="guimenuitem">Import...</span> - <span class="guimenuitem">Existing Projects into Workspace</span>).
-        Both external dependencies (including associated source and javadoc files) and project dependencies are considered.</p><p>Since 1.0-milestone-4 WTP-generating code was refactored into a separate plugin called <code class="literal">eclipse-wtp</code>.
-        So if you are interested in WTP integration then only apply the <code class="literal">eclipse-wtp</code> plugin. Otherwise applying <code class="literal">eclipse</code> plugin is enough.
-        This change was requested by Eclipse users who take advantage of <code class="literal">war</code> or <code class="literal">ear</code> plugin
-        but they don't use Eclipse WTP. Internally, <code class="literal">eclipse-wtp</code> also applies the <code class="literal">eclipse</code> plugin so you don't need to apply both of those plugins.
-    </p><p>What exactly the Eclipse plugin generates depends on which other plugins are used:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;38.1.&nbsp;Eclipse plugin behavior</b></p><div class="table-contents"><table id="N13CE9"><thead><tr><td>Plugin</td><td>Description</td></tr></thead><tr>
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>The Eclipse Plugins - Gradle User Guide Version 3.2</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide Version 3.2"><link rel="up" href="pt05.html" title="Part&nbsp;V.&nbsp;Building JVM projects"><link rel="prev" href="osgi_plugin.html" title="The OSGi Plugin - Gradle User Guide Version 3.2"><link rel="next" href="idea_plugin.html" title="The IDEA Plugin - Gradle User Guide Version 3.2"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="osgi_plugin.html" title="The OSGi Plugin - Gradle User Guide Version 3.2">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 3.2">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="idea_plugin.html" title="The IDEA Plugin - Gradle User Guide Version 3.2">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="eclipse_plugin"></a>Chapter&nbsp;64.&nbsp;The Eclipse Plugins</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="eclipse_plugin.html#sec:eclipse_usage">64.1. Usage</a></span></dt><dt><span class="section"><a href="eclipse_plugin.html#sec:eclipse_tasks">64.2. Tasks</a></span></dt><dt><span class="section"><a href="eclipse_plugin.html#sec:eclipse_configuration">64.3. Configuration</a></span></dt><dt><span class="section"><a href="eclipse_plugin.html#sec:eclipse_customizing_the_generated_files">64.4. Customizing the generated files</a></span></dt></dl></div><p>The Eclipse plugins generate files that are used by the <a class="ulink" href="http://eclipse.org" target="_top">Eclipse IDE</a>, thus
+        making it possible to import the project into Eclipse (<span class="guimenuitem">File</span> - <span class="guimenuitem">Import...</span> - <span class="guimenuitem">Existing Projects into Workspace</span>).</p><p>The <code class="literal">eclipse-wtp</code> is automatically applied whenever the <code class="literal">eclipse</code> plugin is applied to a <a class="link" href="war_plugin.html">War</a> or <a class="link" href="ear_plugin.html">Ear</a> project.
+        For utility projects (i.e. <a class="link" href="java_plugin.html">Java</a> projects used by other web projects), you need to apply the <code class="literal">eclipse-wtp</code> plugin explicitly.
+    </p><p>What exactly the <code class="literal">eclipse</code> plugin generates depends on which other plugins are used:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;64.1.&nbsp;Eclipse plugin behavior</b></p><div class="table-contents"><table id="N17970"><thead><tr><td>Plugin</td><td>Description</td></tr></thead><tr>
             <td>None</td><td>Generates minimal <code class="filename">.project</code> file.</td>
         </tr><tr>
             <td><a class="link" href="java_plugin.html">Java</a></td><td>Adds Java configuration to <code class="filename">.project</code>.
@@ -14,16 +11,21 @@
         </tr><tr>
             <td><a class="link" href="scala_plugin.html">Scala</a></td><td>Adds Scala support to <code class="filename">.project</code> and <code class="filename">.classpath</code> files.</td>
         </tr><tr>
-            <td><a class="link" href="war_plugin.html">War</a></td><td>Adds web application support to <code class="filename">.project</code> file.
-            Generates WTP settings files only if <code class="literal">eclipse-wtp</code> plugin was applied.</td>
+            <td><a class="link" href="war_plugin.html">War</a></td><td>Adds web application support to <code class="filename">.project</code> file.</td>
         </tr><tr>
-            <td><a class="link" href="ear_plugin.html">Ear</a></td><td>Adds ear application support to <code class="filename">.project</code> file.
-            Generates WTP settings files only if <code class="literal">eclipse-wtp</code> plugin was applied.</td>
-        </tr></table></div></div><p>The Eclipse plugin is open to customization and provides a standardized set of hooks
+            <td><a class="link" href="ear_plugin.html">Ear</a></td><td>Adds ear application support to <code class="filename">.project</code> file.</td>
+        </tr></table></div></div><p>The <code class="literal">eclipse-wtp</code> plugin generates all WTP settings files and enhances the
+        <code class="filename">.project</code> file. If a <a class="link" href="java_plugin.html">Java</a> or <a class="link" href="war_plugin.html">War</a> is applied,
+        <code class="filename">.classpath</code> will be extended to get a proper packaging structure for this utility library or web
+        application project.
+    </p><p>Both Eclipse plugins are open to customization and provide a standardized set of hooks
         for adding and removing content from the generated files.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13D46"></a>38.1.&nbsp;Usage</h2></div></div></div><p>To use the Eclipse plugin, include this in your build script:</p><div class="example"><a name="useEclipsePlugin"></a><p class="title"><b>Example&nbsp;38.1.&nbsp;Using the Eclipse plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'eclipse'</span></pre></div></div><br class="example-break"><p>The Eclipse plugin adds a number of tasks to your projects. The main tasks that you will use
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:eclipse_usage" class="section-anchor" href="#sec:eclipse_usage"></a>64.1.&nbsp;Usage</h2></div></div></div><p>To use either the Eclipse or the Eclipse WTP plugin, include one of the lines in your build script:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="useEclipsePlugin"></a><p class="title"><b>Example&nbsp;64.1.&nbsp;Using the Eclipse plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'eclipse'</span>
+</pre></div></div><br class="example-break"><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="useEclipseWtpPlugin"></a><p class="title"><b>Example&nbsp;64.2.&nbsp;Using the Eclipse WTP plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'eclipse-wtp'</span>
+</pre></div></div><br class="example-break"><p><span class="emphasis"><em>Note: </em></span> Internally, the <code class="literal">eclipse-wtp</code> plugin also applies the
+            <code class="literal">eclipse</code> plugin so you don't need to apply both.</p><p>Both Eclipse plugins add a number of tasks to your projects. The main tasks that you will use
             are the <code class="literal">eclipse</code> and <code class="literal">cleanEclipse</code> tasks.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13D5D"></a>38.2.&nbsp;Tasks</h2></div></div></div><p>The Eclipse plugin adds the tasks shown below to a project.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;38.2.&nbsp;Eclipse plugin - tasks</b></p><div class="table-contents"><table id="eclipsetasks"><thead><tr>
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:eclipse_tasks" class="section-anchor" href="#sec:eclipse_tasks"></a>64.2.&nbsp;Tasks</h2></div></div></div><p>The Eclipse plugins add the tasks shown below to a project.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;64.2.&nbsp;Eclipse plugin - tasks</b></p><div class="table-contents"><table id="eclipsetasks"><thead><tr>
                     <td>Task name</td>
                     <td>Depends on</td>
                     <td>Type</td>
@@ -32,18 +34,14 @@
                 <td>
                     <code class="literal">eclipse</code>
                 </td>
-                <td><code class="literal">eclipseProject</code>, <code class="literal">eclipseClasspath</code>, <code class="literal">eclipseJdt</code>,
-                    <code class="literal">eclipseWtpComponent</code>, <code class="literal">cleanEclipseWtpFacet</code></td>
+                <td>all Eclipse configuration file generation tasks</td>
                 <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
                 <td>Generates all Eclipse configuration files</td>
             </tr><tr>
                 <td>
                     <code class="literal">cleanEclipse</code>
                 </td>
-                <td>
-                    <code class="literal">cleanEclipseProject</code>, <code class="literal">cleanEclipseClasspath</code>, <code class="literal">cleanEclipseJdt</code>,
-                    <code class="literal">cleanEclipseWtpComponent</code>, <code class="literal">cleanEclipseWtpFacet</code>
-                </td>
+                <td>all Eclipse configuration file clean tasks</td>
                 <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a></td>
                 <td>Removes all Eclipse configuration files</td>
             </tr><tr>
@@ -75,27 +73,6 @@
                 <td>Removes the <code class="filename">.settings/org.eclipse.jdt.core.prefs</code> file.</td>
             </tr><tr>
                 <td>
-                    <code class="literal">cleanEclipseWtpComponent</code>
-                </td>
-                <td>
-                    <code class="literal">-</code>
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a></td>
-                <td>Removes the <code class="filename">.settings/org.eclipse.wst.common.component</code> file.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">cleanEclipseWtpFacet</code>
-                </td>
-                <td>
-                    <code class="literal">-</code>
-                </td>
-                <td>
-                    <a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a>
-                </td>
-                <td>Removes the <code class="filename">.settings/org.eclipse.wst.common.component</code> file.
-                </td>
-            </tr><tr>
-                <td>
                     <code class="literal">eclipseProject</code>
                 </td>
                 <td>
@@ -121,6 +98,32 @@
                 </td>
                 <td><a class="ulink" href="../dsl/org.gradle.plugins.ide.eclipse.GenerateEclipseJdt.html" target="_top"><code class="classname">GenerateEclipseJdt</code></a></td>
                 <td>Generates the <code class="filename">.settings/org.eclipse.jdt.core.prefs</code> file.</td>
+            </tr></table></div></div><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;64.3.&nbsp;Eclipse WTP plugin - additional tasks</b></p><div class="table-contents"><table id="eclipsewtptasks"><thead><tr>
+                    <td>Task name</td>
+                    <td>Depends on</td>
+                    <td>Type</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">cleanEclipseWtpComponent</code>
+                </td>
+                <td>
+                    <code class="literal">-</code>
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a></td>
+                <td>Removes the <code class="filename">.settings/org.eclipse.wst.common.component</code> file.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">cleanEclipseWtpFacet</code>
+                </td>
+                <td>
+                    <code class="literal">-</code>
+                </td>
+                <td>
+                    <a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a>
+                </td>
+                <td>Removes the <code class="filename">.settings/org.eclipse.wst.common.project.facet.core.xml</code> file.
+                </td>
             </tr><tr>
                 <td>
                     <code class="literal">eclipseWtpComponent</code>
@@ -129,7 +132,7 @@
                     <code class="literal">-</code>
                 </td>
                 <td><a class="ulink" href="../dsl/org.gradle.plugins.ide.eclipse.GenerateEclipseWtpComponent.html" target="_top"><code class="classname">GenerateEclipseWtpComponent</code></a></td>
-                <td>Generates the <code class="filename">.settings/org.eclipse.wst.common.component</code> file only if <code class="literal">eclipse-wtp</code> plugin was applied.</td>
+                <td>Generates the <code class="filename">.settings/org.eclipse.wst.common.component</code> file.</td>
             </tr><tr>
                 <td>
                     <code class="literal">eclipseWtpFacet</code>
@@ -140,8 +143,8 @@
                 <td>
                     <a class="ulink" href="../dsl/org.gradle.plugins.ide.eclipse.GenerateEclipseWtpFacet.html" target="_top"><code class="classname">GenerateEclipseWtpFacet</code></a>
                 </td>
-                <td>Generates the <code class="filename">.settings/org.eclipse.wst.common.project.facet.core.xml</code> file only if <code class="literal">eclipse-wtp</code> plugin was applied.</td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13EC7"></a>38.3.&nbsp;Configuration</h2></div></div></div><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;38.3.&nbsp;Configuration of the Eclipse plugin</b></p><div class="table-contents"><table id="eclipse-configuration"><thead><tr>
+                <td>Generates the <code class="filename">.settings/org.eclipse.wst.common.project.facet.core.xml</code> file.</td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:eclipse_configuration" class="section-anchor" href="#sec:eclipse_configuration"></a>64.3.&nbsp;Configuration</h2></div></div></div><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;64.4.&nbsp;Configuration of the Eclipse plugins</b></p><div class="table-contents"><table id="eclipse-configuration"><thead><tr>
                     <td>Model</td>
                     <td>Reference name</td>
                     <td>Description</td>
@@ -150,7 +153,7 @@
                     <a class="ulink" href="../dsl/org.gradle.plugins.ide.eclipse.model.EclipseModel.html" target="_top"><code class="classname">EclipseModel</code></a>
                 </td>
                 <td><code class="literal">eclipse</code></td>
-                <td>Top level element that enables configuration of the Eclipse plugin in a DSL-friendly fashion</td>
+                <td>Top level element that enables configuration of the Eclipse plugin in a DSL-friendly fashion.</td>
             </tr><tr>
                 <td>
                     <a class="ulink" href="../dsl/org.gradle.plugins.ide.eclipse.model.EclipseProject.html" target="_top"><code class="classname">EclipseProject</code></a>
@@ -162,13 +165,13 @@
                     <a class="ulink" href="../dsl/org.gradle.plugins.ide.eclipse.model.EclipseClasspath.html" target="_top"><code class="classname">EclipseClasspath</code></a>
                 </td>
                 <td><code class="literal">eclipse.classpath</code></td>
-                <td>Allows configuring classpath information</td>
+                <td>Allows configuring classpath information.</td>
             </tr><tr>
                 <td>
                     <a class="ulink" href="../dsl/org.gradle.plugins.ide.eclipse.model.EclipseJdt.html" target="_top"><code class="classname">EclipseJdt</code></a>
                 </td>
                 <td><code class="literal">eclipse.jdt</code></td>
-                <td>Allows configuring jdt information (source/target java compatibility)</td>
+                <td>Allows configuring jdt information (source/target Java compatibility).</td>
             </tr><tr>
                 <td>
                     <a class="ulink" href="../dsl/org.gradle.plugins.ide.eclipse.model.EclipseWtpComponent.html" target="_top"><code class="classname">EclipseWtpComponent</code></a>
@@ -181,81 +184,92 @@
                 </td>
                 <td><code class="literal">eclipse.wtp.facet</code></td>
                 <td>Allows configuring wtp facet information only if <code class="literal">eclipse-wtp</code> plugin was applied.</td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13F46"></a>38.4.&nbsp;Customizing the generated files</h2></div></div></div><p>
-            The Eclipse plugin allows you to customize the generated metadata files. The plugin provides a DSL for configuring model objects
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:eclipse_customizing_the_generated_files" class="section-anchor" href="#sec:eclipse_customizing_the_generated_files"></a>64.4.&nbsp;Customizing the generated files</h2></div></div></div><p>
+            The Eclipse plugins allow you to customize the generated metadata files. The plugins provide a DSL for configuring model objects
             that model the Eclipse view of the project. These model objects are then merged with the existing Eclipse XML metadata to ultimately
-            generate new metadata. The model objects provide lower level hooks for working with domain objects representing the file content 
-            before and after merging with the model configuration. They also provide a very low level hook for working directly with the raw 
-            XML for adjustment before it is persisted, for fine tuning and configuration that the Eclipse plugin does not model.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N13F4B"></a>38.4.1.&nbsp;Merging</h3></div></div></div><p>Sections of existing Eclipse files that are also the target of generated content will be amended or overwritten,
-                 depending on the particular section. The remaining sections will be left as-is.</p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="sec:complete-overwrite"></a>38.4.1.1.&nbsp;Disabling merging with a complete overwrite</h4></div></div></div><p>To completely overwrite existing Eclipse files, execute a clean task together with its corresponding generation task,
-                    for example <strong class="userinput"><code>gradle cleanEclipse eclipse</code></strong> (in that order). If you want to make this
-                    the default behavior, add <code class="code">tasks.eclipse.dependsOn(cleanEclipse)</code> to your build script. This makes it
+            generate new metadata. The model objects provide lower level hooks for working with domain objects representing the file content
+            before and after merging with the model configuration. They also provide a very low level hook for working directly with the raw
+            XML for adjustment before it is persisted, for fine tuning and configuration that the Eclipse and Eclipse WTP plugins do not model.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:merging_with_eclipse_files" class="section-anchor" href="#sec:merging_with_eclipse_files"></a>64.4.1.&nbsp;Merging</h3></div></div></div><p>Sections of existing Eclipse files that are also the target of generated content will be amended or overwritten,
+                 depending on the particular section. The remaining sections will be left as-is.</p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:complete_rewrite_of_eclipse_files" class="section-anchor" href="#sec:complete_rewrite_of_eclipse_files"></a>Disabling merging with a complete rewrite</h4></div></div></div><p>To completely rewrite existing Eclipse files, execute a clean task together with its corresponding generation task,
+                    like &ldquo;<strong class="userinput"><code>gradle cleanEclipse eclipse</code></strong>&rdquo; (in that order). If you want to make this
+                    the default behavior, add &ldquo;<code class="code">tasks.eclipse.dependsOn(cleanEclipse)</code>&rdquo; to your build script. This makes it
                     unnecessary to execute the clean task explicitly.
-                </p><p>Complete overwrite works equally well for individual files, for example by executing <strong class="userinput"><code>gradle cleanEclipseClasspath eclipseClasspath</code></strong>.
-                </p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N13F61"></a>38.4.2.&nbsp;Hooking into the generation lifecycle</h3></div></div></div><p>The Eclipse plugin provides objects modeling the sections of the Eclipse files
+                </p><p>This strategy can also be used for individual files that the plugins would generate. For instance,
+                    this can be done for the &ldquo;<code class="literal">.classpath</code>&rdquo; file with &ldquo;<strong class="userinput"><code>gradle cleanEclipseClasspath eclipseClasspath</code></strong>&rdquo;.
+                </p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:hooking_into_the_eclipse_generation_lifecycle" class="section-anchor" href="#sec:hooking_into_the_eclipse_generation_lifecycle"></a>64.4.2.&nbsp;Hooking into the generation lifecycle</h3></div></div></div><p>The Eclipse plugins provide objects modeling the sections of the Eclipse files
                 that are generated by Gradle. The generation lifecycle is as follows:
                 </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">The file is read; or a default version provided by Gradle is used if it does not exist</li><li class="listitem">The <code class="code">beforeMerged</code> hook is executed with a domain object representing the existing file</li><li class="listitem">The existing content is merged with the configuration inferred from the Gradle build or defined explicitly in the eclipse DSL</li><li class="listitem">The <code class="code">whenMerged</code> hook is executed with a domain object representing contents of the file to be persisted</li><li class="listitem">The <code class="code">withXml</code> hook is executed with a raw representation of the XML that will be persisted</li><li class="listitem">The final XML is persisted</li></ol></div><p>
                 The following table lists the domain object used for each of the Eclipse model types:
-            </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;38.4.&nbsp;Advanced configuration hooks</b></p><div class="table-contents"><table id="eclipse-plugin-hooks"><thead><tr>
+            </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;64.5.&nbsp;Advanced configuration hooks</b></p><div class="table-contents"><table id="eclipse-plugin-hooks"><thead><tr>
                         <td>Model</td>
                         <td><code class="literal">beforeMerged { arg -&gt; }</code> argument type</td>
                         <td><code class="literal">whenMerged { arg -&gt; }</code> argument type</td>
                         <td><code class="literal">withXml { arg -&gt; }</code> argument type</td>
+                        <td><code class="literal">withProperties { arg -&gt; }</code> argument type</td>
                     </tr></thead><tr>
                     <td><a class="ulink" href="../dsl/org.gradle.plugins.ide.eclipse.model.EclipseProject.html" target="_top"><code class="classname">EclipseProject</code></a></td>
-                    <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/eclipse/model/Project.html" target="_top"><code class="classname">Project</code></a></td>
-                    <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/eclipse/model/Project.html" target="_top"><code class="classname">Project</code></a></td>
+                    <td><a class="ulink" href="../javadoc/org/gradle/plugins/ide/eclipse/model/Project.html" target="_top"><code class="classname">Project</code></a></td>
+                    <td><a class="ulink" href="../javadoc/org/gradle/plugins/ide/eclipse/model/Project.html" target="_top"><code class="classname">Project</code></a></td>
                     <td><a class="ulink" href="../javadoc/org/gradle/api/XmlProvider.html" target="_top"><code class="classname">XmlProvider</code></a></td>
+                    <td>-</td>
                 </tr><tr>
                     <td><a class="ulink" href="../dsl/org.gradle.plugins.ide.eclipse.model.EclipseClasspath.html" target="_top"><code class="classname">EclipseClasspath</code></a></td>
-                    <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/eclipse/model/Classpath.html" target="_top"><code class="classname">Classpath</code></a></td>
-                    <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/eclipse/model/Classpath.html" target="_top"><code class="classname">Classpath</code></a></td>
+                    <td><a class="ulink" href="../javadoc/org/gradle/plugins/ide/eclipse/model/Classpath.html" target="_top"><code class="classname">Classpath</code></a></td>
+                    <td><a class="ulink" href="../javadoc/org/gradle/plugins/ide/eclipse/model/Classpath.html" target="_top"><code class="classname">Classpath</code></a></td>
                     <td><a class="ulink" href="../javadoc/org/gradle/api/XmlProvider.html" target="_top"><code class="classname">XmlProvider</code></a></td>
+                    <td>-</td>
                 </tr><tr>
                     <td><a class="ulink" href="../dsl/org.gradle.plugins.ide.eclipse.model.EclipseJdt.html" target="_top"><code class="classname">EclipseJdt</code></a></td>
                     <td><a class="ulink" href="../javadoc/org/gradle/plugins/ide/eclipse/model/Jdt.html" target="_top"><code class="classname">Jdt</code></a></td>
                     <td><a class="ulink" href="../javadoc/org/gradle/plugins/ide/eclipse/model/Jdt.html" target="_top"><code class="classname">Jdt</code></a></td>
-                    <td></td>
+                    <td>-</td>
+                    <td><a class="ulink" href="http://docs.oracle.com/javase/1.5.0/docs/api/java/util/Properties.html" target="_top"><code class="code">java.util.Properties</code></a></td>
                 </tr><tr>
                     <td><a class="ulink" href="../dsl/org.gradle.plugins.ide.eclipse.model.EclipseWtpComponent.html" target="_top"><code class="classname">EclipseWtpComponent</code></a></td>
-                    <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/eclipse/model/WtpComponent.html" target="_top"><code class="classname">WtpComponent</code></a></td>
-                    <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/eclipse/model/WtpComponent.html" target="_top"><code class="classname">WtpComponent</code></a></td>
+                    <td><a class="ulink" href="../javadoc/org/gradle/plugins/ide/eclipse/model/WtpComponent.html" target="_top"><code class="classname">WtpComponent</code></a></td>
+                    <td><a class="ulink" href="../javadoc/org/gradle/plugins/ide/eclipse/model/WtpComponent.html" target="_top"><code class="classname">WtpComponent</code></a></td>
                     <td><a class="ulink" href="../javadoc/org/gradle/api/XmlProvider.html" target="_top"><code class="classname">XmlProvider</code></a></td>
+                    <td>-</td>
                 </tr><tr>
                     <td><a class="ulink" href="../dsl/org.gradle.plugins.ide.eclipse.model.EclipseWtpFacet.html" target="_top"><code class="classname">EclipseWtpFacet</code></a></td>
-                    <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/eclipse/model/WtpFacet.html" target="_top"><code class="classname">WtpFacet</code></a></td>
-                    <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/eclipse/model/WtpFacet.html" target="_top"><code class="classname">WtpFacet</code></a></td>
+                    <td><a class="ulink" href="../javadoc/org/gradle/plugins/ide/eclipse/model/WtpFacet.html" target="_top"><code class="classname">WtpFacet</code></a></td>
+                    <td><a class="ulink" href="../javadoc/org/gradle/plugins/ide/eclipse/model/WtpFacet.html" target="_top"><code class="classname">WtpFacet</code></a></td>
                     <td><a class="ulink" href="../javadoc/org/gradle/api/XmlProvider.html" target="_top"><code class="classname">XmlProvider</code></a></td>
-                </tr></table></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="sec:partial-overwrite"></a>38.4.2.1.&nbsp;Partial overwrite of existing content</h4></div></div></div><p>A <a class="link" href="eclipse_plugin.html#sec:complete-overwrite">complete overwrite</a> causes all existing content to be discarded,
+                    <td>-</td>
+                </tr></table></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:partial-overwrite" class="section-anchor" href="#sec:partial-overwrite"></a>Partial overwrite of existing content</h4></div></div></div><p>A <a class="link" href="">complete overwrite</a> causes all existing content to be discarded,
                     thereby losing any changes made directly in the IDE. Alternatively, the <code class="code">beforeMerged</code> hook makes it possible
                     to overwrite just certain parts of the existing content. The following example removes all existing dependencies
                     from the <code class="literal">Classpath</code> domain object:
-                    </p><div class="example"><a name="partialOverwrites"></a><p class="title"><b>Example&nbsp;38.2.&nbsp;Partial Overwrite for Classpath</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">eclipse.classpath.file {
+                    </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="partialOverwrites"></a><p class="title"><b>Example&nbsp;64.3.&nbsp;Partial Overwrite for Classpath</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">eclipse.classpath.file {
     beforeMerged { classpath -&gt;
         classpath.entries.removeAll { entry -&gt; entry.kind == <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'lib'</span> || entry.kind == <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'var'</span> }
     }
-}</pre></div></div><p><br class="example-break">
+}
+</pre></div></div><p><br class="example-break">
                     The resulting <code class="literal">.classpath</code> file will only contain Gradle-generated dependency entries, but
                     not any other dependency entries that may have been present in the original file. (In the case of dependency entries,
                     this is also the default behavior.) Other sections of the <code class="literal">.classpath</code> file will be either left as-is or merged.
                     The same could be done for the natures in the <code class="literal">.project</code> file:
-                    </p><div class="example"><a name="partialOverwritesProject"></a><p class="title"><b>Example&nbsp;38.3.&nbsp;Partial Overwrite for Project</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">eclipse.project.file.beforeMerged { project -&gt;
+                    </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="partialOverwritesProject"></a><p class="title"><b>Example&nbsp;64.4.&nbsp;Partial Overwrite for Project</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">eclipse.project.file.beforeMerged { project -&gt;
     project.natures.clear()
-}</pre></div></div><p><br class="example-break">
-                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N14043"></a>38.4.2.2.&nbsp;Modifying the fully populated domain objects</h4></div></div></div><p>The <code class="code">whenMerged</code> hook allows to manipulate the fully populated domain objects. Often this is the
+}
+</pre></div></div><p><br class="example-break">
+                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:eclipse_modify_domain_objects" class="section-anchor" href="#sec:eclipse_modify_domain_objects"></a>Modifying the fully populated domain objects</h4></div></div></div><p>The <code class="code">whenMerged</code> hook allows to manipulate the fully populated domain objects. Often this is the
                     preferred way to customize Eclipse files. Here is how you would export all the dependencies of an Eclipse project:
-                    </p><div class="example"><a name="exportDependencies"></a><p class="title"><b>Example&nbsp;38.4.&nbsp;Export Dependencies</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">eclipse.classpath.file {
+                    </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="exportDependencies"></a><p class="title"><b>Example&nbsp;64.5.&nbsp;Export Dependencies</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">eclipse.classpath.file {
     whenMerged { classpath -&gt;
         classpath.entries.findAll { entry -&gt; entry.kind == <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'lib'</span> }*.exported = false
     }
-}</pre></div></div><p><br class="example-break">
-                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N14056"></a>38.4.2.3.&nbsp;Modifying the XML representation</h4></div></div></div><p>The <code class="code">withXml</code>hook allows to manipulate the in-memory XML representation just before the file gets written to disk.
+}
+</pre></div></div><p><br class="example-break">
+                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:eclipse_modify_xml" class="section-anchor" href="#sec:eclipse_modify_xml"></a>Modifying the XML representation</h4></div></div></div><p>The <code class="code">withXml</code>hook allows to manipulate the in-memory XML representation just before the file gets written to disk.
                     Although Groovy's XML support makes up for a lot, this approach is less convenient than manipulating the domain objects.
                     In return, you get total control over the generated file, including sections not modeled by the domain objects.
-                    </p><div class="example"><a name="wtpWithXml"></a><p class="title"><b>Example&nbsp;38.5.&nbsp;Customizing the XML</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'eclipse-wtp'</span>
+                    </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="wtpWithXml"></a><p class="title"><b>Example&nbsp;64.6.&nbsp;Customizing the XML</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'eclipse-wtp'</span>
 
 eclipse.wtp.facet.file.withXml { provider -&gt;
     provider.asNode().fixed.find { it.<span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@facet</span> == <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'jst.java'</span> }.<span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@facet</span> = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'jst2.java'</span>
-}</pre></div></div><p><br class="example-break">
-                </p></div></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="osgi_plugin.html" title="Chapter&nbsp;37.&nbsp;The OSGi Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="idea_plugin.html" title="Chapter&nbsp;39.&nbsp;The IDEA Plugin">Next</a></div></div></div></body></html>
+}
+</pre></div></div><p><br class="example-break">
+                </p></div></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="osgi_plugin.html" title="The OSGi Plugin - Gradle User Guide Version 3.2">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 3.2">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="idea_plugin.html" title="The IDEA Plugin - Gradle User Guide Version 3.2">Next</a></div></div></div></body></html>

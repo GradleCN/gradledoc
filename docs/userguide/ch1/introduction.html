@@ -1,0 +1,132 @@
+<html>
+
+<head>
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Introduction - Gradle User Guide Version 3.2</title>
+    <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="../base.css">
+    <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="../docs.css">
+    <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="../userguide.css">
+    <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+    <link rel="home" href="../userguide.html" title="Gradle User Guide Version 3.2">
+    <link rel="up" href="../pt01.html" title="Part&nbsp;I.&nbsp;About Gradle">
+    <link rel="prev" href="../pt01.html" title="Part&nbsp;I.&nbsp;About Gradle">
+    <link rel="next" href="../overview.html" title="Overview - Gradle User Guide Version 3.2">
+</head>
+
+<body>
+    <div class="navheader">
+        <div>
+            <div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="../pt01.html" title="Part&nbsp;I.&nbsp;About Gradle">上一页</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="../userguide.html" title="Gradle User Guide Version 3.2">目录</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="../overview.html" title="Overview - Gradle User Guide Version 3.2">下一页</a></div>
+        </div>
+    </div>
+    <div class="chapter">
+        <div class="titlepage">
+            <div>
+                <div>
+                    <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="introduction"></a>
+                    第一章 .简介 - Chapter&nbsp;1.&nbsp;Introduction</h1></div>
+            </div>	
+        </div>
+        <div class="toc">
+            <p><b>章节目录 - Table of Contents</b></p>
+            <dl>
+                <dt><span class="section"><a href="../introduction.html#sec:about_this_user_guide">
+                1.1.关于本手册 - About this user guide</a></span></dt>
+            </dl>
+        </div>
+        <p>
+        很高兴能向大家介绍Gradle,这是一个基于JVM的富有突破性构建工具。<br>
+        它为您提供了如下特性:<br>
+        We would like to introduce Gradle to you, a build system that we think is a quantum leap for build technology in the Java (JVM) world. <br>Gradle provides:
+        </p>
+        <div class="itemizedlist">
+            <ul class="itemizedlist">
+                <li class="listitem">
+                	<p>一个像Ant一样，通用灵活的构建工具。</p>
+                    <p>A very flexible general purpose build tool like Ant.
+                    </p>
+                </li>
+                <li class="listitem">
+                <p>一种可切换的，像Maven一样的基于约定约定优于配置的构建框架。</p>
+                    <p>Switchable, build-by-convention frameworks a la Maven. But we never lock you in!
+                    </p>
+                </li>
+                <li class="listitem">
+                <p>强大的多工程构建支持。</p>
+                    <p>Very powerful support for multi-project builds.
+                    </p>
+                </li>
+                <li class="listitem">
+                <p>强大的依赖管理(基于 ApacheIvy)。</p>
+                    <p>Very powerful dependency management (based on Apache Ivy).
+                    </p>
+                </li>
+                <li class="listitem">
+                <p>全面支持已有的 maven 和 ivy 仓库。</p>
+                    <p>Full support for your existing Maven or Ivy repository infrastructure.
+                    </p>
+                </li>
+                <li class="listitem">
+                	<p>支持传递性依赖管理，而不需要远程仓库或者 
+					<code class="filename">pom.xml</code> 
+ 						或者 
+ 						<code class="filename">ivy.xml</code> 
+ 						配置文件 
+					</p>
+                    <p>Support for transitive dependency management without the need for remote repositories or
+                        <code class="filename">pom.xml</code> and <code class="filename">ivy.xml</code> files.
+                    </p>
+                </li>
+                <li class="listitem">
+                <p>Ant式的任务和构建是Gradle的第一公民</p>
+                    <p>Ant tasks and builds as first class citizens.
+                    </p>
+                </li>
+                <li class="listitem">
+                    <p>使用<em>Groovy</em>作为编译脚本</p>
+                    <p>
+                        <span class="emphasis"><em>Groovy</em></span> build scripts.
+                    </p>
+                </li>
+                <li class="listitem">
+                <p>具有广泛的领域模型支持你的构建</p>
+                    <p>A rich domain model for describing your build.
+                    </p>
+                </li>
+            </ul>
+        </div>
+        <p>
+            <p> 
+ 			在 <a class="xref" href="../overview.html">第二章</a>节概述中，你将看到关于Gradle的详细介绍和 
+ 			<a class="link" href="../ch03/tutorials.html">入门指引</a>等一些内容:)。</p>
+In <a class="xref" href="../overview.html">Chapter&nbsp;2, <i>Overview</i></a> you will find a detailed overview of Gradle. Otherwise, the
+            <a class="link" href="../">tutorials</a> are waiting, have fun :)
+        </p>
+        <div class="section">
+            <div class="titlepage">
+                <div>
+                    <div>
+                        <h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:about_this_user_guide" class="section-anchor" href="../#sec:about_this_user_guide"></a>1.1.&nbsp;关于本手册 - 1.1.&nbsp;About this user guide</h2></div>
+                </div>
+            </div>
+            <p>
+与Gradle一样，本手册也在不停的更新中，许多部分并未完全进行描述。
+			有些内容并未完全描述。我们需要你来一起帮助改进本手册。
+ 				你可以在Gradle官方网站找到其余格式的文档。<br> 
+
+            This user guide, like Gradle itself, is under very active development. Some parts of Gradle aren't documented as completely as they need to be. Some of the content presented won't be entirely clear or will assume that you know more about Gradle than you do. We need your help to improve this user guide. You can find out more about contributing to the documentation at the
+                <a class="ulink" href="../http://www.gradle.org/contribute" target="_top">Gradle web site</a>.
+            </p>
+            <p>
+            通过阅读本手册，你会发现一些图表表示Gradle任务之间的依赖关系。 这些使用类似于UML依赖性符号的东西，表示从某个任务到第一个任务之间的依赖关系。<br>
+            Throughout the user guide, you will find some diagrams that represent dependency relationships between Gradle tasks. These use something analogous to the UML dependency notation, which renders an arrow from one task to the task that the first task depends on.</p>
+        </div>
+    </div>
+    <div class="navfooter">
+        <div>
+            <div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="../pt01.html" title="Part&nbsp;I.&nbsp;About Gradle">上一页</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="../userguide.html" title="Gradle User Guide Version 3.2">目录</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="../overview.html" title="Overview - Gradle User Guide Version 3.2">下一页</a></div>
+        </div>
+    </div>
+</body>
+
+</html>

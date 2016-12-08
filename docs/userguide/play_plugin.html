@@ -1,0 +1,496 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Building Play applications - Gradle User Guide Version 3.2</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide Version 3.2"><link rel="up" href="pt06.html" title="Part&nbsp;VI.&nbsp;The Software model"><link rel="prev" href="java_software.html" title="Building Java Libraries - Gradle User Guide Version 3.2"><link rel="next" href="native_software.html" title="Building native software - Gradle User Guide Version 3.2"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="java_software.html" title="Building Java Libraries - Gradle User Guide Version 3.2">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 3.2">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="native_software.html" title="Building native software - Gradle User Guide Version 3.2">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="play_plugin"></a>Chapter&nbsp;70.&nbsp;Building Play applications</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="play_plugin.html#sec:play_usage">70.1. Usage</a></span></dt><dt><span class="section"><a href="play_plugin.html#sec:play_limitations">70.2. Limitations</a></span></dt><dt><span class="section"><a href="play_plugin.html#sec:play_software_model">70.3. Software Model</a></span></dt><dt><span class="section"><a href="play_plugin.html#sec:play_project_layout">70.4. Project Layout</a></span></dt><dt><span class="section"><a href="play_plugin.html#sec:play_tasks">70.5. Tasks</a></span></dt><dt><span class="section"><a href="play_plugin.html#sec:play_finding_out_more_about_your_project">70.6. Finding out more about your project</a></span></dt><dt><span class="section"><a href="play_plugin.html#play_continuous_build">70.7. Running a Play application</a></span></dt><dt><span class="section"><a href="play_plugin.html#configuring_play">70.8. Configuring a Play application</a></span></dt><dt><span class="section"><a href="play_plugin.html#sec:multiproject_play_applications">70.9. Multi-project Play applications</a></span></dt><dt><span class="section"><a href="play_plugin.html#packaging_play_distribution">70.10. Packaging a Play application for distribution</a></span></dt><dt><span class="section"><a href="play_plugin.html#play_ide">70.11. Building a Play application with an IDE</a></span></dt><dt><span class="section"><a href="play_plugin.html#sec:play_resources">70.12. Resources</a></span></dt></dl></div><div class="note"><p>
+            Support for building Play applications is currently <a class="link" href="feature_lifecycle.html">incubating</a>. Please be aware that the DSL, APIs and other configuration may change in later Gradle versions.
+        </p></div><p>
+        <a class="ulink" href="https://www.playframework.com/" target="_top">Play</a> is a modern web application framework.
+        The Play plugin adds support for building, testing and running Play applications with Gradle.
+    </p><p>
+        The Play plugin makes use of the Gradle <a class="link" href="software_model.html">software model</a>.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:play_usage" class="section-anchor" href="#sec:play_usage"></a>70.1.&nbsp;Usage</h2></div></div></div><p>To use the Play plugin, include the following in your build script to apply the <code class="literal">play</code> plugin and add the Typesafe repositories:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="usePlayPlugin"></a><p class="title"><b>Example&nbsp;70.1.&nbsp;Using the Play plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">plugins {
+    id <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'play'</span>
+}
+
+repositories {
+    jcenter()
+    maven {
+        name <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"typesafe-maven-release"</span>
+        url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"https://repo.typesafe.com/typesafe/maven-releases"</span>
+    }
+    ivy {
+        name <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"typesafe-ivy-release"</span>
+        url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"https://repo.typesafe.com/typesafe/ivy-releases"</span>
+        layout <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"ivy"</span>
+    }
+}
+</pre></div></div><br class="example-break"><p>Note that defining the Typesafe repositories is necessary.  In future versions of Gradle, this will be replaced with a more convenient syntax.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:play_limitations" class="section-anchor" href="#sec:play_limitations"></a>70.2.&nbsp;Limitations</h2></div></div></div><p>The Play plugin currently has a few limitations.</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                    Full support is limited to Play 2.3.x applications.
+                    Limited support is available for Play 2.4.x &amp; 2.5.x applications. Gradle does not include support for a few new build-related features in 2.4.0+
+                    Specifically, Gradle does not yet support aggregate reverse routes.
+                    Future Gradle versions will add more support for Play 2.6.x.
+                </p></li><li class="listitem"><p>
+                    A given project may only define a single Play application.  This means that a single project cannot build more than one Play application.
+                    However, a multi-project build can have many projects that each define their own Play application.
+                </p></li><li class="listitem"><p>
+                    Play applications can only target a single &ldquo;platform&rdquo; (combination of Play, Scala and Java version) at a time.  This means that it is
+                    currently not possible to define multiple variants of a Play application that, for example, produce jars for both Scala 2.10 and 2.11.
+                    This limitation may be lifted in future Gradle versions.
+                </p></li><li class="listitem"><p>
+                    Support for generating IDE configurations for Play applications is limited to <a class="link" href="idea_plugin.html">IDEA</a>.
+                </p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:play_software_model" class="section-anchor" href="#sec:play_software_model"></a>70.3.&nbsp;Software Model</h2></div></div></div><p>
+            The Play plugin uses a <em class="firstterm">software model</em> to describe a Play application and how to build it.  The Play software model extends the base Gradle <a class="link" href="software_model_concepts.html">software model</a>
+            to add support for building Play applications. A Play application is represented by a <a class="ulink" href="../dsl/org.gradle.play.PlayApplicationSpec.html" target="_top"><code class="classname">PlayApplicationSpec</code></a> component type.  The plugin automatically
+            creates a single <a class="ulink" href="../dsl/org.gradle.play.PlayApplicationBinarySpec.html" target="_top"><code class="classname">PlayApplicationBinarySpec</code></a> instance when it is applied.  Additional Play components cannot be added to a project.
+        </p><div class="figure"><a xmlns:xslthl="http://xslthl.sf.net" name="N18AC6"></a><p class="title"><b>Figure&nbsp;70.1.&nbsp;Play plugin - software model</b></p><div class="figure-contents"><img src="img/playPluginModel.png" alt="Play plugin - software model"></div></div><br class="figure-break"><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:the_play_application_component" class="section-anchor" href="#sec:the_play_application_component"></a>70.3.1.&nbsp;The Play application component</h3></div></div></div><p>
+                A Play application component describes the application to be built and consists of several configuration elements.  One type of element that
+                describes the application are the source sets that define where the application controller, route, template and model class source
+                files should be found.  These source sets are logical groupings of files of a particular type and a default source set for each type is
+                created when the <code class="literal">play</code> plugin is applied.
+            </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;70.1.&nbsp;Default Play source sets</b></p><div class="table-contents"><table id="N18AD5"><thead><tr>
+                        <td>Source Set</td>
+                        <td>Type</td>
+                        <td>Directory</td>
+                        <td>Filters</td>
+                    </tr></thead><tr>
+                    <td>java</td>
+                    <td><a class="ulink" href="../javadoc/org/gradle/language/java/JavaSourceSet.html" target="_top"><code class="classname">JavaSourceSet</code></a></td>
+                    <td>app</td>
+                    <td>**/*.java</td>
+                </tr><tr>
+                    <td>scala</td>
+                    <td><a class="ulink" href="../javadoc/org/gradle/language/scala/ScalaLanguageSourceSet.html" target="_top"><code class="classname">ScalaLanguageSourceSet</code></a></td>
+                    <td>app</td>
+                    <td>**/*.scala</td>
+                </tr><tr>
+                    <td>routes</td>
+                    <td><a class="ulink" href="../dsl/org.gradle.language.routes.RoutesSourceSet.html" target="_top"><code class="classname">RoutesSourceSet</code></a></td>
+                    <td>conf</td>
+                    <td>routes, *.routes</td>
+                </tr><tr>
+                    <td>twirlTemplates</td>
+                    <td><a class="ulink" href="../dsl/org.gradle.language.twirl.TwirlSourceSet.html" target="_top"><code class="classname">TwirlSourceSet</code></a></td>
+                    <td>app</td>
+                    <td>**/*.html</td>
+                </tr><tr>
+                    <td>javaScript</td>
+                    <td><a class="ulink" href="../dsl/org.gradle.language.javascript.JavaScriptSourceSet.html" target="_top"><code class="classname">JavaScriptSourceSet</code></a></td>
+                    <td>app/assets</td>
+                    <td>**/*.js</td>
+                </tr></table></div></div><p>
+                These source sets can be configured or additional source sets can be added to the Play component.  See <a class="link" href="play_plugin.html#configuring_play">Configuring Play</a> for further information.
+            </p><p>
+                Another element of configuring a Play application is the <em class="firstterm">platform</em>.  To build a Play application, Gradle needs to understand which versions of Play, Scala and Java to use.
+                The Play component specifies this requirement as a <a class="ulink" href="../dsl/org.gradle.play.platform.PlayPlatform.html" target="_top"><code class="classname">PlayPlatform</code></a>.  If these values are not configured, a default version of Play, Scala and Java
+                will be used.  See <a class="link" href="play_plugin.html#configuring_play_platform">Targeting a certain version of Play</a> for information on configuring the Play platform.
+            </p><p>
+                Note that only a single platform can be specified for a given Play component.  This means that only a single version of
+                Play, Scala and Java can be used to build a Play component.  In other words, a Play component can only produce one set of outputs, and
+                those outputs will be built using the versions specified by the platform configured on the component.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:the_play_application_binary" class="section-anchor" href="#sec:the_play_application_binary"></a>70.3.2.&nbsp;The Play application binary</h3></div></div></div><p>
+                A Play application component is compiled and packaged to produce a set of outputs which are represented by a <a class="ulink" href="../dsl/org.gradle.play.PlayApplicationBinarySpec.html" target="_top"><code class="classname">PlayApplicationBinarySpec</code></a>.
+                The Play binary specifies the jar files produced by building the component as well as providing elements by which additional content can be added to those jar files.
+                It also exposes the tasks involved in building the component and creating the binary.
+            </p><p>
+                See <a class="link" href="play_plugin.html#configuring_play">Configuring Play</a> for examples of configuring the Play binary.
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:play_project_layout" class="section-anchor" href="#sec:play_project_layout"></a>70.4.&nbsp;Project Layout</h2></div></div></div><p>The Play plugin follows the typical Play application layout.  You can <a class="link" href="play_plugin.html#configuring_play_sourcesets">configure source sets</a> to include additional directories or change the defaults.</p><pre class="screen">
+├── app                 &rarr; Application source code.
+│&nbsp;&nbsp; ├── assets          &rarr; Assets that require compilation.
+│&nbsp;&nbsp; │&nbsp;&nbsp; └── javascripts &rarr; JavaScript source code to be minified.
+│&nbsp;&nbsp; ├── controllers     &rarr; Application controller source code.
+│&nbsp;&nbsp; ├── models          &rarr; Application business source code.
+│&nbsp;&nbsp; └── views           &rarr; Application UI templates.
+├── build.gradle        &rarr; Your project's build script.
+├── conf                &rarr; Main application configuration file and routes files.
+├── public              &rarr; Public assets.
+│&nbsp;&nbsp; ├── images          &rarr; Application image files.
+│&nbsp;&nbsp; ├── javascripts     &rarr; Typically JavaScript source code.
+│&nbsp;&nbsp; └── stylesheets     &rarr; Typically CSS source code.
+└── test                &rarr; Test source code.
+</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:play_tasks" class="section-anchor" href="#sec:play_tasks"></a>70.5.&nbsp;Tasks</h2></div></div></div><p>The Play plugin hooks into the normal Gradle lifecycle tasks such as <code class="literal">assemble</code>, <code class="literal">check</code> and <code class="literal">build</code>,
+            but it also adds several additional tasks which form the lifecycle of a Play project:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;70.2.&nbsp;Play plugin - lifecycle tasks</b></p><div class="table-contents"><table id="play_lifecycle_tasks"><thead><tr>
+                    <td>Task name</td>
+                    <td>Depends on</td>
+                    <td>Type</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">playBinary</code>
+                </td>
+                <td>
+                    All compile tasks for source sets added to the Play application.
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
+                <td>Performs a build of just the Play application.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">dist</code>
+                </td>
+                <td>
+                    <code class="literal">createPlayBinaryZipDist</code>, <code class="literal">createPlayBinaryTarDist</code>
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
+                <td>Assembles the Play distribution.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">stage</code>
+                </td>
+                <td>
+                    <code class="literal">stagePlayBinaryDist</code>
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
+                <td>Stages the Play distribution.</td>
+            </tr></table></div></div><p>The plugin also provides tasks for running, testing and packaging your Play application:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;70.3.&nbsp;Play plugin - running and testing tasks</b></p><div class="table-contents"><table id="N18BD8"><thead><tr>
+                    <td>Task name</td>
+                    <td>Depends on</td>
+                    <td>Type</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">runPlayBinary</code>
+                </td>
+                <td>
+                    <code class="literal">playBinary</code> to build Play application.
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.play.tasks.PlayRun.html" target="_top"><code class="classname">PlayRun</code></a></td>
+                <td>Runs the Play application for local development. See <a class="link" href="play_plugin.html#play_continuous_build">how this works with continuous build.</a></td>
+            </tr><tr>
+                <td>
+                    <code class="literal">testPlayBinary</code>
+                </td>
+                <td>
+                    <code class="literal">playBinary</code> to build Play application and <code class="literal">compilePlayBinaryTests</code>.
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a></td>
+                <td>Runs JUnit/TestNG tests for the Play application.</td>
+            </tr></table></div></div><p>For the different types of sources in a Play application, the plugin adds the following compilation tasks:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;70.4.&nbsp;Play plugin - source set tasks</b></p><div class="table-contents"><table id="play_source_set_tasks"><thead><tr>
+                    <td>Task name</td>
+                    <td>Source Type</td>
+                    <td>Type</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">compilePlayBinaryScala</code>
+                </td>
+                <td>
+                    Scala and Java
+                </td>
+                <td><a class="ulink" href="../javadoc/org/gradle/language/scala/tasks/PlatformScalaCompile.html" target="_top"><code class="classname">PlatformScalaCompile</code></a></td>
+                <td>Compiles all Scala and Java sources defined by the Play application.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">compilePlayBinaryPlayTwirlTemplates</code>
+                </td>
+                <td>
+                    Twirl HTML templates
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.play.tasks.TwirlCompile.html" target="_top"><code class="classname">TwirlCompile</code></a></td>
+                <td>Compiles HTML templates with the Twirl compiler.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">compilePlayBinaryPlayRoutes</code>
+                </td>
+                <td>
+                    Play Route files
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.play.tasks.RoutesCompile.html" target="_top"><code class="classname">RoutesCompile</code></a></td>
+                <td>Compiles routes files into Scala sources.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">minifyPlayBinaryJavaScript</code>
+                </td>
+                <td>
+                    JavaScript files
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.play.tasks.JavaScriptMinify.html" target="_top"><code class="classname">JavaScriptMinify</code></a></td>
+                <td>Minifies JavaScript files with the Google Closure compiler.</td>
+            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:play_finding_out_more_about_your_project" class="section-anchor" href="#sec:play_finding_out_more_about_your_project"></a>70.6.&nbsp;Finding out more about your project</h2></div></div></div><p>
+            Gradle provides a report that you can run from the command-line that shows some details about the components and binaries that your
+            project produces. To use this report, just run <strong class="userinput"><code>gradle components</code></strong>. Below is an example of running this report for
+            one of the sample projects:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="playComponentReport"></a><p class="title"><b>Example&nbsp;70.2.&nbsp;The components report</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle components</code></strong></p><pre class="screen">&gt; gradle components
+:components
+
+------------------------------------------------------------
+Root project
+------------------------------------------------------------
+
+Play Application 'play'
+-----------------------
+
+Source sets
+    Java source 'play:java'
+        srcDir: app
+        includes: **/*.java
+    JavaScript source 'play:javaScript'
+        srcDir: app/assets
+        includes: **/*.js
+    JVM resources 'play:resources'
+        srcDir: conf
+    Routes source 'play:routes'
+        srcDir: conf
+        includes: routes, *.routes
+    Scala source 'play:scala'
+        srcDir: app
+        includes: **/*.scala
+    Twirl template source 'play:twirlTemplates'
+        srcDir: app
+        includes: **/*.html
+
+Binaries
+    Play Application Jar 'play:binary'
+        build using task: :playBinary
+        target platform: Play Platform (Play 2.3.9, Scala: 2.11, Java: Java SE 8)
+        toolchain: Default Play Toolchain
+        classes dir: build/playBinary/classes
+        resources dir: build/playBinary/resources
+        JAR file: build/playBinary/lib/basic.jar
+
+Note: currently not all plugins register their components, so some components may not be visible here.
+
+BUILD SUCCESSFUL
+
+Total time: 1 secs
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="play_continuous_build" class="section-anchor" href="#play_continuous_build"></a>70.7.&nbsp;Running a Play application</h2></div></div></div><p>
+            The <code class="literal">runPlayBinary</code> task starts the Play application under development.
+            During development it is beneficial to execute this task as a <a class="link" href="continuous_build.html">continuous build</a>.
+            Continuous build is a generic feature that supports automatically re-running a build when inputs change.
+            The <code class="literal">runPlayBinary</code> task is &ldquo;continuous build aware&rdquo;&nbsp;in that it behaves differently when run as part of a continuous build.
+        </p><p>
+            When not run as part of a continuous build, the <code class="literal">runPlayBinary</code> task will <span class="emphasis"><em>block</em></span> the build.
+            That is, the task will not complete as long as the application is running.
+            When running as part of a continuous build, the task will start the application if not running and otherwise propagate any changes to the code of the application to the running instance.
+            This is useful for quickly iterating on your Play application with an edit-&gt;rebuild-&gt;refresh cycle.  Changes to your application will not take affect until the end of the overall build.
+        </p><p>
+            To enable continuous build, run Gradle with <strong class="userinput"><code>-t runPlayBinary</code></strong> or <strong class="userinput"><code>--continuous runPlayBinary</code></strong>.
+        </p><p>
+            Users of Play used to such a workflow with Play's default build system should note that compile errors are handled differently.
+            If a build failure occurs during a continuous build, the Play application will not be reloaded. Instead, you will be presented with an exception
+            message. The exception message will only contain the overall cause of the build failure.
+            More detailed information will only be available from the console.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="configuring_play" class="section-anchor" href="#configuring_play"></a>70.8.&nbsp;Configuring a Play application</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="configuring_play_platform" class="section-anchor" href="#configuring_play_platform"></a>70.8.1.&nbsp;Targeting a certain version of Play</h3></div></div></div><p>
+                By default, Gradle uses Play 2.3.9, Scala 2.11 and the version of Java used to start the build.
+                A Play application can select a different version by specifying a target <a class="ulink" href="../dsl/org.gradle.play.PlayApplicationSpec.html#org.gradle.play.PlayApplicationSpec:platform(java.lang.Object)" target="_top"><code class="classname">PlayApplicationSpec.platform(java.lang.Object)</code></a> on the Play application component.
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="specifyPlayVersion"></a><p class="title"><b>Example&nbsp;70.3.&nbsp;Selecting a version of the Play Framework</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    components {
+        play {
+            platform play: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'2.3.6'</span>, scala: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'2.10'</span>
+        }
+    }
+}
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:adding_dependencies" class="section-anchor" href="#sec:adding_dependencies"></a>70.8.2.&nbsp;Adding dependencies</h3></div></div></div><p>
+                You can add compile, test and runtime dependencies to a Play application through <a class="ulink" href="../dsl/org.gradle.api.artifacts.Configuration.html" target="_top"><code class="classname">Configuration</code></a> created by the Play plugin.
+            </p><p>
+                If you are coming from SBT, the Play SBT plugin provides short names for common dependencies.  For instance, if your project has a dependency on
+                <code class="literal">ws</code>, you will need to add a dependency to <code class="literal">com.typesafe.play:play-ws_2.11:2.3.9</code> where <code class="literal">2.11</code>
+                is your Scala version and <code class="literal">2.3.9</code> is your Play framework version.
+            </p><p>
+                Other dependencies that have short names, such as <code class="literal">jacksons</code> may actually be multiple dependencies. For those dependencies, you will need to work out the dependency
+                coordinates from a dependency report.
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                        <code class="literal">play</code> is used for compile time dependencies.
+                    </p></li><li class="listitem"><p>
+                        <code class="literal">playTest</code> is used for test compile time dependencies.
+                    </p></li><li class="listitem"><p>
+                        <code class="literal">playRun</code> is used for run time dependencies.
+                    </p></li></ul></div><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="addPlayDependencies"></a><p class="title"><b>Example&nbsp;70.4.&nbsp;Adding dependencies to a Play application</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
+    play <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"commons-lang:commons-lang:2.6"</span>
+}
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="configuring_play_sourcesets" class="section-anchor" href="#configuring_play_sourcesets"></a>70.8.3.&nbsp;Configuring the default source sets</h3></div></div></div><p>You can further configure the default source sets to do things like add new directories, add filters, etc.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:adding_extra_source_sets" class="section-anchor" href="#sec:adding_extra_source_sets"></a>70.8.4.&nbsp;Adding extra source sets</h3></div></div></div><p>
+                If your Play application has additional sources that exist in non-standard directories, you can add extra source sets that Gradle will automatically add to the appropriate compile tasks.
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="addExtraPlaySourcesets"></a><p class="title"><b>Example&nbsp;70.5.&nbsp;Adding extra source sets to a Play application</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    components {
+        play {
+            sources {
+                java {
+                    source.srcDir <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"additional/java"</span>
+                }
+                javaScript {
+                    source {
+                        srcDir <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"additional/javascript"</span>
+                        exclude <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"**/old_*.js"</span>
+                    }
+                }
+            }
+        }
+    }
+}
+</pre><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    components {
+        play {
+            sources {
+                extraJava(JavaSourceSet) {
+                    source.srcDir <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"extra/java"</span>
+                }
+                extraTwirl(TwirlSourceSet) {
+                    source.srcDir <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"extra/twirl"</span>
+                }
+                extraRoutes(RoutesSourceSet) {
+                    source.srcDir <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"extra/routes"</span>
+                }
+            }
+        }
+    }
+}
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:configuring_compiler_options" class="section-anchor" href="#sec:configuring_compiler_options"></a>70.8.5.&nbsp;Configuring compiler options</h3></div></div></div><p>
+                If your Play application requires additional Scala compiler flags, you can add these arguments directly to the Scala compiler task.
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="configureScalaCompiler"></a><p class="title"><b>Example&nbsp;70.6.&nbsp;Configuring Scala compiler options</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    components {
+        play {
+            binaries.all {
+                tasks.withType(PlatformScalaCompile) {
+                    scalaCompileOptions.additionalParameters = [<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"-feature"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"-language:implicitConversions"</span>]
+                }
+            }
+        }
+    }
+}
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:configuring_routes_style" class="section-anchor" href="#sec:configuring_routes_style"></a>70.8.6.&nbsp;Configuring routes style</h3></div></div></div><div class="note">
+                The injected router is only supported in Play Framework 2.4 or better.
+            </div><p>
+                If your Play application's router uses dependency injection to access your controllers, you'll need to configure your application to <span class="emphasis"><em>not</em></span> use the default static router.
+
+                Under the covers, the Play plugin is using the <code class="literal">InjectedRoutesGenerator</code> instead of the default <code class="literal">StaticRoutesGenerator</code> to generate the router classes.
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="configureRoutesCompiler"></a><p class="title"><b>Example&nbsp;70.7.&nbsp;Configuring routes style</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    components {
+        play {
+            injectedRoutesGenerator = true
+        }
+    }
+}
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:injecting_a_custom_asset_pipeline" class="section-anchor" href="#sec:injecting_a_custom_asset_pipeline"></a>70.8.7.&nbsp;Injecting a custom asset pipeline</h3></div></div></div><p>
+                Gradle Play support comes with a simplistic asset processing pipeline that minifies JavaScript assets.  However, many organizations have their own
+                custom pipeline for processing assets.  You can easily hook the results of your pipeline into the Play binary by utilizing the <a class="ulink" href="../dsl/org.gradle.play.PublicAssets.html" target="_top"><code class="classname">PublicAssets</code></a>
+                property on the binary.
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="customAssetsPipeline"></a><p class="title"><b>Example&nbsp;70.8.&nbsp;Configuring a custom asset pipeline</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    components {
+        play {
+            binaries.all { binary -&gt;
+                tasks.create(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"addCopyrightToPlay${binary.name.capitalize()}Assets"</span>, AddCopyrights) { copyrightTask -&gt;
+                    source <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"raw-assets"</span>
+                    copyrightFile = project.file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'copyright.txt'</span>)
+                    destinationDir = project.file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"${buildDir}/play${binary.name.capitalize()}/addCopyRights"</span>)
+
+                    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Hook this task into the binary</span>
+                    binary.assets.addAssetDir destinationDir
+                    binary.assets.builtBy copyrightTask
+                }
+            }
+        }
+    }
+}
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> AddCopyrights <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> SourceTask {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@InputFile</span>
+    File copyrightFile
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@OutputDirectory</span>
+    File destinationDir
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@TaskAction</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> generateAssets() {
+        String copyright = copyrightFile.text
+        getSource().files.each { File file -&gt;
+            File outputFile = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(destinationDir, file.name)
+            outputFile.text = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"${copyright}\n${file.text}"</span>
+        }
+    }
+}
+</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:multiproject_play_applications" class="section-anchor" href="#sec:multiproject_play_applications"></a>70.9.&nbsp;Multi-project Play applications</h2></div></div></div><p>
+            Play applications can be built in multi-project builds as well.  Simply apply the <code class="literal">play</code> plugin in the appropriate subprojects and create any
+            project dependencies on the <code class="literal">play</code> configuration.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="playMultiProjectDependencies"></a><p class="title"><b>Example&nbsp;70.9.&nbsp;Configuring dependencies on Play subprojects</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
+    play project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":admin"</span>)
+    play project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":user"</span>)
+    play project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":util"</span>)
+}
+</pre></div></div><br class="example-break"><p>
+            See the <code class="filename">play/multiproject</code> sample provided in the Gradle distribution for a working example.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="packaging_play_distribution" class="section-anchor" href="#packaging_play_distribution"></a>70.10.&nbsp;Packaging a Play application for distribution</h2></div></div></div><p>
+            Gradle provides the capability to package your Play application so that it can easily be distributed and run in a target environment.
+            The distribution package (zip file) contains the Play binary jars, all dependencies, and generated scripts that set up the classpath and run
+            the application in a Play-specific <a class="ulink" href="http://netty.io" target="_top">Netty</a> container.
+        </p><p>
+            The distribution can be created by running the <code class="literal">dist</code> lifecycle task and places the distribution in the <code class="literal">$buildDir/distributions</code> directory.  Alternatively,
+            one can validate the contents by running the <code class="literal">stage</code> lifecycle task which copies the files to the <code class="literal">$buildDir/stage</code> directory using the layout of the distribution package.
+        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;70.5.&nbsp;Play distribution tasks</b></p><div class="table-contents"><table id="N18D9B"><thead><tr>
+                    <td>Task name</td>
+                    <td>Depends on</td>
+                    <td>Type</td>
+                    <td>Description</td>
+                </tr></thead><tr>
+                <td>
+                    <code class="literal">createPlayBinaryStartScripts</code>
+                </td>
+                <td>-</td>
+                <td><a class="ulink" href="../javadoc/org/gradle/api/tasks/application/CreateStartScripts.html" target="_top"><code class="classname">CreateStartScripts</code></a></td>
+                <td>Generates scripts to run the Play application distribution.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">stagePlayBinaryDist</code>
+                </td>
+                <td>
+                    <code class="literal">playBinary</code>, <code class="literal">createPlayBinaryStartScripts</code>
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Copy.html" target="_top"><code class="classname">Copy</code></a></td>
+                <td>Copies all jar files, dependencies and scripts into a staging directory.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">createPlayBinaryZipDist</code>
+                </td>
+                <td></td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Zip.html" target="_top"><code class="classname">Zip</code></a></td>
+                <td>Bundles the Play application as a standalone distribution packaged as a zip.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">createPlayBinaryTarDist</code>
+                </td>
+                <td></td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Tar.html" target="_top"><code class="classname">Tar</code></a></td>
+                <td>Bundles the Play application as a standalone distribution packaged as a tar.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">stage</code>
+                </td>
+                <td><code class="literal">stagePlayBinaryDist</code></td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
+                <td>Lifecycle task for staging a Play distribution.</td>
+            </tr><tr>
+                <td>
+                    <code class="literal">dist</code>
+                </td>
+                <td>
+                    <code class="literal">createPlayBinaryZipDist</code>, <code class="literal">createPlayBinaryTarDist</code>
+                </td>
+                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
+                <td>Lifecycle task for creating a Play distribution.</td>
+            </tr></table></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="adding_files_to_play_distribution" class="section-anchor" href="#adding_files_to_play_distribution"></a>70.10.1.&nbsp;Adding additional files to your Play application distribution</h3></div></div></div><p>
+                You can add additional files to the distribution package using the <a class="ulink" href="../javadoc/org/gradle/api/distribution/Distribution.html" target="_top"><code class="classname">Distribution</code></a> API.
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="addFilesToPlayDistribution"></a><p class="title"><b>Example&nbsp;70.10.&nbsp;Add extra files to a Play application distribution</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+    distributions {
+        playBinary {
+            contents {
+                from(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"README.md"</span>)
+                from(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"scripts"</span>) {
+                    into <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"bin"</span>
+                }
+            }
+        }
+    }
+}
+</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="play_ide" class="section-anchor" href="#play_ide"></a>70.11.&nbsp;Building a Play application with an IDE</h2></div></div></div><p>
+            If you want to generate IDE metadata configuration for your Play project, you need to apply the appropriate IDE plugin.
+            Gradle supports generating IDE metadata for IDEA only for Play projects at this time.
+        </p><p>
+            To generate IDEA's metadata, apply the <code class="literal">idea</code> plugin along with the <code class="literal">play</code> plugin.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="applyPlayIde"></a><p class="title"><b>Example&nbsp;70.11.&nbsp;Applying both the Play and IDEA plugins</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">plugins {
+    id <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'play'</span>
+    id <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'idea'</span>
+}
+</pre></div></div><br class="example-break"><p>
+            Source code generated by routes and Twirl templates cannot be generated by IDEA directly, so changes made to those files will not affect compilation until the next Gradle build.
+            You can run the Play application with Gradle in <a class="link" href="continuous_build.html">continuous build</a> to automatically rebuild and reload the application whenever something changes.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:play_resources" class="section-anchor" href="#sec:play_resources"></a>70.12.&nbsp;Resources</h2></div></div></div><p>
+            For additional information about developing Play applications:
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                    Play types in the Gradle DSL Guide:
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><a class="ulink" href="../dsl/org.gradle.play.PlayApplicationBinarySpec.html" target="_top"><code class="classname">PlayApplicationBinarySpec</code></a></li><li class="listitem"><a class="ulink" href="../dsl/org.gradle.play.PlayApplicationSpec.html" target="_top"><code class="classname">PlayApplicationSpec</code></a></li><li class="listitem"><a class="ulink" href="../dsl/org.gradle.play.platform.PlayPlatform.html" target="_top"><code class="classname">PlayPlatform</code></a></li><li class="listitem"><a class="ulink" href="../dsl/org.gradle.play.JvmClasses.html" target="_top"><code class="classname">JvmClasses</code></a></li><li class="listitem"><a class="ulink" href="../dsl/org.gradle.play.PublicAssets.html" target="_top"><code class="classname">PublicAssets</code></a></li><li class="listitem"><a class="ulink" href="../dsl/org.gradle.play.distribution.PlayDistributionContainer.html" target="_top"><code class="classname">PlayDistributionContainer</code></a></li><li class="listitem"><a class="ulink" href="../dsl/org.gradle.play.tasks.JavaScriptMinify.html" target="_top"><code class="classname">JavaScriptMinify</code></a></li><li class="listitem"><a class="ulink" href="../dsl/org.gradle.play.tasks.PlayRun.html" target="_top"><code class="classname">PlayRun</code></a></li><li class="listitem"><a class="ulink" href="../dsl/org.gradle.play.tasks.RoutesCompile.html" target="_top"><code class="classname">RoutesCompile</code></a></li><li class="listitem"><a class="ulink" href="../dsl/org.gradle.play.tasks.TwirlCompile.html" target="_top"><code class="classname">TwirlCompile</code></a></li></ul></div></li><li class="listitem"><p>
+                    <a class="ulink" href="https://www.playframework.com/documentation" target="_top">Play Framework Documentation</a>.
+                </p></li></ul></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="java_software.html" title="Building Java Libraries - Gradle User Guide Version 3.2">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 3.2">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="native_software.html" title="Building native software - Gradle User Guide Version 3.2">Next</a></div></div></div></body></html>

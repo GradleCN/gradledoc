@@ -1,0 +1,451 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>The Gradle TestKit - Gradle User Guide Version 3.2</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide Version 3.2"><link rel="up" href="pt04.html" title="Part&nbsp;IV.&nbsp;Extending the build"><link rel="prev" href="init_scripts.html" title="Initialization Scripts - Gradle User Guide Version 3.2"><link rel="next" href="pt05.html" title="Part&nbsp;V.&nbsp;Building JVM projects"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="init_scripts.html" title="Initialization Scripts - Gradle User Guide Version 3.2">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 3.2">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="pt05.html" title="Part&nbsp;V.&nbsp;Building JVM projects">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="test_kit"></a>Chapter&nbsp;44.&nbsp;The Gradle TestKit</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="test_kit.html#sec:testkit_usage">44.1. Usage</a></span></dt><dt><span class="section"><a href="test_kit.html#sec:functional_testing_with_the_gradle_runner">44.2. Functional testing with the Gradle runner</a></span></dt></dl></div><div class="note"><p>
+            The Gradle TestKit is currently <a class="link" href="feature_lifecycle.html">incubating</a>.
+            Please be aware that its API and other characteristics may change in later Gradle versions.
+        </p></div><p>
+        The Gradle TestKit (a.k.a. just TestKit) is a library that aids in testing Gradle plugins and build logic generally.
+        At this time, it is focused on
+        <span class="emphasis"><em>functional</em></span>
+        testing.
+        That is, testing build logic by exercising it as part of a programmatically executed build.
+        Over time, the TestKit will likely expand to facilitate other kinds of tests.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:testkit_usage" class="section-anchor" href="#sec:testkit_usage"></a>44.1.&nbsp;Usage</h2></div></div></div><p>To use the TestKit, include the following in your plugin's build:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="testKitDependency"></a><p class="title"><b>Example&nbsp;44.1.&nbsp;Declaring the TestKit dependency</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
+    testCompile gradleTestKit()
+}
+</pre></div></div><br class="example-break"><p>
+            The
+            <code class="literal">gradleTestKit()</code>
+            encompasses the classes of the TestKit, as well as the <a class="link" href="embedding.html">Gradle Tooling API client</a>.
+            It does not include a version of <a class="ulink" href="http://junit.org" target="_top">JUnit</a>, <a class="ulink" href="http://testng.org" target="_top">TestNG</a>, or any other test execution framework.
+            Such a dependency must be explicitly declared.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="junitDependency"></a><p class="title"><b>Example&nbsp;44.2.&nbsp;Declaring the JUnit dependency</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
+    testCompile <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'junit:junit:4.12'</span>
+}
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:functional_testing_with_the_gradle_runner" class="section-anchor" href="#sec:functional_testing_with_the_gradle_runner"></a>44.2.&nbsp;Functional testing with the Gradle runner</h2></div></div></div><p>
+            The <a class="ulink" href="../javadoc/org/gradle/testkit/runner/GradleRunner.html" target="_top"><code class="classname">GradleRunner</code></a> facilitates programmatically executing Gradle builds, and inspecting the result.
+        </p><p>
+            A contrived build can be created (e.g. programmatically, or from a template) that exercises the &ldquo;logic under test&rdquo;.
+            The build can then be executed, potentially in a variety of ways (e.g. different combinations of tasks and arguments).
+            The correctness of the logic can then be verified by asserting the following, potentially in combination:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">The build's output;</li><li class="listitem">The build's logging (i.e. console output);</li><li class="listitem">The set of tasks executed by the build and their results (e.g. FAILED, UP-TO-DATE etc.).</li></ul></div><p>
+            After creating and configuring a runner instance, the build can be executed via the
+            <a class="ulink" href="../javadoc/org/gradle/testkit/runner/GradleRunner.html#build()" target="_top"><code class="classname">GradleRunner.build()</code></a>
+            or
+            <a class="ulink" href="../javadoc/org/gradle/testkit/runner/GradleRunner.html#buildAndFail()" target="_top"><code class="classname">GradleRunner.buildAndFail()</code></a>
+            methods depending on the anticipated outcome.
+        </p><p>
+            The following demonstrates the usage of Gradle runner in a Java JUnit test:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="testKitFunctionalTestJunit"></a><p class="title"><b>Example&nbsp;44.3.&nbsp;Using GradleRunner with JUnit</b></p><div class="example-contents"><p><code class="filename">BuildLogicFunctionalTest.java</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.gradle.testkit.runner.BuildResult;
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.gradle.testkit.runner.GradleRunner;
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.junit.Before;
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.junit.Rule;
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.junit.Test;
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.junit.rules.TemporaryFolder;
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> java.io.BufferedWriter;
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> java.io.File;
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> java.io.FileWriter;
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> java.io.IOException;
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> java.util.Collections;
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">static</span> org.junit.Assert.assertEquals;
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">static</span> org.junit.Assert.assertTrue;
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">static</span> org.gradle.testkit.runner.TaskOutcome.*;
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> BuildLogicFunctionalTest {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Rule</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">final</span> TemporaryFolder testProjectDir = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> TemporaryFolder();
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">private</span> File buildFile;
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Before</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setup() <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">throws</span> IOException {
+        buildFile = testProjectDir.newFile(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"build.gradle"</span>);
+    }
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Test</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> testHelloWorldTask() <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">throws</span> IOException {
+        String buildFileContent = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"task helloWorld {"</span> +
+                                  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"    doLast {"</span> +
+                                  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"        println 'Hello world!'"</span> +
+                                  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"    }"</span> +
+                                  <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"}"</span>;
+        writeFile(buildFile, buildFileContent);
+
+        BuildResult result = GradleRunner.create()
+            .withProjectDir(testProjectDir.getRoot())
+            .withArguments(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"helloWorld"</span>)
+            .build();
+
+        assertTrue(result.getOutput().contains(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Hello world!"</span>));
+        assertEquals(result.task(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":helloWorld"</span>).getOutcome(), SUCCESS);
+    }
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">private</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> writeFile(File destination, String content) <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">throws</span> IOException {
+        BufferedWriter output = null;
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">try</span> {
+            output = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> BufferedWriter(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> FileWriter(destination));
+            output.write(content);
+        } <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">finally</span> {
+            <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (output != null) {
+                output.close();
+            }
+        }
+    }
+}
+</pre></div></div><br class="example-break"><p>
+            Any test execution framework can be used.
+        </p><p>
+            As Gradle build scripts are written in the Groovy programming language, and as many plugins are implemented in Groovy,
+            it is often a productive choice to write Gradle functional tests in Groovy.
+            Furthermore, it is recommended to use the (Groovy based) <a class="ulink" href="https://code.google.com/p/spock/" target="_top">Spock test execution framework</a>
+            as it offers many compelling features over the use of JUnit.
+        </p><p>
+            The following demonstrates the usage of Gradle runner in a Groovy Spock test:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="testKitFunctionalTestSpock"></a><p class="title"><b>Example&nbsp;44.4.&nbsp;Using GradleRunner with Spock</b></p><div class="example-contents"><p><code class="filename">BuildLogicFunctionalTest.groovy</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.gradle.testkit.runner.GradleRunner
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">static</span> org.gradle.testkit.runner.TaskOutcome.*
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.junit.Rule
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.junit.rules.TemporaryFolder
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> spock.lang.Specification
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> BuildLogicFunctionalTest <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> Specification {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Rule</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">final</span> TemporaryFolder testProjectDir = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> TemporaryFolder()
+    File buildFile
+
+    def setup() {
+        buildFile = testProjectDir.newFile(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build.gradle'</span>)
+    }
+
+    def <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"hello world task prints hello world"</span>() {
+        given:
+        buildFile &lt;&lt; <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">""</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"
+</span>            task helloWorld {
+                doLast {
+                    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello world!'</span>
+                }
+            }
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">""</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"
+</span>
+        when:
+        def result = GradleRunner.create()
+            .withProjectDir(testProjectDir.root)
+            .withArguments(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'helloWorld'</span>)
+            .build()
+
+        then:
+        result.output.contains(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello world!'</span>)
+        result.task(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":helloWorld"</span>).outcome == SUCCESS
+    }
+}
+</pre></div></div><br class="example-break"><p>
+            It is a common practice to implement any custom build logic (like plugins and task types) that is more complex in nature as external classes in a standalone project. The main
+            driver behind this approach is bundle the compiled code into a JAR file, publish it to a binary repository and reuse it across various projects.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sub:test-kit-classpath-injection" class="section-anchor" href="#sub:test-kit-classpath-injection"></a>44.2.1.&nbsp;Getting the plugin-under-test into the test build</h3></div></div></div><p>
+                The GradleRunner uses the <a class="link" href="embedding.html">Tooling API</a> to execute builds.
+                An implication of this is that the builds are executed in a separate process (i.e. not the same process executing the tests).
+                Therefore, the test build does not share the same classpath or classloaders as the test process and the code under test is not implicitly available to the test build.
+            </p><p>
+                Starting with version 2.13, Gradle provides a <a class="link" href="test_kit.html#sub:test-kit-automatic-classpath-injection">conventional mechanism to inject the code under test into the test build</a>.
+            </p><p>
+                For earlier versions of Gradle (before 2.13), it is possible to manually make the code under test available via some extra configuration.
+                The following example demonstrates having the build generate a file containing the implementation classpath of the code under test, and making it available at test runtime.
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="testKitFunctionalTestSpockClassesBuildConfig"></a><p class="title"><b>Example&nbsp;44.5.&nbsp;Making the code under test classpath available to the tests</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Write the plugin's classpath to a file to share with the tests</span>
+task createClasspathManifest {
+    def outputDir = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/$name"</span>)
+
+    inputs.files sourceSets.main.runtimeClasspath
+    outputs.dir outputDir
+
+    doLast {
+        outputDir.mkdirs()
+        file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$outputDir/plugin-classpath.txt"</span>).text = sourceSets.main.runtimeClasspath.join(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"\n"</span>)
+    }
+}
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Add the classpath file to the test runtime classpath</span>
+dependencies {
+    testRuntime files(createClasspathManifest)
+}
+</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/testKit/gradleRunner/manualClasspathInjection</code> in the &lsquo;-all&rsquo; distribution of Gradle.</p></div></div></div><br class="example-break"><p>
+                The tests can then read this value, and inject the classpath into the test build by using the method <a class="ulink" href="../javadoc/org/gradle/testkit/runner/GradleRunner.html#withPluginClasspath(java.lang.Iterable)" target="_top"><code class="classname">GradleRunner.withPluginClasspath(java.lang.Iterable)</code></a>.
+                This classpath is then available to use to locate plugins in a test build via the plugins DSL (see <a class="xref" href="plugins.html">Chapter&nbsp;26, <i>Gradle Plugins</i></a>). Applying plugins with the plugins DSL requires the
+                definition of a plugin identifier.
+                The following is an example (in Groovy) of doing this from within a Spock Framework <code class="literal">setup()</code> method, which is analogous to a JUnit <code class="literal">@Before</code> method.
+            </p><p>
+                This approach works well when executing the functional tests as part of the Gradle build.
+                When executing the functional tests from an IDE, there are extra considerations.
+                Namely, the classpath manifest file points to the class files etc. generated by Gradle and not the IDE.
+                This means that after making a change to the source of the code under test, the source must be recompiled by Gradle.
+                Similarly, if the effective classpath of the code under test changes, the manifest must be regenerated.
+                In either case, executing the <code class="literal">testClasses</code> task of the build will ensure that things are up to date.
+            </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:working_with_gradle_versions_prior_to_28" class="section-anchor" href="#sec:working_with_gradle_versions_prior_to_28"></a>Working with Gradle versions prior to 2.8</h4></div></div></div><p>
+                    The <a class="ulink" href="../javadoc/org/gradle/testkit/runner/GradleRunner.html#withPluginClasspath(java.lang.Iterable)" target="_top"><code class="classname">GradleRunner.withPluginClasspath(java.lang.Iterable)</code></a> method will not work when
+                    executing the build with a Gradle version earlier than 2.8 (see: <a class="xref" href="test_kit.html#sub:gradle-runner-gradle-version">Section&nbsp;44.2.3, &ldquo;The Gradle version used to test&rdquo;</a>),
+                    as this feature is not supported on such Gradle versions.
+                </p><p>
+                    Instead, the code must be injected via the build script itself.
+                    The following sample demonstrates how this can be done.
+                </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="testKitFunctionalTestSpockClassesTestConfig"></a><p class="title"><b>Example&nbsp;44.6.&nbsp;Injecting the code under test classes into test builds</b></p><div class="example-contents"><p><code class="filename">src/test/groovy/org/gradle/sample/BuildLogicFunctionalTest.groovy</code></p><pre class="programlisting">List&lt;File&gt; pluginClasspath
+
+def setup() {
+    buildFile = testProjectDir.newFile(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build.gradle'</span>)
+
+    def pluginClasspathResource = getClass().classLoader.findResource(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"plugin-classpath.txt"</span>)
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (pluginClasspathResource == null) {
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">throw</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> IllegalStateException(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Did not find plugin classpath resource, run `testClasses` build task."</span>)
+    }
+
+    pluginClasspath = pluginClasspathResource.readLines().collect { <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(it) }
+}
+
+def <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"hello world task prints hello world"</span>() {
+    given:
+    buildFile &lt;&lt; <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">""</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"
+</span>        plugins {
+            id <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle.sample.helloworld'</span>
+        }
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">""</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"
+</span>
+    when:
+    def result = GradleRunner.create()
+        .withProjectDir(testProjectDir.root)
+        .withArguments(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'helloWorld'</span>)
+        .withPluginClasspath(pluginClasspath)
+        .build()
+
+    then:
+    result.output.contains(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello world!'</span>)
+    result.task(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":helloWorld"</span>).outcome == SUCCESS
+}
+</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/testKit/gradleRunner/manualClasspathInjection</code> in the &lsquo;-all&rsquo; distribution of Gradle.</p></div><p><code class="filename">src/test/groovy/org/gradle/sample/BuildLogicFunctionalTest.groovy</code></p><pre class="programlisting">List&lt;File&gt; pluginClasspath
+
+def setup() {
+    buildFile = testProjectDir.newFile(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build.gradle'</span>)
+
+    def pluginClasspathResource = getClass().classLoader.findResource(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"plugin-classpath.txt"</span>)
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (pluginClasspathResource == null) {
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">throw</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> IllegalStateException(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Did not find plugin classpath resource, run `testClasses` build task."</span>)
+    }
+
+    pluginClasspath = pluginClasspathResource.readLines().collect { <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(it) }
+}
+
+def <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"hello world task prints hello world with pre Gradle 2.8"</span>() {
+    given:
+    def classpathString = pluginClasspath
+        .collect { it.absolutePath.replace(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'\\'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'\\\\'</span>) } <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// escape backslashes in Windows paths</span>
+        .collect { <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"'$it'"</span> }
+        .join(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">", "</span>)
+
+    buildFile &lt;&lt; <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">""</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"
+</span>        buildscript {
+            dependencies {
+                classpath files($classpathString)
+            }
+        }
+        apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.gradle.sample.helloworld"</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">""</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"
+</span>
+    when:
+    def result = GradleRunner.create()
+        .withProjectDir(testProjectDir.root)
+        .withArguments(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'helloWorld'</span>)
+        .withGradleVersion(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"2.7"</span>)
+        .build()
+
+    then:
+    result.output.contains(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello world!'</span>)
+    result.task(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":helloWorld"</span>).outcome == SUCCESS
+}
+</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/testKit/gradleRunner/manualClasspathInjection</code> in the &lsquo;-all&rsquo; distribution of Gradle.</p></div></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sub:test-kit-automatic-classpath-injection" class="section-anchor" href="#sub:test-kit-automatic-classpath-injection"></a>Automatic injection with the Java Gradle Plugin Development plugin</h4></div></div></div><p>
+                    The <a class="link" href="javaGradle_plugin.html">Java Gradle Plugin development plugin</a> can be used to assist in the development of Gradle plugins.
+                    Starting with Gradle version 2.13, the plugin provides a direct integration with TestKit. When applied to a project, the plugin automatically adds
+                    the <code class="literal">gradleTestKit()</code> dependency to the test compile configuration. Furthermore, it automatically generates the classpath for the code
+                    under test and injects it via
+                    <a class="ulink" href="../javadoc/org/gradle/testkit/runner/GradleRunner.html#withPluginClasspath()" target="_top"><code class="classname">GradleRunner.withPluginClasspath()</code></a> for any <code class="literal">GradleRunner</code> instance created by the user.
+                    If the <a class="link" href="test_kit.html#sub:gradle-runner-gradle-version">target Gradle version</a> is prior to 2.8, automatic plugin classpath injection is not performed.
+                </p><p>
+                    The plugin uses the following conventions for applying the TestKit dependency and injecting the classpath:
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Source set containing code under test: <code class="literal">sourceSets.main</code></li><li class="listitem">Source set used for injecting the plugin classpath: <code class="literal">sourceSets.test</code></li></ul></div><p>
+                    Any of these conventions can be reconfigured with the help of the class <a class="ulink" href="../javadoc/org/gradle/plugin/devel/GradlePluginDevelopmentExtension.html" target="_top"><code class="classname">GradlePluginDevelopmentExtension</code></a>.
+                </p><p>
+                    The following Groovy-based sample demonstrates how to automatically inject the plugin classpath by using the standard conventions applied by the
+                    Java Gradle Plugin Development plugin.
+                </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="testKitFunctionalTestSpockAutomaticClasspath"></a><p class="title"><b>Example&nbsp;44.7.&nbsp;Using the Java Gradle Development plugin for generating the plugin metadata</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'groovy'</span>
+apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java-gradle-plugin'</span>
+
+dependencies {
+    testCompile(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.spockframework:spock-core:1.0-groovy-2.4'</span>) {
+        exclude module: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'groovy-all'</span>
+    }
+}
+</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/testKit/gradleRunner/automaticClasspathInjectionQuickstart</code> in the &lsquo;-all&rsquo; distribution of Gradle.</p></div></div></div><br class="example-break"><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="testKitFunctionalTestSpockAutomaticClassesTestConfig"></a><p class="title"><b>Example&nbsp;44.8.&nbsp;Automatically injecting the code under test classes into test builds</b></p><div class="example-contents"><p><code class="filename">src/test/groovy/org/gradle/sample/BuildLogicFunctionalTest.groovy</code></p><pre class="programlisting">def <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"hello world task prints hello world"</span>() {
+    given:
+    buildFile &lt;&lt; <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">""</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"
+</span>        plugins {
+            id <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle.sample.helloworld'</span>
+        }
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">""</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"
+</span>
+    when:
+    def result = GradleRunner.create()
+        .withProjectDir(testProjectDir.root)
+        .withArguments(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'helloWorld'</span>)
+        .withPluginClasspath()
+        .build()
+
+    then:
+    result.output.contains(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello world!'</span>)
+    result.task(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":helloWorld"</span>).outcome == SUCCESS
+}
+</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/testKit/gradleRunner/automaticClasspathInjectionQuickstart</code> in the &lsquo;-all&rsquo; distribution of Gradle.</p></div></div></div><br class="example-break"><p>
+                    The following build script demonstrates how to reconfigure the conventions provided by the Java Gradle Plugin Development plugin for a project that
+                    uses a custom <code class="literal">Test</code> source set.
+                </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="testKitFunctionalTestSpockAutomaticClasspath"></a><p class="title"><b>Example&nbsp;44.9.&nbsp;Reconfiguring the classpath generation conventions of the Java Gradle Development plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'groovy'</span>
+apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java-gradle-plugin'</span>
+
+sourceSets {
+    functionalTest {
+        groovy {
+            srcDir file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/functionalTest/groovy'</span>)
+        }
+        resources {
+            srcDir file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/functionalTest/resources'</span>)
+        }
+        compileClasspath += sourceSets.main.output + configurations.testRuntime
+        runtimeClasspath += output + compileClasspath
+    }
+}
+
+task functionalTest(type: Test) {
+    testClassesDir = sourceSets.functionalTest.output.classesDir
+    classpath = sourceSets.functionalTest.runtimeClasspath
+}
+
+check.dependsOn functionalTest
+
+gradlePlugin {
+    testSourceSets sourceSets.functionalTest
+}
+
+dependencies {
+    functionalTestCompile(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.spockframework:spock-core:1.0-groovy-2.4'</span>) {
+        exclude module: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'groovy-all'</span>
+    }
+}
+</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/testKit/gradleRunner/automaticClasspathInjectionCustomTestSourceSet</code> in the &lsquo;-all&rsquo; distribution of Gradle.</p></div></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:controlling_the_build_environment" class="section-anchor" href="#sec:controlling_the_build_environment"></a>44.2.2.&nbsp;Controlling the build environment</h3></div></div></div><p>
+                The runner executes the test builds in an isolated environment by specifying a dedicated "working directory" in a directory inside the JVM's temp directory
+                (i.e. the location specified by the <code class="literal">java.io.tmpdir</code> system property, typically <code class="literal">/tmp</code>).
+                Any configuration in the default Gradle user home directory (e.g. <code class="literal">~/.gradle/gradle.properties</code>) is not used for test execution.
+                The TestKit does not expose a mechanism for fine grained control of environment variables etc.
+                Future versions of the TestKit will provide improved configuration options.
+            </p><p>
+                The TestKit uses dedicated daemon processes that are automatically shut down after test execution.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sub:gradle-runner-gradle-version" class="section-anchor" href="#sub:gradle-runner-gradle-version"></a>44.2.3.&nbsp;The Gradle version used to test</h3></div></div></div><p>
+                The Gradle runner requires a Gradle distribution in order to execute the build.
+                The TestKit does not depend on all of Gradle's implementation.
+            </p><p>
+                By default, the runner will attempt to find a Gradle distribution based on where the <code class="literal">GradleRunner</code> class was loaded from.
+                That is, it is expected that the class was loaded from a Gradle distribution, as is the case when using the <code class="literal">gradleTestKit()</code> dependency declaration.
+            </p><p>
+                When using the runner as part of tests <span class="emphasis"><em>being executed by Gradle</em></span> (e.g. executing the <code class="literal">test</code> task of a plugin project), the same distribution used to execute the tests will be used by the runner.
+                When using the runner as part of tests <span class="emphasis"><em>being executed by an IDE</em></span>, the same distribution of Gradle that was used when importing the project will be used.
+                This means that the plugin will effectively be tested with the same version of Gradle that it is being built with.
+            </p><p>
+                Alternatively, a different and specific version of Gradle to use can be specified by the any of the following <code class="literal">GradleRunner</code> methods:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><a class="ulink" href="../javadoc/org/gradle/testkit/runner/GradleRunner.html#withGradleVersion(java.lang.String)" target="_top"><code class="classname">GradleRunner.withGradleVersion(java.lang.String)</code></a></li><li class="listitem"><a class="ulink" href="../javadoc/org/gradle/testkit/runner/GradleRunner.html#withGradleInstallation(java.io.File)" target="_top"><code class="classname">GradleRunner.withGradleInstallation(java.io.File)</code></a></li><li class="listitem"><a class="ulink" href="../javadoc/org/gradle/testkit/runner/GradleRunner.html#withGradleDistribution(java.net.URI)" target="_top"><code class="classname">GradleRunner.withGradleDistribution(java.net.URI)</code></a></li></ul></div><p>
+                This can potentially be used to test build logic across Gradle versions.
+                The following demonstrates a cross-version compatibility test written as Groovy Spock test:
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="testKitFunctionalTestSpockGradleDistribution"></a><p class="title"><b>Example&nbsp;44.10.&nbsp;Specifying a Gradle version for test execution</b></p><div class="example-contents"><p><code class="filename">BuildLogicFunctionalTest.groovy</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.gradle.testkit.runner.GradleRunner
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">static</span> org.gradle.testkit.runner.TaskOutcome.*
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.junit.Rule
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.junit.rules.TemporaryFolder
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> spock.lang.Specification
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> spock.lang.Unroll
+
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> BuildLogicFunctionalTest <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> Specification {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Rule</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">final</span> TemporaryFolder testProjectDir = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> TemporaryFolder()
+    File buildFile
+
+    def setup() {
+        buildFile = testProjectDir.newFile(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build.gradle'</span>)
+    }
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Unroll</span>
+    def <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"can execute hello world task with Gradle version #gradleVersion"</span>() {
+        given:
+        buildFile &lt;&lt; <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">""</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"
+</span>            task helloWorld {
+                doLast {
+                    logger.quiet <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello world!'</span>
+                }
+            }
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">""</span><span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"
+</span>
+        when:
+        def result = GradleRunner.create()
+            .withGradleVersion(gradleVersion)
+            .withProjectDir(testProjectDir.root)
+            .withArguments(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'helloWorld'</span>)
+            .build()
+
+        then:
+        result.output.contains(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello world!'</span>)
+        result.task(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":helloWorld"</span>).outcome == SUCCESS
+
+        where:
+        gradleVersion &lt;&lt; [<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'2.6'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'2.7'</span>]
+    }
+}
+</pre></div></div><br class="example-break"><div class="section"><div class="titlepage"><div><div><h4 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sub:test-kit-compatibility" class="section-anchor" href="#sub:test-kit-compatibility"></a>Feature support when testing with different Gradle versions</h4></div></div></div><p>
+                    It is possible to use the GradleRunner to execute builds with Gradle 1.0 and later.
+                    However, some runner features are not supported on earlier versions.
+                    In such cases, the runner will throw an exception when attempting to use the feature.
+                </p><p>
+                    The following table lists the features that are sensitive to the Gradle version being used.
+                </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;44.1.&nbsp;Gradle version compatibility</b></p><div class="table-contents"><table id="N155A9"><thead><tr>
+                            <td>Feature</td>
+                            <td>Minimum Version</td>
+                            <td>Description</td>
+                        </tr></thead><tr>
+                        <td>
+                            Inspecting executed tasks
+                        </td>
+                        <td>2.5</td>
+                        <td>Inspecting the executed tasks, using
+                            <a class="ulink" href="../javadoc/org/gradle/testkit/runner/BuildResult.html#getTasks()" target="_top"><code class="classname">BuildResult.getTasks()</code></a> and similar methods.
+                        </td>
+                    </tr><tr>
+                        <td>
+                            <a class="link" href="test_kit.html#sub:test-kit-classpath-injection">Plugin classpath injection</a>
+                        </td>
+                        <td>2.8</td>
+                        <td>Injecting the code under test via <a class="ulink" href="../javadoc/org/gradle/testkit/runner/GradleRunner.html#withPluginClasspath(java.lang.Iterable)" target="_top"><code class="classname">GradleRunner.withPluginClasspath(java.lang.Iterable)</code></a>.</td>
+                    </tr><tr>
+                        <td>
+                            <a class="link" href="test_kit.html#sub:test-kit-debug">Inspecting build output in debug mode</a>
+                        </td>
+                        <td>2.9</td>
+                        <td>Inspecting the build's text output when run in debug mode, using
+                                <a class="ulink" href="../javadoc/org/gradle/testkit/runner/BuildResult.html#getOutput()" target="_top"><code class="classname">BuildResult.getOutput()</code></a>.
+                        </td>
+                    </tr><tr>
+                        <td>
+                            <a class="link" href="test_kit.html#sub:test-kit-automatic-classpath-injection">Automatic plugin classpath injection</a>
+                        </td>
+                        <td>2.13</td>
+                        <td>
+                            Injecting the code under test automatically via
+                            <a class="ulink" href="../javadoc/org/gradle/testkit/runner/GradleRunner.html#withPluginClasspath()" target="_top"><code class="classname">GradleRunner.withPluginClasspath()</code></a>
+                            by applying the Java Gradle Plugin Development plugin.
+                        </td>
+                    </tr></table></div></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sub:test-kit-debug" class="section-anchor" href="#sub:test-kit-debug"></a>44.2.4.&nbsp;Debugging build logic</h3></div></div></div><p>
+                The runner uses the <a class="link" href="embedding.html">Tooling API</a> to execute builds.
+                An implication of this is that the builds are executed in a separate process (i.e. not the same process executing the tests).
+                Therefore, executing your <span class="emphasis"><em>tests</em></span> in debug mode does not allow you to debug your build logic as you may expect.
+                Any breakpoints set in your IDE will be not be tripped by the code being exercised by the test build.
+            </p><p>
+                The TestKit provides two different ways to enable the debug mode:
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Setting &ldquo;<code class="literal">org.gradle.testkit.debug</code>&rdquo; system property to <code class="literal">true</code> for the JVM <span class="emphasis"><em>using</em></span> the <code class="literal">GradleRunner</code> (i.e. not the build being executed with the runner);</li><li class="listitem">Calling the <a class="ulink" href="../javadoc/org/gradle/testkit/runner/GradleRunner.html#withDebug(boolean)" target="_top"><code class="classname">GradleRunner.withDebug(boolean)</code></a> method.</li></ul></div><p>
+            </p><p>
+                The system property approach can be used when it is desirable to enable debugging support without making an adhoc change to the runner configuration.
+                Most IDEs offer the capability to set JVM system properties for test execution, and such a feature can be used to set this system property.
+            </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="init_scripts.html" title="Initialization Scripts - Gradle User Guide Version 3.2">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 3.2">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="pt05.html" title="Part&nbsp;V.&nbsp;Building JVM projects">Next</a></div></div></div></body></html>

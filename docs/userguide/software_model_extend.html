@@ -1,0 +1,380 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Extending the software model - Gradle User Guide Version 3.2</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide Version 3.2"><link rel="up" href="pt06.html" title="Part&nbsp;VI.&nbsp;The Software model"><link rel="prev" href="native_software.html" title="Building native software - Gradle User Guide Version 3.2"><link rel="next" href="pt07.html" title="Part&nbsp;VII.&nbsp;Appendix"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="native_software.html" title="Building native software - Gradle User Guide Version 3.2">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 3.2">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="pt07.html" title="Part&nbsp;VII.&nbsp;Appendix">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="software_model_extend"></a>Chapter&nbsp;72.&nbsp;Extending the software model</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="software_model_extend.html#sec:concepts">72.1. Concepts</a></span></dt><dt><span class="section"><a href="software_model_extend.html#sec:components">72.2. Components</a></span></dt><dt><span class="section"><a href="software_model_extend.html#sec:binaries">72.3. Binaries</a></span></dt><dt><span class="section"><a href="software_model_extend.html#sec:source_sets">72.4. Source sets</a></span></dt><dt><span class="section"><a href="software_model_extend.html#sec:putting_it_all_together">72.5. Putting it all together</a></span></dt><dt><span class="section"><a href="software_model_extend.html#software-model-extend-internal-views">72.6. About internal views</a></span></dt></dl></div><div class="note"><p>
+            Support for the software model is currently <a class="link" href="feature_lifecycle.html">incubating</a>.
+            Please be aware that the DSL, APIs and other configuration may change in later Gradle versions.
+        </p></div><p>
+        One of the strengths of Gradle has always been its extensibility, and its adaptability to new domains.
+        The software model takes this extensibility to a new level, enabling the deep modeling of specific domains via
+        richly typed DSLs.
+        The following chapter describes how the model and the corresponding DSLs can be extended to support domains like
+        <a class="link" href="java_software.html">Java</a>, <a class="link" href="play_plugin.html">Play Framework</a> or
+        <a class="link" href="native_software.html">native software development</a>.
+        Before reading this you should be familiar with the Gradle software model
+        <a class="link" href="software_model.html">rule based configuration</a> and
+        <a class="link" href="software_model_concepts.html">concepts</a>.
+    </p><p>
+        The following build script is an example of using a custom software model for building Markdown based
+        documentation:
+    </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="sm-extensible-build-script"></a><p class="title"><b>Example&nbsp;72.1.&nbsp;an example of using a custom software model</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> sample.documentation.DocumentationComponent
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> sample.documentation.TextSourceSet
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> sample.markdown.MarkdownSourceSet
+
+apply plugin:sample.documentation.DocumentationPlugin
+apply plugin:sample.markdown.MarkdownPlugin
+
+model {
+    components {
+        docs(DocumentationComponent) {
+            sources {
+                reference(TextSourceSet)
+                userguide(MarkdownSourceSet) {
+                    generateIndex = true
+                    smartQuotes = true
+                }
+            }
+        }
+    }
+}
+</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/customModel/languageType/</code> in the &lsquo;-all&rsquo; distribution of Gradle.</p></div></div></div><br class="example-break"><p>
+        The rest of this chapter is dedicated to explaining what is going on behind this build script.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:concepts" class="section-anchor" href="#sec:concepts"></a>72.1.&nbsp;Concepts</h2></div></div></div><p>
+            A custom software model type has a public type, a base interface and internal views.
+            Multiple such types then collaborate to define a custom software model.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:public_type_and_base_interfaces" class="section-anchor" href="#sec:public_type_and_base_interfaces"></a>72.1.1.&nbsp;Public type and base interfaces</h3></div></div></div><p>
+                Extended types declare a <span class="emphasis"><em>public type</em></span> that extends a
+                <span class="emphasis"><em>base interface</em></span>:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">
+                    Components extend the <a class="ulink" href="../dsl/org.gradle.platform.base.ComponentSpec.html" target="_top"><code class="classname">ComponentSpec</code></a> base interface
+                </li><li class="listitem">
+                    Binaries extend the <a class="ulink" href="../dsl/org.gradle.platform.base.BinarySpec.html" target="_top"><code class="classname">BinarySpec</code></a> base interface
+                </li><li class="listitem">
+                    Source sets extend the <a class="ulink" href="../dsl/org.gradle.language.base.LanguageSourceSet.html" target="_top"><code class="classname">LanguageSourceSet</code></a> base interface
+                </li></ul></div><p>
+                The <span class="emphasis"><em>public type</em></span> is exposed to build logic.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:internal_views" class="section-anchor" href="#sec:internal_views"></a>72.1.2.&nbsp;Internal views</h3></div></div></div><p>
+                Adding internal views to your model type, you can make some data visible to build logic via a public
+                type, while hiding the rest of the data behind the internal view types.
+                This is covered in a <a class="link" href="software_model_extend.html#software-model-extend-internal-views">dedicated section</a> below.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:components_all_the_way_down" class="section-anchor" href="#sec:components_all_the_way_down"></a>72.1.3.&nbsp;Components all the way down</h3></div></div></div><p>
+                Components are composed of other components. A source set is just a special kind of component representing sources. It might be that the sources are provided, or generated. Similarily, some components are composed of different binaries, which are built by tasks. All buildable components are built by tasks. In the software model, you will write rules to generate both binaries from components and tasks from binaries.
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:components" class="section-anchor" href="#sec:components"></a>72.2.&nbsp;Components</h2></div></div></div><p>
+            To declare a custom component type one must extend
+            <a class="ulink" href="../dsl/org.gradle.platform.base.ComponentSpec.html" target="_top"><code class="classname">ComponentSpec</code></a>, or one of the following, depending on the use case:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><a class="ulink" href="../javadoc/org/gradle/platform/base/SourceComponentSpec.html" target="_top"><code class="classname">SourceComponentSpec</code></a> represents a component which has sources</li><li class="listitem"><a class="ulink" href="../dsl/org.gradle.platform.base.VariantComponentSpec.html" target="_top"><code class="classname">VariantComponentSpec</code></a> represents a component which generates different binaries based on context (target platforms, build flavors, ...). Such a component generally produces multiple binaries.</li><li class="listitem"><a class="ulink" href="../javadoc/org/gradle/platform/base/GeneralComponentSpec.html" target="_top"><code class="classname">GeneralComponentSpec</code></a> is a convenient base interface for components that are built from sources and variant-aware. This is the typical case for a lot of software components, and therefore it should be in most of the cases the base type to be extended.</li></ul></div><p>
+        </p><p>
+            The core software model includes more types that can be used as base for extension. For example:
+            <a class="ulink" href="../dsl/org.gradle.platform.base.LibrarySpec.html" target="_top"><code class="classname">LibrarySpec</code></a> and
+            <a class="ulink" href="../javadoc/org/gradle/platform/base/ApplicationSpec.html" target="_top"><code class="classname">ApplicationSpec</code></a> can also be extended in this manner.
+            Theses are no-op extensions of <code class="literal">GeneralComponentSpec</code> used to describe a software
+            model better by distinguishing libraries and applications components.
+            <a class="ulink" href="../javadoc/org/gradle/testing/base/TestSuiteSpec.html" target="_top"><code class="classname">TestSuiteSpec</code></a> should be used for all components that describe a test suite.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="component-declaration"></a><p class="title"><b>Example&nbsp;72.2.&nbsp;Declare a custom component</b></p><div class="example-contents"><p><code class="filename">DocumentationComponent.groovy</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Managed</span>
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">interface</span> DocumentationComponent <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> GeneralComponentSpec {}
+</pre></div></div><br class="example-break"><p>
+            Types extending <code class="literal">ComponentSpec</code> are registered via a rule
+            annotated with <a class="ulink" href="../javadoc/org/gradle/platform/base/ComponentType.html" target="_top"><code class="classname">ComponentType</code></a>:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="component-registration"></a><p class="title"><b>Example&nbsp;72.3.&nbsp;Register a custom component</b></p><div class="example-contents"><p><code class="filename">DocumentationPlugin.groovy</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> DocumentationPlugin <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> RuleSource {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@ComponentType</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> registerComponent(TypeBuilder&lt;DocumentationComponent&gt; builder) {}
+}
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:binaries" class="section-anchor" href="#sec:binaries"></a>72.3.&nbsp;Binaries</h2></div></div></div><p>
+            To declare a custom binary type one must extend
+            <a class="ulink" href="../dsl/org.gradle.platform.base.BinarySpec.html" target="_top"><code class="classname">BinarySpec</code></a>.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="binary-declaration"></a><p class="title"><b>Example&nbsp;72.4.&nbsp;Declare a custom binary</b></p><div class="example-contents"><p><code class="filename">DocumentationBinary.groovy</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Managed</span>
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">interface</span> DocumentationBinary <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> BinarySpec {
+    File getOutputDir()
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setOutputDir(File outputDir)
+}
+</pre></div></div><br class="example-break"><p>
+            Types extending <code class="literal">BinarySpec</code> are registered via a rule
+            annotated with <a class="ulink" href="../javadoc/org/gradle/platform/base/ComponentType.html" target="_top"><code class="classname">ComponentType</code></a>:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="binary-registration"></a><p class="title"><b>Example&nbsp;72.5.&nbsp;Register a custom binary</b></p><div class="example-contents"><p><code class="filename">DocumentationPlugin.groovy</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> DocumentationPlugin <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> RuleSource {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@ComponentType</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> registerBinary(TypeBuilder&lt;DocumentationBinary&gt; builder) {}
+}
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:source_sets" class="section-anchor" href="#sec:source_sets"></a>72.4.&nbsp;Source sets</h2></div></div></div><p>
+            To declare a custom source set type one must extend
+            <a class="ulink" href="../dsl/org.gradle.language.base.LanguageSourceSet.html" target="_top"><code class="classname">LanguageSourceSet</code></a>.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="markdown-lang-declaration"></a><p class="title"><b>Example&nbsp;72.6.&nbsp;Declare a custom source set</b></p><div class="example-contents"><p><code class="filename">MarkdownSourceSet.groovy</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Managed</span>
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">interface</span> MarkdownSourceSet <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> LanguageSourceSet {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">boolean</span> isGenerateIndex()
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setGenerateIndex(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">boolean</span> generateIndex)
+
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">boolean</span> isSmartQuotes()
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setSmartQuotes(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">boolean</span> smartQuotes)
+}
+</pre></div></div><br class="example-break"><p>
+            Types extending <code class="literal">LanguageSourceSet</code> are registered via a rule
+            annotated with <a class="ulink" href="../javadoc/org/gradle/platform/base/ComponentType.html" target="_top"><code class="classname">ComponentType</code></a>:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="markdown-lang-registration"></a><p class="title"><b>Example&nbsp;72.7.&nbsp;Register a custom source set</b></p><div class="example-contents"><p><code class="filename">MarkdownPlugin.groovy</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> MarkdownPlugin <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> RuleSource {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@ComponentType</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> registerMarkdownLanguage(TypeBuilder&lt;MarkdownSourceSet&gt; builder) {}
+}
+</pre></div></div><br class="example-break"><p>
+            Setting the <span class="emphasis"><em>language name</em></span> is mandatory.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:putting_it_all_together" class="section-anchor" href="#sec:putting_it_all_together"></a>72.5.&nbsp;Putting it all together</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:generating_binaries_from_components" class="section-anchor" href="#sec:generating_binaries_from_components"></a>72.5.1.&nbsp;Generating binaries from components</h3></div></div></div><p>
+                Binaries generation from components is done via rules annotated with
+                <a class="ulink" href="../javadoc/org/gradle/platform/base/ComponentBinaries.html" target="_top"><code class="classname">ComponentBinaries</code></a>.
+                This rule generates a <code class="literal">DocumentationBinary</code> named <code class="literal">exploded</code>
+                for each <code class="literal">DocumentationComponent</code> and sets its <code class="literal">outputDir</code> property:
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="binaries-gen"></a><p class="title"><b>Example&nbsp;72.8.&nbsp;Generates documentation binaries</b></p><div class="example-contents"><p><code class="filename">DocumentationPlugin.groovy</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> DocumentationPlugin <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> RuleSource {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@ComponentBinaries</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> generateDocBinaries(ModelMap&lt;DocumentationBinary&gt; binaries, VariantComponentSpec component, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Path("buildDir")</span> File buildDir) {
+        binaries.create(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"exploded"</span>) { binary -&gt;
+            outputDir = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(buildDir, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"${component.name}/${binary.name}"</span>)
+        }
+    }
+}
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:generating_tasks_from_binaries" class="section-anchor" href="#sec:generating_tasks_from_binaries"></a>72.5.2.&nbsp;Generating tasks from binaries</h3></div></div></div><p>
+                Tasks generation from binaries is done via rules annotated with
+                <a class="ulink" href="../javadoc/org/gradle/platform/base/BinaryTasks.html" target="_top"><code class="classname">BinaryTasks</code></a>.
+                This rule generates a <code class="literal">Copy</code> task
+                for each <code class="literal">TextSourceSet</code>
+                of each <code class="literal">DocumentationBinary</code>:
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="text-tasks-gen"></a><p class="title"><b>Example&nbsp;72.9.&nbsp;Generates tasks for text source sets</b></p><div class="example-contents"><p><code class="filename">DocumentationPlugin.groovy</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> DocumentationPlugin <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> RuleSource {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@BinaryTasks</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> generateTextTasks(ModelMap&lt;Task&gt; tasks, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">final</span> DocumentationBinary binary) {
+        binary.inputs.withType(TextSourceSet) { textSourceSet -&gt;
+            def taskName = binary.tasks.taskName(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"compile"</span>, textSourceSet.name)
+            def outputDir = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(binary.outputDir, textSourceSet.name)
+            tasks.create(taskName, Copy) {
+                from textSourceSet.source
+                destinationDir = outputDir
+            }
+        }
+    }
+}
+</pre></div></div><br class="example-break"><p>
+                This rule generates a <code class="literal">MarkdownCompileTask</code> task
+                for each <code class="literal">MarkdownSourceSet</code>
+                of each <code class="literal">DocumentationBinary</code>:
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="markdown-tasks-gen"></a><p class="title"><b>Example&nbsp;72.10.&nbsp;Register a custom source set</b></p><div class="example-contents"><p><code class="filename">MarkdownPlugin.groovy</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> MarkdownPlugin <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> RuleSource {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@BinaryTasks</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> processMarkdownDocumentation(ModelMap&lt;Task&gt; tasks, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">final</span> DocumentationBinary binary) {
+        binary.inputs.withType(MarkdownSourceSet) { markdownSourceSet -&gt;
+            def taskName = binary.tasks.taskName(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"compile"</span>, markdownSourceSet.name)
+            def outputDir = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(binary.outputDir, markdownSourceSet.name)
+            tasks.create(taskName, MarkdownHtmlCompile) { compileTask -&gt;
+                compileTask.source = markdownSourceSet.source
+                compileTask.destinationDir = outputDir
+                compileTask.smartQuotes = markdownSourceSet.smartQuotes
+                compileTask.generateIndex = markdownSourceSet.generateIndex
+            }
+        }
+    }
+}
+</pre></div></div><br class="example-break"><p>
+                See the sample source for more on the <code class="literal">MarkdownCompileTask</code> task.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:using_your_custom_model" class="section-anchor" href="#sec:using_your_custom_model"></a>72.5.3.&nbsp;Using your custom model</h3></div></div></div><p>
+                This build script demonstrate usage of the custom model defined in the sections above:
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="sm-extensible-build-script-re"></a><p class="title"><b>Example&nbsp;72.11.&nbsp;an example of using a custom software model</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> sample.documentation.DocumentationComponent
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> sample.documentation.TextSourceSet
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> sample.markdown.MarkdownSourceSet
+
+apply plugin:sample.documentation.DocumentationPlugin
+apply plugin:sample.markdown.MarkdownPlugin
+
+model {
+    components {
+        docs(DocumentationComponent) {
+            sources {
+                reference(TextSourceSet)
+                userguide(MarkdownSourceSet) {
+                    generateIndex = true
+                    smartQuotes = true
+                }
+            }
+        }
+    }
+}
+</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/customModel/languageType/</code> in the &lsquo;-all&rsquo; distribution of Gradle.</p></div></div></div><br class="example-break"><p>
+                And in the components reports for such a build script we can see our model types properly registered:
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="softwareModelExtend-components"></a><p class="title"><b>Example&nbsp;72.12.&nbsp;foo bar</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q components</code></strong></p><pre class="screen">&gt; gradle -q components
+
+------------------------------------------------------------
+Root project
+------------------------------------------------------------
+
+DocumentationComponent 'docs'
+-----------------------------
+
+Source sets
+    Markdown source 'docs:userguide'
+        srcDir: src/docs/userguide
+    Text source 'docs:reference'
+        srcDir: src/docs/reference
+
+Binaries
+    DocumentationBinary 'docs:exploded'
+        build using task: :docsExploded
+
+Note: currently not all plugins register their components, so some components may not be visible here.</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="software-model-extend-internal-views" class="section-anchor" href="#software-model-extend-internal-views"></a>72.6.&nbsp;About internal views</h2></div></div></div><p>
+            Internal views can be added to an already registered type or to a new custom type.
+            In other words, using internal views, you can attach extra properties to already registered components,
+            binaries and source sets types like <code class="literal">JvmLibrarySpec</code>, <code class="literal">JarBinarySpec</code>
+            or <code class="literal">JavaSourceSet</code> and to the custom types you write.
+        </p><p>
+            Let's start with a simple component public type and its internal view declarations:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="iv-type-declaration"></a><p class="title"><b>Example&nbsp;72.13.&nbsp;public type and internal view declaration</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Managed</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">interface</span> MyComponent <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> ComponentSpec {
+    String getPublicData()
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setPublicData(String data)
+}
+<span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Managed</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">interface</span> MyComponentInternal <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> MyComponent {
+    String getInternalData()
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> setInternalData(String internal)
+}
+</pre></div></div><br class="example-break"><p>
+            The type registration is as follows:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="iv-type-registration"></a><p class="title"><b>Example&nbsp;72.14.&nbsp;type registration</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> MyPlugin <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> RuleSource {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@ComponentType</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> registerMyComponent(TypeBuilder&lt;MyComponent&gt; builder) {
+        builder.internalView(MyComponentInternal)
+    }
+}
+</pre></div></div><br class="example-break"><p>
+            The <code class="literal">internalView(type)</code> method of the type builder can be called several times.
+            This is how you would add several internal views to a type.
+        </p><p>
+            Now, let's mutate both public and internal data using some rule:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="iv-view-mutation"></a><p class="title"><b>Example&nbsp;72.15.&nbsp;public and internal data mutation</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> MyPlugin <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> RuleSource {
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Mutate</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> mutateMyComponents(ModelMap&lt;MyComponentInternal&gt; components) {
+        components.all { component -&gt;
+            component.publicData = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Some PUBLIC data"</span>
+            component.internalData = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Some INTERNAL data"</span>
+        }
+    }
+}
+</pre></div></div><br class="example-break"><p>
+            Our <code class="literal">internalData</code> property should not be exposed to build logic.
+            Let's check this using the <code class="literal">model</code> task on the following build file:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="softwareModelExtend-iv-model"></a><p class="title"><b>Example&nbsp;72.16.&nbsp;example build script and model report output</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: MyPlugin
+model {
+    components {
+        my(MyComponent)
+    }
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q model</code></strong></p><pre class="screen">&gt; gradle -q model
+
+------------------------------------------------------------
+Root project
+------------------------------------------------------------
+
++ components
+      | Type:       org.gradle.platform.base.ComponentSpecContainer
+      | Creator:     ComponentBasePlugin.PluginRules#components(ComponentSpecContainer)
+      | Rules:
+         ⤷ components { ... } @ build.gradle line 42, column 5
+         ⤷ MyPlugin#mutateMyComponents(ModelMap&lt;MyComponentInternal&gt;)
+    + my
+          | Type:       MyComponent
+          | Creator:     components { ... } @ build.gradle line 42, column 5 &gt; create(my)
+          | Rules:
+             ⤷ MyPlugin#mutateMyComponents(ModelMap&lt;MyComponentInternal&gt;) &gt; all()
+        + publicData
+              | Type:       java.lang.String
+              | Value:      Some PUBLIC data
+              | Creator:     components { ... } @ build.gradle line 42, column 5 &gt; create(my)
++ tasks
+      | Type:       org.gradle.model.ModelMap&lt;org.gradle.api.Task&gt;
+      | Creator:     Project.&lt;init&gt;.tasks()
+    + assemble
+          | Type:       org.gradle.api.DefaultTask
+          | Value:      task ':assemble'
+          | Creator:     tasks.addPlaceholderAction(assemble)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + build
+          | Type:       org.gradle.api.DefaultTask
+          | Value:      task ':build'
+          | Creator:     tasks.addPlaceholderAction(build)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + buildEnvironment
+          | Type:       org.gradle.api.tasks.diagnostics.BuildEnvironmentReportTask
+          | Value:      task ':buildEnvironment'
+          | Creator:     tasks.addPlaceholderAction(buildEnvironment)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + check
+          | Type:       org.gradle.api.DefaultTask
+          | Value:      task ':check'
+          | Creator:     tasks.addPlaceholderAction(check)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + clean
+          | Type:       org.gradle.api.tasks.Delete
+          | Value:      task ':clean'
+          | Creator:     tasks.addPlaceholderAction(clean)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + components
+          | Type:       org.gradle.api.reporting.components.ComponentReport
+          | Value:      task ':components'
+          | Creator:     tasks.addPlaceholderAction(components)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + dependencies
+          | Type:       org.gradle.api.tasks.diagnostics.DependencyReportTask
+          | Value:      task ':dependencies'
+          | Creator:     tasks.addPlaceholderAction(dependencies)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + dependencyInsight
+          | Type:       org.gradle.api.tasks.diagnostics.DependencyInsightReportTask
+          | Value:      task ':dependencyInsight'
+          | Creator:     tasks.addPlaceholderAction(dependencyInsight)
+          | Rules:
+             ⤷ HelpTasksPlugin.Rules#addDefaultDependenciesReportConfiguration(DependencyInsightReportTask, ServiceRegistry)
+             ⤷ copyToTaskContainer
+    + dependentComponents
+          | Type:       org.gradle.api.reporting.dependents.DependentComponentsReport
+          | Value:      task ':dependentComponents'
+          | Creator:     tasks.addPlaceholderAction(dependentComponents)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + help
+          | Type:       org.gradle.configuration.Help
+          | Value:      task ':help'
+          | Creator:     tasks.addPlaceholderAction(help)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + init
+          | Type:       org.gradle.buildinit.tasks.InitBuild
+          | Value:      task ':init'
+          | Creator:     tasks.addPlaceholderAction(init)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + model
+          | Type:       org.gradle.api.reporting.model.ModelReport
+          | Value:      task ':model'
+          | Creator:     tasks.addPlaceholderAction(model)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + projects
+          | Type:       org.gradle.api.tasks.diagnostics.ProjectReportTask
+          | Value:      task ':projects'
+          | Creator:     tasks.addPlaceholderAction(projects)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + properties
+          | Type:       org.gradle.api.tasks.diagnostics.PropertyReportTask
+          | Value:      task ':properties'
+          | Creator:     tasks.addPlaceholderAction(properties)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + tasks
+          | Type:       org.gradle.api.tasks.diagnostics.TaskReportTask
+          | Value:      task ':tasks'
+          | Creator:     tasks.addPlaceholderAction(tasks)
+          | Rules:
+             ⤷ copyToTaskContainer
+    + wrapper
+          | Type:       org.gradle.api.tasks.wrapper.Wrapper
+          | Value:      task ':wrapper'
+          | Creator:     tasks.addPlaceholderAction(wrapper)
+          | Rules:
+             ⤷ copyToTaskContainer
+</pre></div></div><br class="example-break"><p>
+            We can see in this report that <code class="literal">publicData</code> is present and that
+            <code class="literal">internalData</code> is not.
+        </p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="native_software.html" title="Building native software - Gradle User Guide Version 3.2">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 3.2">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="pt07.html" title="Part&nbsp;VII.&nbsp;Appendix">Next</a></div></div></div></body></html>

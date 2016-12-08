@@ -117,6 +117,7 @@ project | 项目
 task | 任务
 plugin | 插件
 action | 动作
+Gradle wrapper | Gradle包装器
 
 
 ## 建议与反馈

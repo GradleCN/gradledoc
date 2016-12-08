@@ -1,12 +1,15 @@
 翻译规范
 =======
 
-非常感谢您的关注，本项目是针对	`Gradle` 官方`docs`的翻译项目，旨在为`Gradle`中文化贡献绵薄微力。
-如果您想参与进来，请仔细阅读以下内容。
+　　本项目是针对`Gradle`官方`docs`的翻译项目，旨在为`Gradle`中文化贡献绵薄微力
+　　
+  　如果您想参与进来，请仔细阅读以下内容。
 
-为了提高翻译质量和协同效率，特约定些文档。在参与翻译前，请仔细阅读此文档。
+　　为了提高翻译质量和协同效率，特约定些文档。在参与翻译前，请仔细阅读此文档。
 
-[成员名单](Collaborator.md)
+* [成员名单](Collaborator.md)
+
+* [在线阅读](https://gradlecn.github.io/gradledoc/docs/userguide/userguide.html)
 
 ## 质量保证
 

@@ -59,21 +59,32 @@
                     </dd>
                     <dt><span class="term">结构化构建<br>Structure your build</span></dt>
                     <dd>
-                    	<p></p>
+                    	<p>Gradle强大的灵活性和通用性可以使你直接为你构建应用一些通用的原则。例如，你可以很容易的应用一些组件来完成你的构建。</p>
                         <p>The suppleness and richness of Gradle finally allows you to apply common design principles to your build. For example, it is very easy to compose your build from reusable pieces of build logic. Inline stuff where unnecessary indirections would be inappropriate. Don't be forced to tear apart what belongs together (e.g. in your project hierarchy). Avoid smells like shotgun changes or divergent change that turn your build into a maintenance nightmare. At last you can create a well structured, easily maintained, comprehensible build.</p>
                     </dd>
-                    <dt><span class="term">可深化API<br>Deep API</span></dt>
+                    <dt><span class="term">可深化的API<br>Deep API</span></dt>
                     <dd>
+                    	<p>你会非常乐意在整个构建执行的生命周期中使用 Gradle, 因为Gradle允许你管理和定制它的配置和执行行为。</p>
                         <p>From being a pleasure to be used embedded to its many hooks over the whole lifecycle of build execution, Gradle allows you to monitor and customize its configuration and execution behavior to its very core.
                         </p>
                     </dd>
-                    <dt><span class="term">Gradle scales</span></dt>
+                    <dt><span class="term">良好的伸缩性 - Gradle scales</span></dt>
                     <dd>
+                    	<p>
+                    		Gradle拥有良好的伸缩性，从简单的单一项目构建到企业级的多项目构建，这能显著提高您得生产效率。对于结构化构建而言这是实实在在的特性。藉由最先进的增量构建方法，可以切实解决大型企业级项目构建时的性能之痛。
+
+                    	</p>
                         <p>Gradle scales very well. It significantly increases your productivity, from simple single project builds up to huge enterprise multi-project builds. This is true for structuring the build. With the state-of-art incremental build function, this is also true for tackling the performance pain many large enterprise builds suffer from.
                         </p>
                     </dd>
                     <dt><span class="term">支持多项目构建<br>Multi-project builds</span></dt>
                     <dd>
+                    	<p>
+                    		Gradle对多项目构建的支持十分优秀。项目的依赖是一等公民，您可以在多项目构建中自行组织项目之间的关系，Gralde将遵循您的配置。
+                    		<br>
+                    		同时，Gradle提供了局部构建的功能.如果你构建一个单独的子项目, Gradle 会构建这个子项目依赖的所有子项目。 你也可以选择依赖于另一个特别的子项目重新构建这些子项目。 这样在一些大型项目里就可以节省非常多的时间。
+
+                    	</p>
                         <p>Gradle's support for multi-project build is outstanding. Project dependencies are first class citizens. We allow you to model the project relationships in a multi-project build as they really are for your problem domain. Gradle follows your layout not vice versa.
                         </p>
                         <p>Gradle provides partial builds. If you build a single subproject Gradle takes care of building all the subprojects that subproject depends on. You can also choose to rebuild the subprojects that depend on a particular subproject. Together with incremental builds this is a big time saver for larger builds.
@@ -87,21 +98,29 @@
                     	</p>
                         <p>Different teams prefer different ways to manage their external dependencies. Gradle provides convenient support for any strategy. From transitive dependency management with remote Maven and Ivy repositories to jars or directories on the local file system.</p>
                     </dd>
-                    <dt><span class="term">第一个集成式构建工具<br>Gradle is the first build integration tool</span></dt>
+                    <dt><span class="term">第一个一站式构建工具<br>Gradle is the first build integration tool</span></dt>
                     <dd>
+                    	<p>
+                    		Ant 中的task是 Ant 中的核心构成。而更有趣的是，Ant projects 也同样是核心构成。 Gradle 对任意的 Ant 项目提供了深度导入，并在运行时将 Ant 目标(target)转换为原生的 Gradle 任务(task)。 你可以从 Gradle 上依赖它们(Ant targets)，增强它们，甚至在你的 build.xml 上定义对 Gradle tasks 的依赖。Gradle 为属性、路径等等提供了同样的整合。
+
+Gradle 完全支持用于发布或检索依赖的 Maven 或 Ivy 仓库。 Gradle 同样提供了一个转换器，用于将一个 Maven pom.xml 文件转换为一个 Gradle 脚本。Maven 项目的运行时导入的功能将很快会有。
+                    	</p>
                         <p>Ant tasks are first class citizens. Even more interesting, Ant projects are first class citizens as well. Gradle provides a deep import for any Ant project, turning Ant targets into native Gradle tasks at runtime. You can depend on them from Gradle, you can enhance them from Gradle, you can even declare dependencies on Gradle tasks in your build.xml. The same integration is provided for properties, paths, etc ...</p>
                         <p>Gradle fully supports your existing Maven or Ivy repository infrastructure for publishing and retrieving dependencies. Gradle also provides a converter for turning a Maven <code class="filename">pom.xml</code> into a Gradle script. Runtime imports of Maven projects will come soon.</p>
                     </dd>
                     <dt><span class="term">易于集成<br>Ease of migration</span></dt>
                     <dd>
                     	<p>
-                    		Gradle可以适应任何你采用的结构。
+                    		Gradle可以适应任何你有的结构。 因此，您可以随时在同一个分支中开发您的Gradle构建，您的生产构建存在，并且可以并行演化。 我们通常建议编写测试，确保生成的工件是相似的。 这样迁移的破坏性越小，越可靠越好。 这是遵循通过应用婴儿步骤重构的最佳实践。
                     	</p>
                         <p>Gradle can adapt to any structure you have. Therefore you can always develop your Gradle build in the same branch where your production build lives and both can evolve in parallel. We usually recommend to write tests that make sure that the produced artifacts are similar. That way migration is as less disruptive and as reliable as possible. This is following the best-practices for refactoring by applying baby steps.
                         </p>
                     </dd>
                     <dt><span class="term">Groovy</span></dt>
                     <dd>
+                    	<p>
+                    	Gradle 的构建脚本是采用 Groovy 写的，而不是用 XML。 但与其他方法不同，它并不只是展示了由一种动态语言编写的原始脚本的强大。 那样将导致维护构建变得很困难。 Gradle 的整体设计是面向被作为一门语言，而不是一个僵化的框架。 并且 Groovy 是我们允许你通过抽象的 Gradle 描述你个人的 story 的黏合剂。 Gradle 提供了一些标准通用的 story。这是我们相比其他声明性构建系统的主要特点。 我们的 Groovy 支持也不是简单的糖衣层，整个 Gradle 的 API 都是完全 groovy 化的。只有通过 Groovy才能去运用它并对它提高效率。
+                    	</p>
                         <p>Gradle's build scripts are written in Groovy, not XML. But unlike other approaches this is not for simply exposing the raw scripting power of a dynamic language. That would just lead to a very difficult to maintain build. The whole design of Gradle is oriented towards being used as a language, not as a rigid framework. And Groovy is our glue that allows you to tell your individual story with the abstractions Gradle (or you) provide. Gradle provides some standard stories but they are not privileged in any form. This is for us a major distinguishing feature compared to other declarative build systems. Our Groovy support is not just sugar coating. The whole Gradle API is fully Groovy-ized. Adding Groovy results in an enjoyable and productive experience.
                         </p>
                     </dd>

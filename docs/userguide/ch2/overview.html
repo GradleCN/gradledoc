@@ -9,14 +9,14 @@
     <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
     <link rel="home" href="../userguide.html" title="Gradle User Guide Version 3.2">
     <link rel="up" href="../pt01.html" title="Part&nbsp;I.&nbsp;About Gradle">
-    <link rel="prev" href="../introduction.html" title="Introduction - Gradle User Guide Version 3.2">
+    <link rel="prev" href="../ch1/introduction.html" title="Introduction - Gradle User Guide Version 3.2">
     <link rel="下一页" href="../pt02.html" title="Part&nbsp;II.&nbsp;Working with existing builds">
 </head>
 
 <body>
     <div class="navheader">
         <div>
-            <div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="../introduction.html" title="Introduction - Gradle User Guide Version 3.2">上一页</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="../userguide.html" title="Gradle User Guide Version 3.2">目录</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="../pt02.html" title="Part&nbsp;II.&nbsp;Working with existing builds">下一页</a></div>
+            <div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="../ch1/introduction.html" title="Introduction - Gradle User Guide Version 3.2">上一页</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="../userguide.html" title="Gradle User Guide Version 3.2">目录</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="../pt02.html" title="Part&nbsp;II.&nbsp;Working with existing builds">下一页</a></div>
         </div>
     </div>
     <div class="chapter">
@@ -148,14 +148,25 @@ Gradle 完全支持用于发布或检索依赖的 Maven 或 Ivy 仓库。 Gradle
             <div class="titlepage">
                 <div>
                     <div>
-                        <h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:why_groovy" class="section-anchor" href="#sec:why_groovy"></a>2.2.为何采用 Groovy - Why Groovy?</h2></div>
+                        <h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:why_groovy" class="section-anchor" href="#sec:why_groovy"></a>2.2.为何选用 Groovy - Why Groovy?</h2></div>
                 </div>
             </div>
+            <p>
+            	我们认为采用基于动态语言的DSL作为脚本语言相对XML具有更大的优势。为何我们在众多动态语言中选中了Groovy呢？原因在于Gradle上下文的操作性。虽然Gradle核心是一个通用的构建工具，但它更主要的还是聚焦于JAVA项目的构建。在Java项目中团队成员对Java都非常熟悉，所以我们尽可能的保证构建过程对所有的团队成员都是透明的。
+
+            </p>
             <p>We think the advantages of an internal DSL (based on a dynamic language) over XML are tremendous when used in <span class="emphasis"><em>build scripts</em></span>. There are a couple of dynamic languages out there. Why Groovy? The answer lies in the context Gradle is operating in. Although Gradle is a general purpose build tool at its core, its main focus are Java projects. In such projects the team members will be very familiar with Java. We think a build should be as transparent as possible to <span class="emphasis"><em>all</em></span> team members.
+            </p>
+            <p>
+            	或许你可能会疑问为何不直接用 Java 作为构建脚本语言，这里有一个问题，就是对于团队的最高的透明度和最低的学习曲线，但是由于 Java 的一些限制，作为构建脚本并不理想。相较而言，Python、Groovy、Rudy都更能胜任此项工作。我们选择 Groovy 是因为它较其他语言而言对 Java 开发者更加透明。它的基本语法与 Java 类似，包括 本文系统，包结构和其他方面。Groovy 提供了最重要内容但都是符合 Java 基础功能的。
+
             </p>
             <p>In that case, you might argue why we don't just use Java as the language for build scripts. We think this is a valid question. It would have the highest transparency for your team and the lowest learning curve, but because of the limitations of Java, such a build language would not be as nice, expressive and powerful as it could be.
                 <sup>[<a href="#ftn.N100C6" name="N100C6" class="footnote">1</a>]</sup> Languages like Python, Groovy or Ruby do a much better job here. We have chosen Groovy as it offers by far the greatest transparency for Java people. Its base syntax is the same as Java's as well as its type system, its package structure and other things. Groovy provides much more on top of that, but with the common foundation of Java.
             </p>
+           	<p>
+           		对于对 Python 或 Ruby 知识拥有强烈的学习欲望的 Java 开发者来说，上述论点不适用。该工具的设计非常适合于创建另一个建立在 JRuby 和Jython 脚本引擎。对于我们来说暂时它只是不具有最高优先级。我们高兴地支持任何社区的努力来创建额外的构建脚本引擎。
+           	</p>
             <p>For Java developers with Python or Ruby knowledge or the desire to learn them, the above arguments don't apply. The Gradle design is well-suited for creating another build script engine in JRuby or Jython. It just doesn't have the highest priority for us at the moment. We happily support any community effort to create additional build script engines.
             </p>
         </div>

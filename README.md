@@ -7,6 +7,8 @@
 
 　　为了提高翻译质量和协同效率，特约定些文档。在参与翻译前，请仔细阅读此文档。
 
+* [中文技术文档协作规范](https://github.com/pkaq/document-style-guide)
+
 * [成员名单](Collaborator.md)
 
 * [在线阅读](https://gradlecn.github.io/gradledoc/docs/userguide/userguide.html)
